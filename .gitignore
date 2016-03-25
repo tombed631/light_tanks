@@ -103,6 +103,12 @@ artifacts/
 *.svclog
 *.scc
 
+#Add-by-Tomek
+*.sln
+*.sdf
+*.vcxproj
+*.vcx.filters
+
 # Chutzpah Test files
 _Chutzpah*
 
