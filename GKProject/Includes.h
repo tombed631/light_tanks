@@ -2,9 +2,6 @@
 #define Includes_hpp
 #endif
 
-#define NOMINMAX
-
-
 #include <Windows.h>
 #include <SFML/OpenGL.hpp>
 #include <SFML/Graphics.hpp>
@@ -13,5 +10,6 @@
 #include <iostream>
 #include <stdlib.h>
 #include <cstdlib>
+
 using namespace sf;
 using namespace std;
