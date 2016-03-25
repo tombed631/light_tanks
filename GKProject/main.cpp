@@ -12,4 +12,4 @@ void main(void)
 	TankWindow window;
 	window.renderWindow(800,600,"Light Tanks");
 }
-
+//zmiana
