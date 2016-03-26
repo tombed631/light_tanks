@@ -80,7 +80,7 @@ void Menu::showMenu(RenderWindow &window)
 						else if (counter == 1)
 							menuOptions[counter].setColor(Color::Green);
 						else if (counter == 2)
-							menuOptions[i].setColor(Color::Yellow);
+							menuOptions[counter].setColor(Color::Yellow);
 						else if (counter == 3)
 							menuOptions[counter].setColor(Color::Red);
 					}

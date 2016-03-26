@@ -13,5 +13,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <cstdlib>
+#include <limits>
+
+
 using namespace sf;
 using namespace std;
