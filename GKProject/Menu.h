@@ -10,9 +10,9 @@ class Menu
 {
 private:
 	Event eventHandle; //handle events
-	bool isRunning; // is app running? 
+	bool isRunningMenu; // is app running? 
 	Font font;
-	const static int ilosc_opcji = 3;
+	const static int optionsNumber = 4; // liczba opcji w menu
 	int counter; // licznik do zmiany opcji menu za pomoca klawiatury
 public:
 	/*Constructor*/
