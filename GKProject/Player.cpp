@@ -81,3 +81,20 @@ void Player::moveTankTwo()
 	tankSprite.move(velocity);
 
 }
+Vector2f Player::getTankPosition()
+{
+	return tankSprite.getPosition();
+}
+
+void Player::bulletShoot()
+{
+	Bullet *bullet = new Bullet(tankSprite.getPosition(),tankSprite.getRotation());
+	bullets.push_back(bullet);
+	
+}
+
+vector <Bullet*> Player::getBullets()
+{
+	return bullets;
+}
+

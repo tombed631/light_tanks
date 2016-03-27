@@ -4,7 +4,6 @@
 
 #include "Includes.h"
 #include "Player.h"
-
 /*Klasa uruchomieniowa gry*/
 class Game
 {
@@ -15,8 +14,8 @@ private:
 	vector <Player*> players; // wektor ze wskaznikami na obiekt graczy
 public:
 	Game();
-	void run(RenderWindow &window);
-
+	void run(RenderWindow &window); // odpala g³ówn¹ petle gry
+	void engine(RenderWindow &window); // silnik gry odpowiedzialny za ruch pojazdów, pocisków i kolizje
 
 
 };
