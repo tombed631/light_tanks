@@ -1,4 +1,3 @@
-- wejœcie w rozgrywke - narazie domyœlne kolory czolgów
 
 - dodaæ opis w helpie
 - mozna dodac info o autorach na dole w menu lub jakas grafika t³a

@@ -4,6 +4,7 @@ Menu::Menu()
 {
 	isRunningMenu = true;
 	counter = 0;
+	
 }
 
 void Menu::showMenu(RenderWindow &window)
@@ -32,14 +33,24 @@ void Menu::showMenu(RenderWindow &window)
 			if ((eventHandle.type == sf::Event::Closed || (eventHandle.type == Event::KeyPressed &&
 				eventHandle.key.code == Keyboard::Escape)))
 				isRunningMenu = false;
-			// klikniecie myszka - wyjscie
-			if ((menuOptions[optionsNumber - 1].getGlobalBounds().contains(mouse) &&
-				eventHandle.type == Event::MouseButtonReleased && eventHandle.key.code == Mouse::Left))
+			// klikniecie myszka lub klawiatura na wyjscie
+			if (menuOptions[optionsNumber - 1].getColor() == Color::Red && 
+				((eventHandle.type == Event::MouseButtonReleased && eventHandle.key.code == Mouse::Left)
+				|| (eventHandle.type == Event::KeyPressed && eventHandle.key.code == Keyboard::Return)))
 				isRunningMenu = false;
-			// klikniecie enterem - wyjscie
-			if (menuOptions[optionsNumber-1].getColor() == Color::Red &&
-				eventHandle.type == Event::KeyPressed && eventHandle.key.code == Keyboard::Return)
-				isRunningMenu = false;
+
+			// klikniecie myszka lub klawiatura na PLAY
+			if (menuOptions[optionsNumber - 4].getColor() == Color::Blue &&
+				((eventHandle.type == Event::MouseButtonReleased && eventHandle.key.code == Mouse::Left)
+				 || (eventHandle.type == Event::KeyPressed && eventHandle.key.code == Keyboard::Return)))
+			{
+
+				// trzeba tez zaimplementowac sprawdzenie wybranie czolgu - potem
+				game.run(window);
+			}
+					
+
+
 			// klikniecie przyciskiem do gory - zmiejszany licznik
 			if (eventHandle.type == Event::KeyPressed && eventHandle.key.code == Keyboard::Up)
 			{

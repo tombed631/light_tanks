@@ -3,6 +3,7 @@
 #endif
 
 #include "Includes.h"
+#include "Game.h"
 /*
  Class to create menu 
 */
@@ -14,6 +15,7 @@ private:
 	Font font;
 	const static int optionsNumber = 4; // liczba opcji w menu
 	int counter; // licznik do zmiany opcji menu za pomoca klawiatury
+	Game game;
 public:
 	/*Constructor*/
 	Menu();
