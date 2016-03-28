@@ -44,7 +44,7 @@ void Menu::showMenu(RenderWindow &window)
 				((eventHandle.type == Event::MouseButtonReleased && eventHandle.key.code == Mouse::Left)
 				 || (eventHandle.type == Event::KeyPressed && eventHandle.key.code == Keyboard::Return)))
 			{
-
+				Game game;
 				// trzeba tez zaimplementowac sprawdzenie wybranie czolgu - potem
 				game.run(window);
 			}
