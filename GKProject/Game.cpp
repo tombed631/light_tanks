@@ -57,41 +57,41 @@ void Game::engine(RenderWindow &window)
 	playerOne->moveTankOne();
 	playerTwo->moveTankTwo();
 	
-	if (!playerOne->getBullets().empty())
+
+
+	// kod zwiazany za wyswietlenie pocisku
+	vector <Bullet*> v = playerOne->getBullets();
+	if (!v.empty()) // jezeli wektor z pociskami nie jest pusty - czyli nastapil wystrzal i sa jakies w wektorze
 	{
-		vector <Bullet*> v = playerOne->getBullets();
+
 		for (vector <Bullet*>::iterator it = v.begin(); it != v.end(); ++it)
 		{
-			(*it)->updateMove(false);
-			if ((*it)->getElapsedTime())
-			{ // nie wiem czemu tu nie wchodzi
-				 delete(*it);
-				 v.erase(it);
+			(*it)->updateMove(false); // updatujemy ruch pocisku
+			if ((*it)->getElapsedTime()) // sprawdzamy czy nie ma zniknac po 2 sek
+			{ 
+				 v.erase(it); // jezeli tak to czyscimy z tego iteratora (pocisk znika)
+				 playerOne->setBullets(v); // ustalamy nowy wektor setterem w klasie Player
 				 break;
 			}
-			
-			
-			window.draw((**it));
-
+			window.draw((**it)); // rysujemy pocisk na scenie
 		}
 	}
 
-	if (!playerTwo->getBullets().empty())
+	// dla drygiego gracza analogicznie jak wyzej
+	vector <Bullet*> v2 = playerTwo->getBullets();
+	if (!v2.empty())
 	{
-		vector <Bullet*> v = playerTwo->getBullets();
-		for (vector <Bullet*>::iterator it = v.begin(); it != v.end(); ++it)
+
+		for (vector <Bullet*>::iterator it = v2.begin(); it != v2.end(); ++it)
 		{
 			(*it)->updateMove(false);
 			if ((*it)->getElapsedTime())
-			{ // nie wiem czemu tu nie wchodzi
-				delete(*it);
-				v.erase(it);
+			{
+				v2.erase(it);
+				playerTwo->setBullets(v2);
 				break;
 			}
-
-
 			window.draw((**it));
-
 		}
 	}
 

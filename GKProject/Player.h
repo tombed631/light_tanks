@@ -26,4 +26,5 @@ public:
 	Vector2f getTankPosition(); //zwraca pozycje czo³gu
 	void bulletShoot(); // nastapil strzal - tworzenie pocisku 
 	vector <Bullet*> getBullets(); // zwraca wektor z pociskami
+	void setBullets(vector <Bullet*> v); // ustala wektor z pociskami
 };

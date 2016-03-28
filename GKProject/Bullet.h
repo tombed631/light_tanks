@@ -12,7 +12,7 @@ private:
 	Vector2f position; // pozycja poczatkowa
 	Vector2f velocity; //  przemieszczenie
 	Time timeAlive; // czas zycia 
-	Clock clock; // zegar generujacy czas
+	Clock clock, deltaClock; // zegar generujacy czas
 public:
 	Bullet(Vector2f _position, float rotation);
 	bool getElapsedTime(); // zwraca true jesli minelo 1 sekunda - NIE DZIALA

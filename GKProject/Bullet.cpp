@@ -8,7 +8,7 @@ Bullet::Bullet(Vector2f _position, float rotation)
 	timeAlive = clock.restart();
 	position = _position;
 	ball.setRadius(5);
-	ball.setFillColor(Color::White);
+	ball.setFillColor(Color::Red);
 	ball.setPosition(position); 
 	ball.setRotation(rotation);
 	
@@ -20,11 +20,11 @@ void Bullet::draw(RenderTarget &target, RenderStates states) const
 bool Bullet::getElapsedTime()
 {
 
-	timeAlive = clock.getElapsedTime();
-	if ((float)(timeAlive.asSeconds()) >= 1.f)
+	timeAlive = deltaClock.getElapsedTime();
+	if ((float)(timeAlive.asSeconds()) >= 2.f)//jezeli czas zycia jest wiekszy niz 2 sek to
 	{
-		clock.restart();
-		return true;
+		deltaClock.restart(); // zrestartuj zegar
+		return true;	// i zwroc true
 	}
 	else
 		return false;

@@ -98,3 +98,8 @@ vector <Bullet*> Player::getBullets()
 	return bullets;
 }
 
+void Player::setBullets(vector <Bullet*> v)
+{
+	bullets = v;
+}
+
