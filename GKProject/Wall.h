@@ -1,6 +1,7 @@
 #ifndef Wall_hpp
 #define Wall_hpp
 #endif
+
 #include "Includes.h"
 
 class Wall: public Drawable, public Transformable
