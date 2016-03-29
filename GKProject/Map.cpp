@@ -17,33 +17,42 @@ void Map::createMap(RenderWindow &gameWindow){
 		MessageBox(NULL, "Brak shematu mapy!", "ERROR", NULL);
 		return;
 	}
-	//ramka okna
+	//ramka okna bazowa dla ka¿dego
 	walls.push_back(new Wall(10, windowX, Vector2f(0, 0), 0));
 	walls.push_back(new Wall(10, windowX, Vector2f(0, windowY - 10), 0));
 	walls.push_back(new Wall(windowY, 10, Vector2f(0, 0), 0));
 	walls.push_back(new Wall(windowY, 10, Vector2f(windowX - 10, 0), 0));
 
+	// wczytywanie danych mapy z plików
+	// okno dzielone na kratki 9 kolumn, 7 wierszy
 	for (int y = 0; y < 7; y++){
 		for (int x = 0; x < 9; x++){
-			//getline(mapFile, fileData);
+			// wczytywanie z pliku
 			mapFile >> fileData;
 			cellInfo = atoi(fileData.c_str());
 			switch (cellInfo){
+				//0 nie ma nic
 			case 0:
 				break;
 
+				// 1 dolna sciana
 			case 1:
+				// tworzy obiekt kratki w tablicy
 				mapCells[y][x] = new Cell();
+				// ustawia zmienna odpowiednimi wartosciami wyliczanymi ze schematu
 				mapCells[y][x]->setBottom(new Wall(10, 100, Vector2f(((x + 1) * 90) - 90, (y + 1) * 90), 0));
+				// puszuje do wektora stworzona sciane
 				walls.push_back(mapCells[y][x]->getBottom());
 				break;
 
+				// 2 prawa sciana
 			case 2:
 				mapCells[y][x] = new Cell();
 				mapCells[y][x]->setRight(new Wall(100, 10, Vector2f((x + 1) * 90, ((y + 1) * 90) - 90), 0));
 				walls.push_back(mapCells[y][x]->getRight());
 				break;
 
+				// 3 obie sciany
 			case 3:
 				mapCells[y][x] = new Cell();
 				mapCells[y][x]->setBottom(new Wall(10, 100, Vector2f(((x + 1) * 90) - 90, (y + 1) * 90), 0));
