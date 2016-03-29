@@ -10,9 +10,11 @@ private:
 	float heigth, width; // wysokosc i szerokosc
 	int rotation;
 	RectangleShape wall; // ksztalt 
+	Texture texture;
 public:
 	Wall(float _heigth, float _width, Vector2f _position, int _rotation);
 	virtual void draw(RenderTarget &target, RenderStates states) const; // wirtualna metoda pozwalajaca rysowac obiekt
 	FloatRect getBounds();
+	const RectangleShape getShape();
 	
 };

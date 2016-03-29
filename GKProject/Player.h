@@ -29,10 +29,10 @@ public:
 	void setBullets(vector <Bullet*> v); // ustala wektor z pociskami
 	FloatRect getBounds();
 	void setTankPosition(Vector2f _position);
-
-	FloatRect copySpriteRotation(bool tankOne); // ustawia kopie sprajta i zwraca jego boundsy podczas obrotów
+	const Sprite getSprite();
+	Sprite copySpriteRotation(bool tankOne); // ustawia kopie sprajta i zwraca jego boundsy podczas obrotów
 												//argument sprawdza o ktory czolg chodzi (osobne sterowanie dla pierwszego i drugiego)
-	FloatRect tankForwardAndBackward(bool tankOne); // ustawia kopie sprajta w przód lub ty³. 
+	Sprite tankForwardAndBackward(bool tankOne); // ustawia kopie sprajta w przód lub ty³. 
 													//argument sprawdza o ktory czolg chodzi (osobne sterowanie dla pierwszego i drugiego)
 	void assignRotation();	// ustawienie rotacji sprajta jako przypisanie do niego kopii która nie kolidowa³a
 };

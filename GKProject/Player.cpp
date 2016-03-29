@@ -33,7 +33,7 @@ void Player::setTankPosition(Vector2f _position)
 
 }
 
-FloatRect Player::copySpriteRotation(bool tankOne)
+Sprite Player::copySpriteRotation(bool tankOne)
 {
 	copy = tankSprite;
 	if (tankOne)
@@ -50,11 +50,11 @@ FloatRect Player::copySpriteRotation(bool tankOne)
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 			copy.setRotation(copy.getRotation() + 3);
 	}
-	return copy.getGlobalBounds();
+	return copy;
 }
 
 
-FloatRect Player::tankForwardAndBackward(bool tankOne)
+Sprite Player::tankForwardAndBackward(bool tankOne)
 {
 	velocity.x = 0;
 	velocity.y = 0;
@@ -88,7 +88,7 @@ FloatRect Player::tankForwardAndBackward(bool tankOne)
 		}
 	}
 	copy.move(velocity);
-	return copy.getGlobalBounds();
+	return copy;
 }
 
 
@@ -128,4 +128,9 @@ void Player::setBullets(vector <Bullet*> v)
 FloatRect Player::getBounds()
 {
 	return tankSprite.getGlobalBounds();
+}
+
+const Sprite Player::getSprite()
+{
+	return tankSprite;
 }
