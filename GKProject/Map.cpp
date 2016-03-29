@@ -34,27 +34,27 @@ void Map::createMap(RenderWindow &gameWindow){
 
 			case 1:
 				mapCells[y][x] = new Cell();
-				mapCells[y][x]->setBottom(new Wall(10, 90, Vector2f(((x + 1) * 90) - 80, (y + 1) * 90), 0));
+				mapCells[y][x]->setBottom(new Wall(10, 100, Vector2f(((x + 1) * 90) - 90, (y + 1) * 90), 0));
 				walls.push_back(mapCells[y][x]->getBottom());
 				break;
 
 			case 2:
 				mapCells[y][x] = new Cell();
-				mapCells[y][x]->setRight(new Wall(90, 10, Vector2f((x + 1) * 90, ((y + 1) * 90) - 80), 0));
+				mapCells[y][x]->setRight(new Wall(100, 10, Vector2f((x + 1) * 90, ((y + 1) * 90) - 90), 0));
 				walls.push_back(mapCells[y][x]->getRight());
 				break;
 
 			case 3:
 				mapCells[y][x] = new Cell();
-				mapCells[y][x]->setBottom(new Wall(10, 90, Vector2f(((x + 1) * 90) - 80, (y + 1) * 90), 0));
+				mapCells[y][x]->setBottom(new Wall(10, 100, Vector2f(((x + 1) * 90) - 90, (y + 1) * 90), 0));
 				walls.push_back(mapCells[y][x]->getBottom());
-				mapCells[y][x]->setRight(new Wall(90, 10, Vector2f((x + 1) * 90, ((y + 1) * 90) - 80), 0));
+				mapCells[y][x]->setRight(new Wall(100, 10, Vector2f((x + 1) * 90, ((y + 1) * 90) - 90), 0));
 				walls.push_back(mapCells[y][x]->getRight());
 				break;
 			}
 		}
 	}
-	
+
 	mapFile.close();
 };
 
@@ -69,4 +69,3 @@ Wall* Map::getWall(int index){
 const RectangleShape Map::getWallBounds(int index){
 	return walls[index]->getShape();
 };
-
