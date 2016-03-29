@@ -71,14 +71,9 @@ void Game::moveTankOne()
 
 	for (unsigned int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
 	{
-<<<<<<< HEAD
-		if (Collision::PlayerWallCollision(X, walls[i]->getShape()))
-=======
-		FloatRect W = map->getWallBounds(i); // zwraca boundsy akutalnej sciany
-		if (X.intersects(W))
->>>>>>> origin/szyneksmapex
+		if (Collision::PlayerWallCollision(X, map->getWallBounds(i)))
 			rotation = false;
-		if (Collision::PlayerWallCollision(Y, walls[i]->getShape()))
+		if (Collision::PlayerWallCollision(Y, map->getWallBounds(i)))
 			forwardBackward = false;
 	}
 	if (rotation) // jezeli nie by³o kolizji przypisz nowa rotacje
@@ -92,21 +87,21 @@ void Game::moveTankTwo()
 {
 	bool rotation = true;
 	bool forwardBackward = true;
-	Sprite X = playerTwo->copySpriteRotation(false);
-	Sprite Y = playerTwo->tankForwardAndBackward(false);
+	Sprite X = playerTwo->copySpriteRotation(false); // zwraca boundsy kopi sprajta podczas rotacji
+	Sprite Y = playerTwo->tankForwardAndBackward(false); // zwraca boundsy kopi sprata podczas ruchu do przodu lub ty³u
 
-	for (unsigned int i = 0; i < walls.size(); i++)
+	for (unsigned int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
 	{
-		FloatRect W = walls[i]->getBounds();
-		if (Collision::PlayerWallCollision(X, walls[i]->getShape()))
+		if (Collision::PlayerWallCollision(X, map->getWallBounds(i)))
 			rotation = false;
-		if (Collision::PlayerWallCollision(Y, walls[i]->getShape()))
+		if (Collision::PlayerWallCollision(Y, map->getWallBounds(i)))
 			forwardBackward = false;
 	}
-	if (rotation)
+	if (rotation) // jezeli nie by³o kolizji przypisz nowa rotacje
 		playerTwo->assignRotation();
-	if (forwardBackward)
+	if (forwardBackward) // jezeli nie by³o kolizji w przod lub ty³ przypisz nowa pozycje
 		playerTwo->moveTank();
+
 
 }
 void Game::engine(RenderWindow &window)

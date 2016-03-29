@@ -66,6 +66,7 @@ Wall* Map::getWall(int index){
 	return walls[index];
 };
 
-FloatRect Map::getWallBounds(int index){
-	return walls[index]->getBounds();
+const RectangleShape Map::getWallBounds(int index){
+	return walls[index]->getShape();
 };
+

@@ -21,7 +21,7 @@ public:
 	void createMap(RenderWindow &gameWindow);
 	int getWallsSize();
 	Wall * getWall(int index);
-	FloatRect getWallBounds(int index);
+	const RectangleShape getWallBounds(int index);
 
 	virtual void draw(RenderTarget &target, RenderStates states) const; // wirtualna metoda pozwalajaca rysowac obiekt
 };
