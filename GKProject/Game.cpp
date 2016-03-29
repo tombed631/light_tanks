@@ -9,6 +9,9 @@ void Game::run(RenderWindow &window)
 {
 	playerOne = new Player("Tomek", "Textures\\1.jpg", 20, 20);
 	playerTwo = new Player("Sinex", "Textures\\2.jpg", 50, 50);
+
+	walls.push_back(new Wall(100, 150, Vector2f(200, 200), 0));
+	walls.push_back(new Wall(100, 150, Vector2f(400, 400), 0));
 	//players.push_back(playerOne); 
 	//players.push_back(playerTwo);
 	while (isRunningGame)
@@ -43,8 +46,8 @@ void Game::run(RenderWindow &window)
 		window.clear();
 
 		engine(window);
-
-
+		for (unsigned int i = 0; i < walls.size(); i++)
+			window.draw(*walls[i]);
 		window.draw(*playerOne);
 		window.draw(*playerTwo);
 		window.display();
@@ -52,14 +55,55 @@ void Game::run(RenderWindow &window)
 	
 }
 
+
+void Game::moveTankOne()
+{
+	bool rotation = true;
+	bool forwardBackward = true;
+	FloatRect X = playerOne->copySpriteRotation(true); // zwraca boundsy kopi sprajta podczas rotacji
+	FloatRect Y = playerOne->tankForwardAndBackward(true); // zwraca boundsy kopi sprata podczas ruchu do przodu lub ty³u
+
+	for (unsigned int i = 0; i < walls.size(); i++) // iteracja tablic ze scianami
+	{
+		FloatRect W = walls[i]->getBounds(); // zwraca boundsy akutalnej sciany
+		if (X.intersects(W))
+			rotation = false;
+		if (Y.intersects(W))
+			forwardBackward = false;
+	}
+	if (rotation) // jezeli nie by³o kolizji przypisz nowa rotacje
+		playerOne->assignRotation();
+	if (forwardBackward) // jezeli nie by³o kolizji w przod lub ty³ przypisz nowa pozycje
+		playerOne->moveTank();
+
+}
+
+void Game::moveTankTwo()
+{
+	bool rotation = true;
+	bool forwardBackward = true;
+	FloatRect X = playerTwo->copySpriteRotation(false);
+	FloatRect Y = playerTwo->tankForwardAndBackward(false);
+
+	for (unsigned int i = 0; i < walls.size(); i++)
+	{
+		FloatRect W = walls[i]->getBounds();
+		if (X.intersects(W))
+			rotation = false;
+		if (Y.intersects(W))
+			forwardBackward = false;
+	}
+	if (rotation)
+		playerTwo->assignRotation();
+	if (forwardBackward)
+		playerTwo->moveTank();
+
+}
 void Game::engine(RenderWindow &window)
 {
-	playerOne->moveTankOne();
-	playerTwo->moveTankTwo();
-	
 
-
-	// kod zwiazany za wyswietlenie pocisku
+	moveTankOne();
+	moveTankTwo();
 	vector <Bullet*> v = playerOne->getBullets();
 	if (!v.empty()) // jezeli wektor z pociskami nie jest pusty - czyli nastapil wystrzal i sa jakies w wektorze
 	{

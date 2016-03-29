@@ -27,60 +27,82 @@ String Player::getName()
 	return name;
 }
 
+void Player::setTankPosition(Vector2f _position)
+{
+	tankSprite.setPosition(_position);
 
-void Player::moveTankOne()
+}
+
+FloatRect Player::copySpriteRotation(bool tankOne)
+{
+	copy = tankSprite;
+	if (tankOne)
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+			copy.setRotation(copy.getRotation() - 3);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+			copy.setRotation(copy.getRotation() + 3);
+	}
+	else 
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+			copy.setRotation(copy.getRotation() - 3);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			copy.setRotation(copy.getRotation() + 3);
+	}
+	return copy.getGlobalBounds();
+}
+
+
+FloatRect Player::tankForwardAndBackward(bool tankOne)
 {
 	velocity.x = 0;
 	velocity.y = 0;
 	sf::Time dt = deltaClock.restart();
 	double angle = tankSprite.getRotation()*3.14159265 / 180;
-	
-	
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		tankSprite.setRotation((tankSprite.getRotation() - 3));
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		tankSprite.setRotation((tankSprite.getRotation() + 3));
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-	{
-		velocity.x = (speed * sin(angle)*dt.asSeconds());
-		velocity.y = -speed * cos(angle)*dt.asSeconds();
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-	{
-		velocity.x = -speed * sin(angle)*dt.asSeconds();
-		velocity.y = speed * cos(angle)*dt.asSeconds();
-	}
 
-	tankSprite.move(velocity);
-
+	if (tankOne) // jesli gracz pierwszy wykonuje ruch
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		{
+			velocity.x = (speed * sin(angle)*dt.asSeconds());
+			velocity.y = -speed * cos(angle)*dt.asSeconds();
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		{
+			velocity.x = -speed * sin(angle)*dt.asSeconds();
+			velocity.y = speed * cos(angle)*dt.asSeconds();
+		}
+	}
+	else if (!tankOne) // jesli drugi gracz
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+		{
+			velocity.x = (speed * sin(angle)*dt.asSeconds());
+			velocity.y = -speed * cos(angle)*dt.asSeconds();
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		{
+			velocity.x = -speed * sin(angle)*dt.asSeconds();
+			velocity.y = speed * cos(angle)*dt.asSeconds();
+		}
+	}
+	copy.move(velocity);
+	return copy.getGlobalBounds();
 }
 
-void Player::moveTankTwo()
+
+
+void Player::assignRotation()
 {
-	velocity.x = 0;
-	velocity.y = 0;
-	sf::Time dt = deltaClock.restart();
-	double angle = tankSprite.getRotation()*3.14159265 / 180;
-
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-		tankSprite.setRotation((tankSprite.getRotation() - 3));
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		tankSprite.setRotation((tankSprite.getRotation() + 3));
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-	{
-		velocity.x = (speed * sin(angle)*dt.asSeconds());
-		velocity.y = -speed * cos(angle)*dt.asSeconds();
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-	{
-		velocity.x = -speed * sin(angle)*dt.asSeconds();
-		velocity.y = speed * cos(angle)*dt.asSeconds();
-	}
-
-	tankSprite.move(velocity);
-
+	float x = copy.getRotation();
+	tankSprite.setRotation(x);
 }
+void Player::moveTank()
+{
+	tankSprite.move(velocity);
+}
+
 Vector2f Player::getTankPosition()
 {
 	return tankSprite.getPosition();
@@ -103,3 +125,7 @@ void Player::setBullets(vector <Bullet*> v)
 	bullets = v;
 }
 
+FloatRect Player::getBounds()
+{
+	return tankSprite.getGlobalBounds();
+}
