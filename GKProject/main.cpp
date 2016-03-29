@@ -9,7 +9,8 @@ using namespace sf;
 using namespace std;
 void main(void)
 {
+
 	TankWindow window;
-	window.renderWindow(800,600,"Light Tanks");
+	window.renderWindow(820,640,"Light Tanks");
 }
 

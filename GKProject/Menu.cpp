@@ -46,7 +46,7 @@ void Menu::showMenu(RenderWindow &window)
 			{
 				Game game;
 				// trzeba tez zaimplementowac sprawdzenie wybranie czolgu - potem
-				game.run(window);
+				isRunningMenu = game.run(window);
 			}
 					
 

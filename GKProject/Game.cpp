@@ -5,13 +5,15 @@ Game::Game()
 	isRunningGame = true;
 }
 
-void Game::run(RenderWindow &window)
+bool Game::run(RenderWindow &window)
 {
-	playerOne = new Player("Tomek", "Textures\\1.jpg", 20, 20);
-	playerTwo = new Player("Sinex", "Textures\\2.jpg", 50, 50);
+	bool backToMenu = true;
 
-	walls.push_back(new Wall(100, 150, Vector2f(200, 200), 0));
-	walls.push_back(new Wall(100, 150, Vector2f(400, 400), 0));
+	playerOne = new Player("Tomek", "Textures\\1.jpg", 760, 50);
+	playerTwo = new Player("Sinex", "Textures\\2.jpg", 40, 50);
+	map = new Map();
+	map->createMap(window);
+
 	//players.push_back(playerOne); 
 	//players.push_back(playerTwo);
 	while (isRunningGame)
@@ -22,8 +24,13 @@ void Game::run(RenderWindow &window)
 			if (eventHandle.type == sf::Event::Resized)
 				window.setView(sf::View(sf::FloatRect(0, 0, eventHandle.size.width, eventHandle.size.height)));
 			// klikniecie X - wyjscie z gry ca³kowite
-			if (eventHandle.type == sf::Event::Closed)
+			if (eventHandle.type == sf::Event::Closed){
+				isRunningGame = false;
+				backToMenu = false;
+				players.clear();
 				window.close();
+			}
+				
 			// klikniecie ESC - wyjscie do menu
 			if ((eventHandle.type == Event::KeyReleased && eventHandle.key.code == Keyboard::Escape))
 			{
@@ -46,13 +53,12 @@ void Game::run(RenderWindow &window)
 		window.clear();
 
 		engine(window);
-		for (unsigned int i = 0; i < walls.size(); i++)
-			window.draw(*walls[i]);
+		window.draw(*map);
 		window.draw(*playerOne);
 		window.draw(*playerTwo);
 		window.display();
 	}
-	
+	return backToMenu;
 }
 
 
@@ -63,9 +69,9 @@ void Game::moveTankOne()
 	FloatRect X = playerOne->copySpriteRotation(true); // zwraca boundsy kopi sprajta podczas rotacji
 	FloatRect Y = playerOne->tankForwardAndBackward(true); // zwraca boundsy kopi sprata podczas ruchu do przodu lub ty³u
 
-	for (unsigned int i = 0; i < walls.size(); i++) // iteracja tablic ze scianami
+	for (unsigned int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
 	{
-		FloatRect W = walls[i]->getBounds(); // zwraca boundsy akutalnej sciany
+		FloatRect W = map->getWallBounds(i); // zwraca boundsy akutalnej sciany
 		if (X.intersects(W))
 			rotation = false;
 		if (Y.intersects(W))
@@ -85,9 +91,9 @@ void Game::moveTankTwo()
 	FloatRect X = playerTwo->copySpriteRotation(false);
 	FloatRect Y = playerTwo->tankForwardAndBackward(false);
 
-	for (unsigned int i = 0; i < walls.size(); i++)
+	for (unsigned int i = 0; i < map->getWallsSize(); i++)
 	{
-		FloatRect W = walls[i]->getBounds();
+		FloatRect W = map->getWallBounds(i);
 		if (X.intersects(W))
 			rotation = false;
 		if (Y.intersects(W))
@@ -121,7 +127,7 @@ void Game::engine(RenderWindow &window)
 		}
 	}
 
-	// dla drygiego gracza analogicznie jak wyzej
+	// dla drugiego gracza analogicznie jak wyzej
 	vector <Bullet*> v2 = playerTwo->getBullets();
 	if (!v2.empty())
 	{
