@@ -71,9 +71,10 @@ void Game::moveTankOne()
 
 	for (unsigned int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
 	{
-		if (Collision::PlayerWallCollision(X, map->getWallBounds(i)))
+		const RectangleShape RS = map->getWallBounds(i);
+		if (Collision::PlayerWallCollision(X, RS))
 			rotation = false;
-		if (Collision::PlayerWallCollision(Y, map->getWallBounds(i)))
+		if (Collision::PlayerWallCollision(Y, RS))
 			forwardBackward = false;
 	}
 	if (rotation) // jezeli nie by³o kolizji przypisz nowa rotacje
@@ -92,9 +93,10 @@ void Game::moveTankTwo()
 
 	for (unsigned int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
 	{
-		if (Collision::PlayerWallCollision(X, map->getWallBounds(i)))
+		const RectangleShape RS = map->getWallBounds(i);
+		if (Collision::PlayerWallCollision(X, RS))
 			rotation = false;
-		if (Collision::PlayerWallCollision(Y, map->getWallBounds(i)))
+		if (Collision::PlayerWallCollision(Y, RS))
 			forwardBackward = false;
 	}
 	if (rotation) // jezeli nie by³o kolizji przypisz nowa rotacje
@@ -118,11 +120,16 @@ void Game::engine(RenderWindow &window)
 			(*it)->updateMove(false); // updatujemy ruch pocisku
 			if ((*it)->getElapsedTime()) // sprawdzamy czy nie ma zniknac po 2 sek
 			{ 
-				 v.erase(it); // jezeli tak to czyscimy z tego iteratora (pocisk znika)
-				 playerOne->setBullets(v); // ustalamy nowy wektor setterem w klasie Player
-				 break;
+
+				delete (*it);
+				it = v.erase(it);
+				playerOne->setBullets(v); // ustalamy nowy wektor setterem w klasie Player
+				break;
 			}
-			window.draw((**it)); // rysujemy pocisk na scenie
+		}
+		for (vector <Bullet*>::iterator it = v.begin(); it != v.end(); ++it)
+		{
+			window.draw(**it);
 		}
 	}
 
@@ -136,12 +143,17 @@ void Game::engine(RenderWindow &window)
 			(*it)->updateMove(false);
 			if ((*it)->getElapsedTime())
 			{
+				delete (*it);
 				v2.erase(it);
 				playerTwo->setBullets(v2);
 				break;
 			}
-			window.draw((**it));
 		}
+		for (vector <Bullet*>::iterator it = v2.begin(); it != v2.end(); ++it)
+		{
+			window.draw(**it);
+		}
+
 	}
 
 
