@@ -7,15 +7,25 @@ Bullet::Bullet(Vector2f _position, float rotation)
 	velocity.y = 0;
 	timeAlive = clock.restart();
 	position = _position;
-	ball.setRadius(5);
-	ball.setFillColor(Color::Red);
-	ball.setPosition(position); 
-	ball.setRotation(rotation);
-	
+	bullet.setRadius(radius);
+	bullet.setFillColor(Color::Blue);
+	bullet.setPosition(position);
+	/*
+	if (!texture.loadFromFile("Textures\\4.jpg"))
+	{
+		MessageBox(NULL, "Brak tekstury pocisku!", "ERROR", NULL);
+		return;
+
+	}
+	*/
+	//bullet.setTexture(&texture);
+	bullet.setRotation(rotation);
+	bullet.setOrigin(radius, radius);
+	angle = 0;
 }
 void Bullet::draw(RenderTarget &target, RenderStates states) const
 {
-	target.draw(ball);
+	target.draw(bullet);
 };
 bool Bullet::getElapsedTime()
 {
@@ -33,12 +43,32 @@ bool Bullet::getElapsedTime()
 
 void Bullet::updateMove(bool changeRotation)
 {
-	double angle = ball.getRotation()*3.14159265 / 180;
+	angle = bullet.getRotation()*3.14159265 / 180;
 	Time dt = clock.restart();
 	if (changeRotation)
 	{ //kolizje
 	}
 	velocity.x = (speed * sin(angle)*dt.asSeconds());
 	velocity.y = -speed * cos(angle)*dt.asSeconds();
-	ball.move(velocity);
+	bullet.move(velocity);
 }
+
+CircleShape Bullet::getShape()
+{
+	return bullet;
+}
+void Bullet::setRotationBullet(float rotation)
+{
+	bullet.setRotation(rotation);
+}
+Vector2f Bullet::getPositionBullet()
+{
+	return bullet.getPosition();
+}
+
+FloatRect Bullet::getBulletBounds()
+{
+	return bullet.getGlobalBounds();
+}
+
+

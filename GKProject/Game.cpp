@@ -39,12 +39,14 @@ bool Game::run(RenderWindow &window)
 			}
 			if ((eventHandle.type == Event::KeyReleased && eventHandle.key.code == Keyboard::Space))
 			{
+				if (playerOne->getBullets().size()<8)
 				playerOne->bulletShoot();
 				
 			}
 
 			if ((eventHandle.type == Event::KeyReleased && eventHandle.key.code == Keyboard::K))
 			{
+				if (playerTwo->getBullets().size()<8)
 				playerTwo->bulletShoot();
 
 			}
@@ -71,7 +73,7 @@ void Game::moveTankOne()
 
 	for (unsigned int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
 	{
-		const RectangleShape RS = map->getWallBounds(i);
+		const RectangleShape RS = map->getWallShape(i);
 		if (Collision::PlayerWallCollision(X, RS))
 			rotation = false;
 		if (Collision::PlayerWallCollision(Y, RS))
@@ -93,7 +95,7 @@ void Game::moveTankTwo()
 
 	for (unsigned int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
 	{
-		const RectangleShape RS = map->getWallBounds(i);
+		const RectangleShape RS = map->getWallShape(i);
 		if (Collision::PlayerWallCollision(X, RS))
 			rotation = false;
 		if (Collision::PlayerWallCollision(Y, RS))
@@ -106,11 +108,83 @@ void Game::moveTankTwo()
 
 
 }
+
 void Game::engine(RenderWindow &window)
 {
 
 	moveTankOne();
 	moveTankTwo();
+	float right, left, top, bottom, ballX, ballY;
+	for (unsigned int i = 0; i < playerOne->getBullets().size(); i++)
+	{
+		for (unsigned int j = 0; j < map->getWallsSize(); j++)
+		
+		if (playerOne->getSingleBullet(i)->getBulletBounds().intersects(map->getWall(j)->getBounds()))
+		{
+			float rotation = playerOne->getBulletsShape(i).getRotation();
+			float newRotation = rotation;
+			right = map->getWall(j)->getBounds().left + map->getWall(j)->getBounds().width;
+			left = map->getWall(j)->getBounds().left;
+			top = map->getWall(j)->getBounds().top;
+			bottom = map->getWall(j)->getBounds().top + map->getWall(j)->getBounds().height;
+			ballX = playerOne->getSingleBullet(i)->getPositionBullet().x;
+			ballY = playerOne->getSingleBullet(i)->getPositionBullet().y;
+			
+			if (ballX >= left && ballX <= right) // jezeli pocisk trafil w sciane pozioma
+			{
+				if (ballY > top)
+				{
+					//przypadek ze pocisk leci w dol w prawo
+					if (rotation < 180 && rotation >= 90)
+						newRotation = rotation - 2 * (rotation - 90);
+					//przypadek ze pocisk leci w dol w lewo
+					else if (rotation >= 180 && rotation <= 270)
+						newRotation = rotation + 2 * (270 - rotation);
+				}
+			
+				else if (ballY < bottom)
+				{
+					//przypadek ze pocisk leci w gore w prawo
+					if (rotation < 90 && rotation >= 0)
+						newRotation = rotation + 2 * (90 - rotation);
+					//przypadek ze pocisk leci w gore w lewo
+					else if (rotation >= 270 && rotation < 360)
+						newRotation = rotation - 2 * (rotation - 270);
+				}
+			
+				
+			}
+			else if (ballY >= top && ballY <= bottom) // jezeli pocisk trafil w pionowo
+			{
+				if (ballX <= left)
+				{
+					// pocisk leci w prawo w dol
+					if (rotation < 180 && rotation >= 90)
+						newRotation = rotation + 2 * (180 - rotation);
+					// pocisk leci w prawo w gore
+					if (rotation < 90 && rotation >= 0)
+						newRotation = 360 - rotation;	
+				}
+				else if (ballX >= right)
+				{
+				
+					// pocisk leci w lewo w dol
+					if (rotation >= 180 && rotation < 270)
+						newRotation = rotation - 2 * (rotation - 180);
+					// pocisk leci w lewo w gore
+					else if (rotation >= 270 && rotation < 360)
+						newRotation = 360 - rotation;
+				}
+			}
+
+			playerOne->getSingleBullet(i)->setRotationBullet(newRotation);
+		}
+
+	}
+
+
+
+
 	vector <Bullet*> v = playerOne->getBullets();
 	if (!v.empty()) // jezeli wektor z pociskami nie jest pusty - czyli nastapil wystrzal i sa jakies w wektorze
 	{
@@ -119,7 +193,7 @@ void Game::engine(RenderWindow &window)
 		{
 			(*it)->updateMove(false); // updatujemy ruch pocisku
 			if ((*it)->getElapsedTime()) // sprawdzamy czy nie ma zniknac po 2 sek
-			{ 
+			{
 
 				delete (*it);
 				it = v.erase(it);
@@ -127,6 +201,11 @@ void Game::engine(RenderWindow &window)
 				break;
 			}
 		}
+
+
+
+
+
 		for (vector <Bullet*>::iterator it = v.begin(); it != v.end(); ++it)
 		{
 			window.draw(**it);
@@ -155,7 +234,5 @@ void Game::engine(RenderWindow &window)
 		}
 
 	}
-
-
 
 }

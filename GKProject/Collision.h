@@ -40,6 +40,10 @@ source distribution.
 namespace Collision {
 
 	bool PlayerWallCollision(const sf::Sprite& Object1, const sf::RectangleShape& Object2);
+
+	bool intersects(float cx, float cy, float radius, float left, float top, float right, float bottom);
+	bool collideCircleRect(const sf::CircleShape & circle, const sf::RectangleShape & rect);
+	bool collide(const sf::Vector2f & circlePositon, float radius, const sf::FloatRect & rectangle);
 }
 
-#endif  /* COLLISION_H */
+#endif  

@@ -119,6 +119,15 @@ vector <Bullet*> Player::getBullets()
 {
 	return bullets;
 }
+Bullet* Player::getSingleBullet(int i)
+{
+	return bullets[i];
+}
+CircleShape Player::getBulletsShape(int i)
+{
+	return bullets[i]->getShape();
+}
+
 
 void Player::setBullets(vector <Bullet*> v)
 {

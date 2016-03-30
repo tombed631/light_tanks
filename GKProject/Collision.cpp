@@ -75,4 +75,31 @@ namespace Collision
 		}
 		return true;
 	}
+
+	bool intersects(float cx, float cy, float radius, float left, float top, float right, float bottom)
+	{
+		float closestX = (cx < left ? left : (cx > right ? right : cx));
+		float closestY = (cy < top ? top : (cy > bottom ? bottom : cy));
+		float dx = closestX - cx;
+		float dy = closestY - cy;
+
+		return(dx * dx + dy * dy) <= radius * radius;
+	}
+
+	bool collide(const sf::Vector2f & circlePositon, float radius, const sf::FloatRect & rectangle)
+	{
+		return intersects(circlePositon.x, circlePositon.y, radius,
+			rectangle.left, rectangle.top,
+			rectangle.left + rectangle.width, rectangle.top + rectangle.height);
+	}
+
+	bool collideCircleRect(const sf::CircleShape & circle, const sf::RectangleShape & rect)
+	{
+		sf::Vector2f transpos = rect.getInverseTransform().transformPoint(circle.getPosition());
+		return collide(transpos, circle.getRadius(), rect.getLocalBounds());
+	}
+
+
+
+
 }

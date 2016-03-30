@@ -35,7 +35,7 @@ void Map::createMap(RenderWindow &gameWindow){
 			case 0:
 				break;
 
-				// 1 dolna sciana
+				// 1 pozioma sciana
 			case 1:
 				// tworzy obiekt kratki w tablicy
 				mapCells[y][x] = new Cell();
@@ -45,7 +45,7 @@ void Map::createMap(RenderWindow &gameWindow){
 				walls.push_back(mapCells[y][x]->getBottom());
 				break;
 
-				// 2 prawa sciana
+				// 2 pionowa sciana
 			case 2:
 				mapCells[y][x] = new Cell();
 				mapCells[y][x]->setRight(new Wall(100, 10, Vector2f((x + 1) * 90, ((y + 1) * 90) - 90), 0));
@@ -75,6 +75,6 @@ Wall* Map::getWall(int index){
 	return walls[index];
 };
 
-const RectangleShape Map::getWallBounds(int index){
+const RectangleShape Map::getWallShape(int index){
 	return walls[index]->getShape();
 };

@@ -26,6 +26,8 @@ public:
 	Vector2f getTankPosition(); //zwraca pozycje czo³gu
 	void bulletShoot(); // nastapil strzal - tworzenie pocisku 
 	vector <Bullet*> getBullets(); // zwraca wektor z pociskami
+	Bullet* getSingleBullet(int i);
+	CircleShape getBulletsShape(int i);
 	void setBullets(vector <Bullet*> v); // ustala wektor z pociskami
 	FloatRect getBounds();
 	void setTankPosition(Vector2f _position);
