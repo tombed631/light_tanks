@@ -1,6 +1,6 @@
-- generwoanie œcian - wallsów i mapy
-
+-wykrywanie kolizji pocisk czo³g
+-dodanie dŸwiêku ? 
 - dodaæ opis w helpie
-- mozna dodac info o autorach na dole w menu lub jakas grafika t³a
 
-- mapa... itd... bedzie wiadomo dalej
+- mozna dodac info o autorach na dole w menu lub jakas grafika t³a
+- powiêkszyæ okno i dodaæ jakieœ grafiki ze scoreboardem
