@@ -10,7 +10,7 @@ class Map : public Drawable, public Transformable
 private:
 	Wall *wall;
 	vector <Wall*> walls;
-	int windowX, windowY;
+	float windowX, windowY;
 	Cell *mapCells[7][9];
 
 public:

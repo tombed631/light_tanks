@@ -13,18 +13,18 @@ namespace Collision
 			Transform trans = Object.getTransform();
 			IntRect local = Object.getTextureRect();
 			Points[0] = trans.transformPoint(0.f, 0.f);
-			Points[1] = trans.transformPoint(local.width, 0.f);
-			Points[2] = trans.transformPoint(local.width, local.height);
-			Points[3] = trans.transformPoint(0.f, local.height);
+			Points[1] = trans.transformPoint((float)(local.width), 0.f);
+			Points[2] = trans.transformPoint((float)local.width, (float)local.height);
+			Points[3] = trans.transformPoint(0.f, (float)local.height);
 		}
 		BoundingBox(const sf::RectangleShape& Object) // Calculate the four points of the OBB from a transformed (scaled, rotated...) sprite
 		{
 			Transform trans = Object.getTransform();
 			IntRect local = Object.getTextureRect();
 			Points[0] = trans.transformPoint(0.f, 0.f);
-			Points[1] = trans.transformPoint(local.width, 0.f);
-			Points[2] = trans.transformPoint(local.width, local.height);
-			Points[3] = trans.transformPoint(0.f, local.height);
+			Points[1] = trans.transformPoint((float)local.width, 0.f);
+			Points[2] = trans.transformPoint((float)local.width, (float)local.height);
+			Points[3] = trans.transformPoint(0.f, (float)local.height);
 		}
 
 		sf::Vector2f Points[4];
@@ -74,32 +74,5 @@ namespace Collision
 				return false;
 		}
 		return true;
-	}
-
-	bool intersects(float cx, float cy, float radius, float left, float top, float right, float bottom)
-	{
-		float closestX = (cx < left ? left : (cx > right ? right : cx));
-		float closestY = (cy < top ? top : (cy > bottom ? bottom : cy));
-		float dx = closestX - cx;
-		float dy = closestY - cy;
-
-		return(dx * dx + dy * dy) <= radius * radius;
-	}
-
-	bool collide(const sf::Vector2f & circlePositon, float radius, const sf::FloatRect & rectangle)
-	{
-		return intersects(circlePositon.x, circlePositon.y, radius,
-			rectangle.left, rectangle.top,
-			rectangle.left + rectangle.width, rectangle.top + rectangle.height);
-	}
-
-	bool collideCircleRect(const sf::CircleShape & circle, const sf::RectangleShape & rect)
-	{
-		sf::Vector2f transpos = rect.getInverseTransform().transformPoint(circle.getPosition());
-		return collide(transpos, circle.getRadius(), rect.getLocalBounds());
-	}
-
-
-
-
+		}
 }

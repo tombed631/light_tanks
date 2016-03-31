@@ -22,7 +22,7 @@ bool Game::run(RenderWindow &window)
 		{
 			// zmiana rozmiaru okna
 			if (eventHandle.type == sf::Event::Resized)
-				window.setView(sf::View(sf::FloatRect(0, 0, eventHandle.size.width, eventHandle.size.height)));
+				window.setView(sf::View(sf::FloatRect(0, 0, (float)eventHandle.size.width, (float)eventHandle.size.height)));
 			// klikniecie X - wyjscie z gry ca³kowite
 			if (eventHandle.type == sf::Event::Closed){
 				isRunningGame = false;
@@ -71,7 +71,7 @@ void Game::moveTankOne()
 	Sprite X = playerOne->copySpriteRotation(true); // zwraca boundsy kopi sprajta podczas rotacji
 	Sprite Y = playerOne->tankForwardAndBackward(true); // zwraca boundsy kopi sprata podczas ruchu do przodu lub ty³u
 
-	for (unsigned int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
+ 	for (int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
 	{
 		const RectangleShape RS = map->getWallShape(i);
 		if (Collision::PlayerWallCollision(X, RS))
@@ -93,7 +93,7 @@ void Game::moveTankTwo()
 	Sprite X = playerTwo->copySpriteRotation(false); // zwraca boundsy kopi sprajta podczas rotacji
 	Sprite Y = playerTwo->tankForwardAndBackward(false); // zwraca boundsy kopi sprata podczas ruchu do przodu lub ty³u
 
-	for (unsigned int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
+	for (int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
 	{
 		const RectangleShape RS = map->getWallShape(i);
 		if (Collision::PlayerWallCollision(X, RS))
@@ -113,7 +113,7 @@ void Game::detectBulletsCollisionOne()
 	float right, left, top, bottom, ballX, ballY;
 	for (unsigned int i = 0; i < playerOne->getBullets().size(); i++)
 	{
-		for (unsigned int j = 0; j < map->getWallsSize(); j++)
+		for (int j = 0; j < map->getWallsSize(); j++)
 
 		if (playerOne->getSingleBullet(i)->getBulletBounds().intersects(map->getWall(j)->getBounds()))
 		{
@@ -186,7 +186,7 @@ void Game::detectBulletsCollisionTwo()
 	float right, left, top, bottom, ballX, ballY;
 	for (unsigned int i = 0; i < playerTwo->getBullets().size(); i++)
 	{
-		for (unsigned int j = 0; j < map->getWallsSize(); j++)
+		for (int j = 0; j < map->getWallsSize(); j++)
 
 		if (playerTwo->getSingleBullet(i)->getBulletBounds().intersects(map->getWall(j)->getBounds()))
 		{

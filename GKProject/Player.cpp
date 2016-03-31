@@ -13,7 +13,7 @@ Player::Player(String _name, String path, float _positionX, float _positionY)
 	tankSprite.setTexture(tankTexture);
 	tankSprite.setPosition(positionX, positionY);
 	tankSprite.setOrigin(80, 128);
-	tankSprite.setScale(0.15, 0.15);
+	tankSprite.setScale((float)0.15, (float)0.15);
 	tankSprite.setRotation(180);
 	name = _name;
 
@@ -65,26 +65,26 @@ Sprite Player::tankForwardAndBackward(bool tankOne)
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		{
-			velocity.x = (speed * sin(angle)*dt.asSeconds());
-			velocity.y = -speed * cos(angle)*dt.asSeconds();
+			velocity.x = (speed * (float)sin(angle)*dt.asSeconds());
+			velocity.y = -speed * (float)cos(angle)*dt.asSeconds();
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		{
-			velocity.x = -speed * sin(angle)*dt.asSeconds();
-			velocity.y = speed * cos(angle)*dt.asSeconds();
+			velocity.x = -speed * (float)sin(angle)*dt.asSeconds();
+			velocity.y = speed * (float)cos(angle)*dt.asSeconds();
 		}
 	}
 	else if (!tankOne) // jesli drugi gracz
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		{
-			velocity.x = (speed * sin(angle)*dt.asSeconds());
-			velocity.y = -speed * cos(angle)*dt.asSeconds();
+			velocity.x = (speed * (float)sin(angle)*dt.asSeconds());
+			velocity.y = -speed * (float)cos(angle)*dt.asSeconds();
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
-			velocity.x = -speed * sin(angle)*dt.asSeconds();
-			velocity.y = speed * cos(angle)*dt.asSeconds();
+			velocity.x = -speed * (float)sin(angle)*dt.asSeconds();
+			velocity.y = speed * (float)cos(angle)*dt.asSeconds();
 		}
 	}
 	copy.move(velocity);

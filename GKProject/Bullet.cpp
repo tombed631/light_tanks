@@ -7,7 +7,7 @@ Bullet::Bullet(Vector2f _position, float rotation)
 	velocity.y = 0;
 	timeAlive = clock.restart();
 	position = _position;
-	bullet.setRadius(radius);
+	bullet.setRadius((float)radius);
 	bullet.setFillColor(Color::Blue);
 	bullet.setPosition(position);
 	/*
@@ -20,7 +20,7 @@ Bullet::Bullet(Vector2f _position, float rotation)
 	*/
 	//bullet.setTexture(&texture);
 	bullet.setRotation(rotation);
-	bullet.setOrigin(radius, radius);
+	bullet.setOrigin((float)radius, (float)radius);
 	angle = 0;
 }
 void Bullet::draw(RenderTarget &target, RenderStates states) const
@@ -48,8 +48,8 @@ void Bullet::updateMove(bool changeRotation)
 	if (changeRotation)
 	{ //kolizje
 	}
-	velocity.x = (speed * sin(angle)*dt.asSeconds());
-	velocity.y = -speed * cos(angle)*dt.asSeconds();
+	velocity.x = (speed * (float)sin(angle)*dt.asSeconds());
+	velocity.y = -speed * (float)cos(angle)*dt.asSeconds();
 	bullet.move(velocity);
 }
 

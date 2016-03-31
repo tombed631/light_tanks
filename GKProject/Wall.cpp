@@ -8,7 +8,7 @@ Wall::Wall(float _heigth, float _width, Vector2f _position, int _rotation)
 	position = _position;
 	rotation = _rotation;
 	wall.setPosition(position);
-	wall.setRotation(rotation);
+	wall.setRotation((float)rotation);
 	wall.setSize(Vector2f(width,heigth));
 	wall.setFillColor(Color::White);
 	
@@ -18,7 +18,7 @@ Wall::Wall(float _heigth, float _width, Vector2f _position, int _rotation)
 		return;
 	}
 	wall.setTexture(&texture);
-	wall.setTextureRect(IntRect(0, 0, width, heigth));
+	wall.setTextureRect(IntRect(0, 0, (int)width, (int)heigth));
 }
 
 

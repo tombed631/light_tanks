@@ -7,8 +7,8 @@ void Map::draw(RenderTarget &target, RenderStates states) const
 };
 
 void Map::createMap(RenderWindow &gameWindow){
-	windowX = gameWindow.getSize().x;
-	windowY = gameWindow.getSize().y;
+	windowX = (float)gameWindow.getSize().x;
+	windowY = (float)gameWindow.getSize().y;
 	ifstream mapFile;
 	string fileData;
 	int cellInfo;
@@ -18,10 +18,10 @@ void Map::createMap(RenderWindow &gameWindow){
 		return;
 	}
 	//ramka okna bazowa dla ka¿dego
-	walls.push_back(new Wall(10, windowX, Vector2f(0, 0), 0));
-	walls.push_back(new Wall(10, windowX, Vector2f(0, windowY - 10), 0));
-	walls.push_back(new Wall(windowY, 10, Vector2f(0, 0), 0));
-	walls.push_back(new Wall(windowY, 10, Vector2f(windowX - 10, 0), 0));
+	walls.push_back(new Wall(10.f, windowX, Vector2f(0.f, 0.f), 0));
+	walls.push_back(new Wall(10.f, windowX, Vector2f(0.f, windowY - 10), 0));
+	walls.push_back(new Wall(windowY, 10.f, Vector2f(0.f, 0.f), 0));
+	walls.push_back(new Wall(windowY, 10.f, Vector2f(windowX - 10, 0.f), 0));
 
 	// wczytywanie danych mapy z plików
 	// okno dzielone na kratki 9 kolumn, 7 wierszy
@@ -40,7 +40,7 @@ void Map::createMap(RenderWindow &gameWindow){
 				// tworzy obiekt kratki w tablicy
 				mapCells[y][x] = new Cell();
 				// ustawia zmienna odpowiednimi wartosciami wyliczanymi ze schematu
-				mapCells[y][x]->setBottom(new Wall(10, 100, Vector2f(((x + 1) * 90) - 90, (y + 1) * 90), 0));
+				mapCells[y][x]->setBottom(new Wall(10.f, 100.f, Vector2f(((x + 1) * 90.f) - 90.f, (y + 1) * 90.f), 0));
 				// puszuje do wektora stworzona sciane
 				walls.push_back(mapCells[y][x]->getBottom());
 				break;
@@ -48,16 +48,16 @@ void Map::createMap(RenderWindow &gameWindow){
 				// 2 pionowa sciana
 			case 2:
 				mapCells[y][x] = new Cell();
-				mapCells[y][x]->setRight(new Wall(100, 10, Vector2f((x + 1) * 90, ((y + 1) * 90) - 90), 0));
+				mapCells[y][x]->setRight(new Wall(100.f, 10.f, Vector2f((x + 1) * 90.f, ((y + 1) * 90.f) - 90.f), 0));
 				walls.push_back(mapCells[y][x]->getRight());
 				break;
 
 				// 3 obie sciany
 			case 3:
 				mapCells[y][x] = new Cell();
-				mapCells[y][x]->setBottom(new Wall(10, 100, Vector2f(((x + 1) * 90) - 90, (y + 1) * 90), 0));
+				mapCells[y][x]->setBottom(new Wall(10.f, 100.f, Vector2f(((x + 1) * 90.f) - 90.f, (y + 1) * 90.f), 0));
 				walls.push_back(mapCells[y][x]->getBottom());
-				mapCells[y][x]->setRight(new Wall(100, 10, Vector2f((x + 1) * 90, ((y + 1) * 90) - 90), 0));
+				mapCells[y][x]->setRight(new Wall(100.f, 10.f, Vector2f((x + 1) * 90.f, ((y + 1) * 90.f) - 90.f), 0));
 				walls.push_back(mapCells[y][x]->getRight());
 				break;
 			}

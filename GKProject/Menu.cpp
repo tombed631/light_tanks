@@ -19,16 +19,13 @@ void Menu::showMenu(RenderWindow &window)
 		menuOptions[i].setFont(font);
 		menuOptions[i].setCharacterSize(30);
 		menuOptions[i].setString(str[i]);
-		menuOptions[i].setPosition(800 / 2 - menuOptions[i].getGlobalBounds().width / 2.f, 200 + i * 60);
+		menuOptions[i].setPosition(800 / 2 - menuOptions[i].getGlobalBounds().width / 2.f, (float)200 + i * 60);
 	}
 	while (isRunningMenu)
 	{
 		Vector2f mouse(Mouse::getPosition(window));
 		while (window.pollEvent(eventHandle))
 		{
-			// zmiana rozmiaru okna
-			if (eventHandle.type == sf::Event::Resized)
-				window.setView(sf::View(sf::FloatRect(0, 0, eventHandle.size.width, eventHandle.size.height)));
 			// klikniecie ESC - wyjscie
 			if ((eventHandle.type == sf::Event::Closed || (eventHandle.type == Event::KeyPressed &&
 				eventHandle.key.code == Keyboard::Escape)))
