@@ -51,7 +51,7 @@ PlTankTypes TankSelector::run(){
 
 ///Renders current frame to the window
 ///and displays it on the screen.
-void TankSelector::draw() {
+void TankSelector::draw() const{
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

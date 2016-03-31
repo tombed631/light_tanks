@@ -1,6 +1,6 @@
 #version 120
 
-in vec3 color;			//input color
+//in vec3 color;			//input color
 in vec2 textureCoord;	//texture coordinate
 
 //output color 

@@ -3,9 +3,10 @@
 
 using namespace std;
 
-/// Creates shader program from specified vertex and fragment shaders.
-///	vertexShaderPath		path to the vertex shader source file
-///	fragmentShaderPath		path to the fragment shader source file
+///Creates shader program from specified vertex and fragment shaders.
+///vertexShaderPath		path to the vertex shader source file
+///fragmentShaderPath		path to the fragment shader source file
+///Throws ShaderCompileError if compilation failed
 void Shader::build(const GLchar * vertexShaderPath, const GLchar * fragmentShaderPath){
 
 	const GLchar *  vertexShaderCode, * fragmentShaderCode;	//contains source code of shaders
@@ -36,6 +37,10 @@ void Shader::build(const GLchar * vertexShaderPath, const GLchar * fragmentShade
 		fragmentShaderFile.close();
 	}
 	catch (ifstream::failure & e){
+		if (vertexShaderFile.is_open())
+			vertexShaderFile.close();
+		if (fragmentShaderFile.is_open())
+			fragmentShaderFile.close();
 		throw ShaderCompileError("An error occured during reafing shader source files");
 	}
 
@@ -47,6 +52,7 @@ void Shader::build(const GLchar * vertexShaderPath, const GLchar * fragmentShade
 	if (!success){
 		GLchar infoLog[512];
 		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		glDeleteShader(vertexShader);
 		throw ShaderCompileError(infoLog);
 	}
 
@@ -58,6 +64,8 @@ void Shader::build(const GLchar * vertexShaderPath, const GLchar * fragmentShade
 	if (!success){
 		GLchar infoLog[512];
 		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
 		throw ShaderCompileError(infoLog);
 	}
 
@@ -70,6 +78,8 @@ void Shader::build(const GLchar * vertexShaderPath, const GLchar * fragmentShade
 	if (!success){
 		GLchar infoLog[512];
 		glGetProgramInfoLog(this->shaderProgram, 512, NULL, infoLog);
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
 		throw ShaderCompileError(infoLog);
 	}
 

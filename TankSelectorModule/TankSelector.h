@@ -48,7 +48,7 @@ private:
 
 	///Renders current frame to the window
 	///and displays it on the screen.
-	void draw();
+	void draw() const;
 
 };
 
