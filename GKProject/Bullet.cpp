@@ -31,7 +31,7 @@ bool Bullet::getElapsedTime()
 {
 
 	timeAlive = deltaClock.getElapsedTime();
-	if ((float)(timeAlive.asSeconds()) >= 2.f)//jezeli czas zycia jest wiekszy niz 2 sek to
+	if ((float)(timeAlive.asSeconds()) >= 4.f)//jezeli czas zycia jest wiekszy niz 5 sek to
 	{
 		deltaClock.restart(); // zrestartuj zegar
 		return true;	// i zwroc true

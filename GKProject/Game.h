@@ -24,5 +24,9 @@ public:
 	void moveTankOne(); // najpierw przesuwamy kopie sprajta - jezeli bedzie kolidowa³o z ktoryms z obiektow nie przypiszemy nowej pozycji
 						// oryginalnemu, jesli nie bedzie to przypisujemy nowa pozycje. efekt kolizji zachowany
 	void moveTankTwo(); // to samo jak wyzej
+	void bulletsEnginePlayerOne(RenderWindow &window);
+	void bulletsEnginePlayerTwo(RenderWindow &window);
 
+	void detectBulletsCollisionOne();
+	void detectBulletsCollisionTwo();
 };

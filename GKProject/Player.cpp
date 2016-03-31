@@ -13,7 +13,7 @@ Player::Player(String _name, String path, float _positionX, float _positionY)
 	tankSprite.setTexture(tankTexture);
 	tankSprite.setPosition(positionX, positionY);
 	tankSprite.setOrigin(80, 128);
-	tankSprite.setScale(0.2, 0.2);
+	tankSprite.setScale(0.15, 0.15);
 	tankSprite.setRotation(180);
 	name = _name;
 
