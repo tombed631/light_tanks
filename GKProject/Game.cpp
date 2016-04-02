@@ -64,67 +64,47 @@ bool Game::run(RenderWindow &window)
 }
 
 
-void Game::moveTankOne()
+void Game::moveTank(Player *playerMain, Player *playerSub,bool which)
 {
 	bool rotation = true;
 	bool forwardBackward = true;
-	Sprite X = playerOne->copySpriteRotation(true); // zwraca boundsy kopi sprajta podczas rotacji
-	Sprite Y = playerOne->tankForwardAndBackward(true); // zwraca boundsy kopi sprata podczas ruchu do przodu lub ty³u
-
- 	for (int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
-	{
-		const RectangleShape RS = map->getWallShape(i);
-		if (Collision::PlayerWallCollision(X, RS))
-			rotation = false;
-		if (Collision::PlayerWallCollision(Y, RS))
-			forwardBackward = false;
-	}
-	if (rotation) // jezeli nie by³o kolizji przypisz nowa rotacje
-		playerOne->assignRotation();
-	if (forwardBackward) // jezeli nie by³o kolizji w przod lub ty³ przypisz nowa pozycje
-		playerOne->moveTank();
-
-}
-
-void Game::moveTankTwo()
-{
-	bool rotation = true;
-	bool forwardBackward = true;
-	Sprite X = playerTwo->copySpriteRotation(false); // zwraca boundsy kopi sprajta podczas rotacji
-	Sprite Y = playerTwo->tankForwardAndBackward(false); // zwraca boundsy kopi sprata podczas ruchu do przodu lub ty³u
+	Sprite X = playerMain->copySpriteRotation(which); // zwraca boundsy kopi sprajta podczas rotacji
+	Sprite Y = playerMain->tankForwardAndBackward(which); // zwraca boundsy kopi sprata podczas ruchu do przodu lub ty³u
 
 	for (int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
 	{
 		const RectangleShape RS = map->getWallShape(i);
-		if (Collision::PlayerWallCollision(X, RS))
+		if (Collision::PlayerWallCollision(X, RS) || Collision::PlayerPlayerCollision(X, playerSub->getSprite()))
 			rotation = false;
-		if (Collision::PlayerWallCollision(Y, RS))
+		if (Collision::PlayerWallCollision(Y, RS) || Collision::PlayerPlayerCollision(Y, playerSub->getSprite()))
 			forwardBackward = false;
 	}
 	if (rotation) // jezeli nie by³o kolizji przypisz nowa rotacje
-		playerTwo->assignRotation();
+		playerMain->assignRotation();
 	if (forwardBackward) // jezeli nie by³o kolizji w przod lub ty³ przypisz nowa pozycje
-		playerTwo->moveTank();
+		playerMain->moveTank();
 
 
 }
-void Game::detectBulletsCollisionOne()
+
+
+void Game::detectBulletsCollision(Player *player)
 {
 	float right, left, top, bottom, ballX, ballY;
-	for (unsigned int i = 0; i < playerOne->getBullets().size(); i++)
+	for (unsigned int i = 0; i < player->getBullets().size(); i++)
 	{
 		for (int j = 0; j < map->getWallsSize(); j++)
 
-		if (playerOne->getSingleBullet(i)->getBulletBounds().intersects(map->getWall(j)->getBounds()))
+		if (player->getSingleBullet(i)->getBulletBounds().intersects(map->getWall(j)->getBounds()))
 		{
-			float rotation = playerOne->getBulletsShape(i).getRotation();
+			float rotation = player->getBulletsShape(i).getRotation();
 			float newRotation = rotation;
 			right = map->getWall(j)->getBounds().left + map->getWall(j)->getBounds().width;
 			left = map->getWall(j)->getBounds().left;
 			top = map->getWall(j)->getBounds().top;
 			bottom = map->getWall(j)->getBounds().top + map->getWall(j)->getBounds().height;
-			ballX = playerOne->getSingleBullet(i)->getPositionBullet().x;
-			ballY = playerOne->getSingleBullet(i)->getPositionBullet().y;
+			ballX = player->getSingleBullet(i)->getPositionBullet().x;
+			ballY = player->getSingleBullet(i)->getPositionBullet().y;
 
 			if (ballX >= left && ballX <= right) // jezeli pocisk trafil w sciane pozioma
 			{
@@ -175,104 +155,41 @@ void Game::detectBulletsCollisionOne()
 				}
 
 			}
-			playerOne->getSingleBullet(i)->setRotationBullet(newRotation);
+			player->getSingleBullet(i)->setRotationBullet(newRotation);
 
 		}
 
 	}
 };
-void Game::detectBulletsCollisionTwo()
+bool Game::isPlayerHit(Player *player, Bullet *bullet)
 {
-	float right, left, top, bottom, ballX, ballY;
-	for (unsigned int i = 0; i < playerTwo->getBullets().size(); i++)
-	{
-		for (int j = 0; j < map->getWallsSize(); j++)
+	if (player->getBounds().intersects(bullet->getBulletBounds()))
+		return true;
+	return false;
 
-		if (playerTwo->getSingleBullet(i)->getBulletBounds().intersects(map->getWall(j)->getBounds()))
-		{
-			float rotation = playerTwo->getBulletsShape(i).getRotation();
-			float newRotation = rotation;
-			right = map->getWall(j)->getBounds().left + map->getWall(j)->getBounds().width;
-			left = map->getWall(j)->getBounds().left;
-			top = map->getWall(j)->getBounds().top;
-			bottom = map->getWall(j)->getBounds().top + map->getWall(j)->getBounds().height;
-			ballX = playerTwo->getSingleBullet(i)->getPositionBullet().x;
-			ballY = playerTwo->getSingleBullet(i)->getPositionBullet().y;
+}
 
-			if (ballX >= left && ballX <= right) // jezeli pocisk trafil w sciane pozioma
-			{
-				if (ballY < top)
-				{
-					//przypadek ze pocisk leci w dol w prawo
-					if (rotation < 180 && rotation >= 90)
-						newRotation = 180 - rotation;
-					//przypadek ze pocisk leci w dol w lewo
-					else if (rotation >= 180 && rotation <= 270)
-						newRotation = rotation + 2 * (270 - rotation);
-
-				}
-
-				if (ballY > bottom)
-				{
-					//przypadek ze pocisk leci w gore w prawo
-					if (rotation < 90 && rotation >= 0)
-						newRotation = rotation + 2 * (90 - rotation);
-					//przypadek ze pocisk leci w gore w lewo
-					else if (rotation >= 270 && rotation < 360)
-						newRotation = rotation - 2 * (rotation - 270);
-
-				}
-
-
-			}
-			if (ballY >= top && ballY <= bottom) // jezeli pocisk trafil w pionowo
-			{
-				if (ballX <= left)
-				{
-					// pocisk leci w prawo w dol
-					if (rotation < 180 && rotation >= 90)
-						newRotation = rotation + 2 * (180 - rotation);
-					// pocisk leci w prawo w gore
-					if (rotation < 90 && rotation >= 0)
-						newRotation = 360 - rotation;
-				}
-				else if (ballX >= right)
-				{
-
-					// pocisk leci w lewo w dol
-					if (rotation >= 180 && rotation < 270)
-						newRotation = rotation - 2 * (rotation - 180);
-					// pocisk leci w lewo w gore
-					else if (rotation >= 270 && rotation < 360)
-						newRotation = 360 - rotation;
-				}
-
-			}
-			playerTwo->getSingleBullet(i)->setRotationBullet(newRotation);
-
-		}
-
-	}
-};
-void Game::bulletsEnginePlayerOne(RenderWindow &window)
+void Game::bulletsEngine(RenderWindow &window, Player *player)
 {
 
-	detectBulletsCollisionOne();
+	detectBulletsCollision(player);
 
-
-	vector <Bullet*> v = playerOne->getBullets();
+	vector <Bullet*> v = player->getBullets();
 	if (!v.empty()) // jezeli wektor z pociskami nie jest pusty - czyli nastapil wystrzal i sa jakies w wektorze
 	{
 
 		for (vector <Bullet*>::iterator it = v.begin(); it != v.end(); ++it)
 		{
+
 			(*it)->updateMove(false); // updatujemy ruch pocisku
+			if (isPlayerHit(player, *it))
+				cout << "a";
 			if ((*it)->getElapsedTime()) // sprawdzamy czy nie ma zniknac po 2 sek
 			{
 
 				delete (*it);
 				it = v.erase(it);
-				playerOne->setBullets(v); // ustalamy nowy wektor setterem w klasie Player
+				player->setBullets(v); // ustalamy nowy wektor setterem w klasie Player
 				break;
 			}
 		}
@@ -284,46 +201,14 @@ void Game::bulletsEnginePlayerOne(RenderWindow &window)
 	}
 }
 
-void Game::bulletsEnginePlayerTwo(RenderWindow &window)
-{
-
-	detectBulletsCollisionTwo();
-
-	// dla drygiego gracza analogicznie jak wyzej
-	vector <Bullet*> v2 = playerTwo->getBullets();
-	if (!v2.empty())
-	{
-
-		for (vector <Bullet*>::iterator it = v2.begin(); it != v2.end(); ++it)
-		{
-			(*it)->updateMove(false);
-			if ((*it)->getElapsedTime())
-			{
-				delete (*it);
-				v2.erase(it);
-				playerTwo->setBullets(v2);
-				break;
-			}
-		}
-
-	}
-
-	for (vector <Bullet*>::iterator it = v2.begin(); it != v2.end(); ++it)
-	{
-		window.draw(**it);
-	}
-
-
-}
-
 
 void Game::engine(RenderWindow &window)
 {
 
-	moveTankOne();
-	moveTankTwo();
-	bulletsEnginePlayerOne(window);
-	bulletsEnginePlayerTwo(window);
+	moveTank(playerOne, playerTwo,true);
+	moveTank(playerTwo, playerOne,false);
+	bulletsEngine(window, playerOne);
+	bulletsEngine(window, playerTwo);
 
 
 }

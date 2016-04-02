@@ -1,6 +1,9 @@
--wykrywanie kolizji pocisk czo³g
--dodanie dŸwiêku ? 
-- dodaæ opis w helpie
+-wykrywanie kolizji pocisk czo³g (TOMEK)
+	trzeba zmieniæ miejsce wystrza³u pocisku, przesun¹æ go przed czo³g a nie w czo³gu.
 
-- mozna dodac info o autorach na dole w menu lub jakas grafika t³a
-- powiêkszyæ okno i dodaæ jakieœ grafiki ze scoreboardem
+
+-dodanie dŸwiêku ? SINEX
+- dodaæ opis w helpie SINEX
+
+- mozna dodac info o autorach na dole w menu lub jakas grafika t³a SINEX
+- powiêkszyæ okno i dodaæ jakieœ grafiki ze scoreboardem SINEX

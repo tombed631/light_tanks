@@ -6,6 +6,6 @@
 #include "Includes.h"
 namespace Collision {
 
-	bool PlayerWallCollision(const sf::Sprite& Object1, const sf::RectangleShape& Object2);
-
+	bool PlayerWallCollision(const Sprite& Object1, const RectangleShape& Object2);
+	bool PlayerPlayerCollision(const Sprite& object1, const Sprite& object2);
 }
