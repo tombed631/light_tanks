@@ -9,7 +9,9 @@ Bullet::Bullet(Vector2f _position, float rotation)
 	position = _position;
 	bullet.setRadius((float)radius);
 	bullet.setFillColor(Color::Blue);
+	
 	bullet.setPosition(position);
+	bullet.move(Vector2f(25 * (float)sin(rotation*3.14159265 / 180), 25 * -(float)cos(rotation*3.14159265 / 180)));
 	/*
 	if (!texture.loadFromFile("Textures\\4.jpg"))
 	{
@@ -48,8 +50,9 @@ void Bullet::updateMove(bool changeRotation)
 	if (changeRotation)
 	{ //kolizje
 	}
-	velocity.x = (speed * (float)sin(angle)*dt.asSeconds());
-	velocity.y = -speed * (float)cos(angle)*dt.asSeconds();
+	float time = dt.asSeconds();
+	velocity.x = (speed * (float)sin(angle)*time);
+	velocity.y = -speed * (float)cos(angle)*time;
 	bullet.move(velocity);
 }
 

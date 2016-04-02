@@ -74,9 +74,9 @@ void Game::moveTank(Player *playerMain, Player *playerSub,bool which)
 	for (int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
 	{
 		const RectangleShape RS = map->getWallShape(i);
-		if (Collision::PlayerWallCollision(X, RS) || Collision::PlayerPlayerCollision(X, playerSub->getSprite()))
+		if (col.isCollision(X, RS) || col.isCollision(X, playerSub->getSprite()))
 			rotation = false;
-		if (Collision::PlayerWallCollision(Y, RS) || Collision::PlayerPlayerCollision(Y, playerSub->getSprite()))
+		if (col.isCollision(Y, RS) || col.isCollision(Y, playerSub->getSprite()))
 			forwardBackward = false;
 	}
 	if (rotation) // jezeli nie by³o kolizji przypisz nowa rotacje
@@ -163,7 +163,8 @@ void Game::detectBulletsCollision(Player *player)
 };
 bool Game::isPlayerHit(Player *player, Bullet *bullet)
 {
-	if (player->getBounds().intersects(bullet->getBulletBounds()))
+	const CircleShape CS = bullet->getShape();
+	if (col.isCollision(player->getSprite(), CS))
 		return true;
 	return false;
 

@@ -16,6 +16,7 @@ private:
 	Event eventHandle; //handle events
 	bool isRunningGame; // czy gra jest uruchomiana
 	vector <Player*> players; // wektor ze wskaznikami na obiekt graczy
+	Collision col;
 public:
 	Game();
 	bool run(RenderWindow &window); // odpala g³ówn¹ petle gry
