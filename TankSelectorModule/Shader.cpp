@@ -4,7 +4,9 @@
 using namespace std;
 
 ///Creates shader program from specified vertex and fragment shaders.
-///vertexShaderPath		path to the vertex shader source file
+///Note that the current shader program will be deleted if existed
+///and the new one will be built.
+///vertexShaderPath			path to the vertex shader source file
 ///fragmentShaderPath		path to the fragment shader source file
 ///Throws ShaderCompileError if compilation failed
 void Shader::build(const GLchar * vertexShaderPath, const GLchar * fragmentShaderPath){
@@ -17,6 +19,9 @@ void Shader::build(const GLchar * vertexShaderPath, const GLchar * fragmentShade
 
 	//set exception flags
 	vertexShaderFile.exceptions(ifstream::badbit | ifstream::failbit);
+
+	if (shaderProgram != 0)
+		glDeleteProgram(shaderProgram);
 
 	try{
 		//open files
@@ -80,6 +85,8 @@ void Shader::build(const GLchar * vertexShaderPath, const GLchar * fragmentShade
 		glGetProgramInfoLog(this->shaderProgram, 512, NULL, infoLog);
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
+		glDeleteProgram(shaderProgram);
+		shaderProgram = 0;
 		throw ShaderCompileError(infoLog);
 	}
 

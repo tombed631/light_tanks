@@ -14,33 +14,35 @@
 ///	compiles and links them to the shader program,
 ///	that is ready to use.
 ///
-///	version 1.0
+///	version 1.1
 ////////////////////////////////////////////////////////
 class Shader {
-
 
 public:
 	
 	///Default constructor.
 	///Note that if you create a shader object by this constructor,
 	///you have to call bulid method first before you use this object.
-	Shader() = default;
+	Shader() : shaderProgram(0) {}
 
 	///Creates shader program from specified vertex and fragment shaders.
-	///vertexShaderPath		path to the vertex shader source file
+	///vertexShaderPath			path to the vertex shader source file
 	///fragmentShaderPath		path to the fragment shader source file
 	///Throws ShaderCompileError if compilation failed
-	Shader(const GLchar * vertexShaderPath, const GLchar * fragmentShaderPath){
+	Shader(const GLchar * vertexShaderPath, const GLchar * fragmentShaderPath) : shaderProgram(0){
 		build(vertexShaderPath, fragmentShaderPath);
 	}
 
-	///Deletes shader program
+	///Deletes shader program.
 	~Shader(){
-		glDeleteProgram(this->shaderProgram);
+		if (shaderProgram != 0)
+			glDeleteProgram(shaderProgram);
 	}
 
 	///Creates shader program from specified vertex and fragment shaders.
-	///vertexShaderPath		path to the vertex shader source file
+	///Note that the current shader program will be deleted if existed
+	///and the new one will be built.
+	///vertexShaderPath			path to the vertex shader source file
 	///fragmentShaderPath		path to the fragment shader source file
 	///Throws ShaderCompileError if compilation failed
 	void build(const GLchar * vertexShaderPath, const GLchar * fragmentShaderPath);
@@ -59,6 +61,13 @@ private:
 
 	///Shader program ID
 	GLuint shaderProgram;
+
+	//Shader non-copyable and non-movable
+	Shader(const Shader &) = delete;
+	Shader(Shader &&) = delete;
+	Shader & operator=(const Shader &) = delete;
+	Shader & operator=(Shader &&) = delete;
+
 };
 
 
