@@ -39,14 +39,14 @@ bool Game::run(RenderWindow &window)
 			}
 			if ((eventHandle.type == Event::KeyReleased && eventHandle.key.code == Keyboard::Space))
 			{
-  				if (playerOne->getBullets().size()<8)
+  				if (playerOne->getBullets().size()<8 && !playerOne->isHited)
 				playerOne->bulletShoot();
 				
 			}
 
 			if ((eventHandle.type == Event::KeyReleased && eventHandle.key.code == Keyboard::K))
 			{
-				if (playerTwo->getBullets().size()<8)
+				if (playerTwo->getBullets().size()<8 && !playerTwo->isHited)
 				playerTwo->bulletShoot();
 
 			}
@@ -169,7 +169,16 @@ bool Game::isPlayerHit(Player *player, Bullet *bullet)
 	return false;
 
 }
+void Game::playerHited(Player *player)
+{
+	player->isHited = true;
 
+	// rozpoznanie ktory gracz zostal trafiony
+	if (playerOne->isHited) // trafiony gracz pierwszy
+		playerTwo->setPoints(playerTwo->getPoints()+1); // dodaj punkt graczowi drugiemu
+	else if (playerTwo->isHited) // trafiony gracz pierwszy
+		playerOne->setPoints(playerOne->getPoints() + 1);// dodaj punkt graczowi pierwszemu
+}
 void Game::bulletsEngine(RenderWindow &window, Player *player)
 {
 
@@ -183,11 +192,31 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 		{
 
 			(*it)->updateMove(false); // updatujemy ruch pocisku
-			if (isPlayerHit(player, *it))
-				cout << "a";
-			if ((*it)->getElapsedTime()) // sprawdzamy czy nie ma zniknac po 2 sek
-			{
 
+
+			if (isPlayerHit(playerOne, *it)) //jesli trafiony zostal gracz pierwszy
+			{
+				playerHited(playerOne);
+				delete (*it);
+				it = v.erase(it);
+				player->setBullets(v); // ustalamy nowy wektor setterem w klasie Player
+				break;
+			}
+				
+			if (isPlayerHit(playerTwo, *it)) //jesli trafiony zostal gracz drugi
+			{
+				playerHited(playerTwo);
+				delete (*it);
+				it = v.erase(it);
+				player->setBullets(v); // ustalamy nowy wektor setterem w klasie Player
+				break;
+			}
+				
+
+
+
+			if ((*it)->getElapsedTime()) // sprawdzamy czy nie ma zniknac po X sek
+			{
 				delete (*it);
 				it = v.erase(it);
 				player->setBullets(v); // ustalamy nowy wektor setterem w klasie Player

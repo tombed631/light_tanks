@@ -15,9 +15,10 @@ private:
 	Clock deltaClock;; // krok czasowy
 	String name; // nazwa gracza
 	float positionX, positionY; // pozycja gracza
-	vector <Bullet*> bullets;
-	
+	vector <Bullet*> bullets; // tablica z pociskami
+	int points;					// punkty gracza
 public:
+	bool isHited; // czy zosta³ trafiony
 	Player();
 	virtual void draw(RenderTarget &target, RenderStates states) const; // wirtualna metoda pozwalajaca rysowac obiekt
 	Player(String _name,String path, float _positionX, float _positionY); //konstruktor z argumentamii
@@ -26,15 +27,20 @@ public:
 	Vector2f getTankPosition(); //zwraca pozycje czo³gu
 	void bulletShoot(); // nastapil strzal - tworzenie pocisku 
 	vector <Bullet*> getBullets(); // zwraca wektor z pociskami
-	Bullet* getSingleBullet(int i);
-	CircleShape getBulletsShape(int i);
+	Bullet* getSingleBullet(int i);	//zwraca pojedynczy pocisk 
+	CircleShape getBulletsShape(int i);	// zwraca kszta³t pocisku
 	void setBullets(vector <Bullet*> v); // ustala wektor z pociskami
-	FloatRect getBounds();
-	void setTankPosition(Vector2f _position);
-	const Sprite getSprite();
+	FloatRect getBounds();					
+	void setTankPosition(Vector2f _position); // ustawia pozycje czo³gu
+	const Sprite getSprite();				// zwraca sprite czo³gu
 	Sprite copySpriteRotation(bool tankOne); // ustawia kopie sprajta i zwraca jego boundsy podczas obrotów
-												//argument sprawdza o ktory czolg chodzi (osobne sterowanie dla pierwszego i drugiego)
+										//argument sprawdza o ktory czolg chodzi (osobne sterowanie dla pierwszego i drugiego)
 	Sprite tankForwardAndBackward(bool tankOne); // ustawia kopie sprajta w przód lub ty³. 
 													//argument sprawdza o ktory czolg chodzi (osobne sterowanie dla pierwszego i drugiego)
 	void assignRotation();	// ustawienie rotacji sprajta jako przypisanie do niego kopii która nie kolidowa³a
+
+	int getPoints();
+	void setPoints(int _points);
+
+
 };

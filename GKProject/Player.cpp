@@ -16,7 +16,8 @@ Player::Player(String _name, String path, float _positionX, float _positionY)
 	tankSprite.setScale((float)0.15, (float)0.15);
 	tankSprite.setRotation(180);
 	name = _name;
-
+	isHited = false;
+	points = 0;
 }
 void Player::draw(RenderTarget &target, RenderStates states) const
 {
@@ -32,7 +33,14 @@ void Player::setTankPosition(Vector2f _position)
 	tankSprite.setPosition(_position);
 
 }
-
+int Player::getPoints()
+{
+	return points;
+}
+void Player::setPoints(int _points)
+{
+	_points = points;
+}
 Sprite Player::copySpriteRotation(bool tankOne)
 {
 	copy = tankSprite;
