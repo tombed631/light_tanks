@@ -8,6 +8,7 @@
 #include <GL\glew.h>
 #include "GLExceptions.h"
 
+
 ////////////////////////////////////////////////////////
 ///	Represents a openGL shader program. 
 ///	Reads vertex and framgent shaders from disk, 

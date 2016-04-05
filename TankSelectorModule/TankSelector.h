@@ -6,6 +6,11 @@
 #include "TankTypes.h"
 #include <GL\glew.h>
 #include "GLExceptions.h"
+#include "Model3d.h"
+
+#ifdef _DEBUG
+#include <iostream>
+#endif
 
 ////////////////////////////////////////////////////////
 ///	Provides GUI for tank selecting option in game menu.
@@ -15,6 +20,11 @@
 class TankSelector{
 
 public:
+
+	Shader * shader;
+	Model3D * hero;
+
+
 
 	///Default constructor.
 	///Note that you need to set thetarget window 

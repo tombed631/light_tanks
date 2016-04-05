@@ -1,4 +1,5 @@
 
+
 #include "Model3d.h";
 
 ///Creates buffer objects and sends data to this buffers.
@@ -73,7 +74,7 @@ void Mesh::draw(const Shader & shader) const{
 		else if (type == "texture_specular")
 			number = std::to_string(specularNr++);
 		//set specified sampler to active texture unit
-		glUniform1f(glGetUniformLocation(shader.getProgram(), ("material." + type + number).c_str()), i);
+		glUniform1f(glGetUniformLocation(shader.getProgram(), (type + number).c_str()), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);	//bind texture to the active texture unit
 	}
 	glActiveTexture(GL_TEXTURE0);
@@ -85,6 +86,8 @@ void Mesh::draw(const Shader & shader) const{
 		
 }
 
+/////////////////////////////////////////////////////////////////////////////////
+
 
 ///Draws the model.
 ///shader	Shader used to draw the mesh
@@ -93,6 +96,10 @@ void Model3D::draw(const Shader & shader) const{
 		meshes[i]->draw(shader);
 }
 
+///Loads model from specified file.
+///Note that model texture file paths have to be relative to the model object path.
+///path		Path to the file to read from
+///Throws LoadModelError if failed.
 void Model3D::loadModel(std::string path){
 	
 	//import scene object from file
@@ -101,37 +108,46 @@ void Model3D::loadModel(std::string path){
 
 	//Check if any error occured
 	if ((!scene) || (scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE) || (!scene->mRootNode)){
-		//
-		// ERROR, importer.GetErrorString()
-		//
+		throw LoadModelError(importer.GetErrorString());
 	}
 
 	//get path of the directory containing model file
 	this->directory = path.substr(0, path.find_last_of('/'));
 
+	//Process scene nodes, start from root node
 	this->processNode(scene->mRootNode, scene);
 }
 
+///Retrieves all meshes from this node and repeats this process on its children
+///if any exists.
+///node		Node to be processed
+///scene	Scene that is owner of the specified node
 void Model3D::processNode(aiNode * node, const aiScene * scene){
 	
+	//Store all meshes from this node in vector
 	for (GLuint i = 0; i < node->mNumMeshes; i++){
 		aiMesh * mesh = scene->mMeshes[node->mMeshes[i]];
 		this->meshes.push_back(this->processMesh(mesh, scene));
 	}
 
+	//Do the same for this node's children
 	for (GLuint i = 0; i < node->mNumChildren; i++){
 		processNode(node->mChildren[i], scene);
 	}
 
 }
 
+///Converts ASSIMP mesh to the Model3D acceptable mesh object
+///mesh		Assimp mesh to be transformed
+///scene	Scene imported from file, that is being processed
 Mesh * Model3D::processMesh(aiMesh * mesh, const aiScene * scene)
 {
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
 	std::vector<Texture> textures;
-	Mesh * modelMesh;
+	Mesh * modelMesh;	//mesh to return
 
+	//Get all vertices data
 	for (GLuint i = 0; i < mesh->mNumVertices; i++)
 	{
 		Vertex vertex;
@@ -156,19 +172,24 @@ Mesh * Model3D::processMesh(aiMesh * mesh, const aiScene * scene)
 		vertices.push_back(vertex);
 	}
 
-	//process indices
+	//Get indices data
+	//for each face (primitive)...
 	for (GLuint i = 0; i < mesh->mNumFaces; i++){
 		aiFace face = mesh->mFaces[i];
+		//...get its indices and store in vector
 		for (GLuint j = 0; j < face.mNumIndices; j++)
 			indices.push_back(face.mIndices[j]);
 	}
 
-	//process material
+	//process materials
 	if (mesh->mMaterialIndex >= 0)
 	{
 		aiMaterial * material = scene->mMaterials[mesh->mMaterialIndex];
+
+		//get diffuse maps
 		std::vector<Texture> diffuseMaps = this->loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+		//get specular maps
 		std::vector<Texture> specularMaps = this->loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 	}
@@ -178,15 +199,50 @@ Mesh * Model3D::processMesh(aiMesh * mesh, const aiScene * scene)
 	return modelMesh;
 }
 
+
+///Reads Texture from file.
+///path			Path to the source file (relative to the directory)
+///directory	Path to the directory containing model source file
+GLint readTextureFromFile(const char * path, std::string directory)
+{
+	std::string filename = std::string(path);
+	filename = directory + '/' + filename;
+	GLuint textureID;
+	int width, height;
+	//read image from file
+	unsigned char * image = SOIL_load_image(filename.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+	glGenTextures(1, &textureID);	//create texture object
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	//Create texture from image
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D); //generate mipmap for texture
+
+	//set texture parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	SOIL_free_image_data(image); //free image
+	return textureID;
+
+}
+
+
+///Checks all material textures of a specified type and loads them if they are not loaded yet.
+///mat		Material, which textures are loaded
+///type		Type of the texture (diffuse, specular etc.)
+///typeName	Name of the texture type
 std::vector<Texture> Model3D::loadMaterialTextures(aiMaterial * mat, aiTextureType type, std::string typeName){
 
 	std::vector<Texture> textures;
 
 	for (GLuint i = 0; i < mat->GetTextureCount(type); i++){
 
-		aiString str;
-		mat->GetTexture(type, i, &str);
+		aiString str;	//texture file location, relative to the model object location
+		mat->GetTexture(type, i, &str);	//get Texture info
 		GLboolean skip = false;
+		//check if texture is already loaded
 		for (GLuint j = 0; j < textures_loaded.size(); j++){
 			if (textures_loaded[j].path == str){
 				textures.push_back(textures_loaded[j]);
@@ -194,9 +250,10 @@ std::vector<Texture> Model3D::loadMaterialTextures(aiMaterial * mat, aiTextureTy
 				break;
 			}
 		}
+		//load if not loaded
 		if (!skip){
 			Texture texture;
-			texture.id = TextureFromFile(str.C_Str(), this->directory);
+			texture.id = readTextureFromFile(str.C_Str(), this->directory);
 			texture.type = typeName;
 			texture.path = str;
 			textures.push_back(texture);
@@ -207,3 +264,4 @@ std::vector<Texture> Model3D::loadMaterialTextures(aiMaterial * mat, aiTextureTy
 	return textures;
 
 }
+

@@ -16,6 +16,7 @@ void Shader::build(const GLchar * vertexShaderPath, const GLchar * fragmentShade
 
 	GLuint vertexShader, fragmentShader;	//shader id's
 	GLint success; //to determine whether compilation was succesful or not
+	std::string fragmentShaderCodeStr, vertexShaderCodeStr;
 
 	//set exception flags
 	vertexShaderFile.exceptions(ifstream::badbit | ifstream::failbit);
@@ -31,17 +32,19 @@ void Shader::build(const GLchar * vertexShaderPath, const GLchar * fragmentShade
 
 		//read code from files
 		stream << vertexShaderFile.rdbuf();
-		vertexShaderCode = stream.str().c_str();
+		vertexShaderCodeStr = stream.str();
+		vertexShaderCode = vertexShaderCodeStr.c_str();
 		stream.clear();
 		stream.str(string());	//clear sstream
 		stream << fragmentShaderFile.rdbuf();
-		fragmentShaderCode = stream.str().c_str();
+		fragmentShaderCodeStr = stream.str();
+		fragmentShaderCode = fragmentShaderCodeStr.c_str();
 		
 		//close files
 		vertexShaderFile.close();
 		fragmentShaderFile.close();
 	}
-	catch (ifstream::failure & e){
+	catch (ifstream::failure &){
 		if (vertexShaderFile.is_open())
 			vertexShaderFile.close();
 		if (fragmentShaderFile.is_open())
@@ -58,7 +61,9 @@ void Shader::build(const GLchar * vertexShaderPath, const GLchar * fragmentShade
 		GLchar infoLog[512];
 		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 		glDeleteShader(vertexShader);
-		throw ShaderCompileError(infoLog);
+		GLchar errmsg[536] = "VERTEX:\n\n";
+		strcat_s(errmsg, infoLog);
+		throw ShaderCompileError(errmsg);
 	}
 
 	//Compile fragment shader
@@ -71,7 +76,9 @@ void Shader::build(const GLchar * vertexShaderPath, const GLchar * fragmentShade
 		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
-		throw ShaderCompileError(infoLog);
+		GLchar errmsg[536] = "FRAGMENT:\n\n";
+		strcat_s(errmsg, infoLog);
+		throw ShaderCompileError(errmsg);
 	}
 
 	//Create program
@@ -87,7 +94,9 @@ void Shader::build(const GLchar * vertexShaderPath, const GLchar * fragmentShade
 		glDeleteShader(fragmentShader);
 		glDeleteProgram(shaderProgram);
 		shaderProgram = 0;
-		throw ShaderCompileError(infoLog);
+		GLchar errmsg[536] = "SHD_LINK:\n\n";
+		strcat_s(errmsg, infoLog);
+		throw ShaderCompileError(errmsg);
 	}
 
 	//delete shaders

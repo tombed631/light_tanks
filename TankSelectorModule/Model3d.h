@@ -3,6 +3,8 @@
 #define _MODEL_3D_H_
 
 #include <glm\glm.hpp>
+#include <glm\gtc\matrix_transform.hpp>
+#include <glm\gtc\type_ptr.hpp>
 
 #include <GL\glew.h>
 
@@ -31,18 +33,18 @@ struct Vertex{
 ////////////////////////////////////////////////////////
 /// Represents a single texture. 
 ///
-///	version 1.0
+///	version 1.1
 ////////////////////////////////////////////////////////
 struct Texture{
 	GLuint id;
 	std::string type;	//diffuse/specular
-	aiString path;	//path of the texture
+	aiString path;	//path of the texture (relative to the model directory)
 };
 
 ////////////////////////////////////////////////////////
 /// Represents a single drawable object.  
 ///
-///	version 1.0
+///	version 1.1
 ////////////////////////////////////////////////////////
 class Mesh{
 public:
@@ -102,6 +104,7 @@ public:
 
 	///Loads 3D model from specified file;
 	///path		Path to the file containing model.
+	///Throws LoadModelError if failed.
 	explicit Model3D(const GLchar * path){
 		loadModel(path);
 	}
@@ -122,15 +125,33 @@ private:
 	std::vector<Mesh*> meshes;
 	std::vector<Texture> textures_loaded;
 
+	///Path to the model object file directory
 	std::string directory;
 
+	///Loads model from specified file.
+	///Note that model texture file paths have to be relative to the model object path.
+	///path		Path to the file to read from
+	///Throws LoadModelError if failed.
 	void loadModel(const std::string path);
 
+	///Retrieves all meshes from this node and repeats this process on its children
+	///if any exists.
+	///node		Node to be processed
+	///scene	Scene that is owner of the specified node
 	void processNode(aiNode * node, const aiScene * scene);
+
+	///Converts ASSIMP mesh to the Model3D acceptable mesh object
+	///mesh		Assimp mesh to be transformed
+	///scene	Scene imported from file, that is being processed
 	Mesh * processMesh(aiMesh * mesh, const aiScene * scene);
 
+	///Checks all material textures of a specified type and loads them if they are not loaded yet.
+	///mat		Material, which textures are loaded
+	///type		Type of the texture (diffuse, specular etc.)
+	///typeName	Name of the texture type
 	std::vector<Texture> loadMaterialTextures(aiMaterial * mat, aiTextureType type, std::string typeName);
 
 };
+
 
 #endif //_MODEL_3D_H_

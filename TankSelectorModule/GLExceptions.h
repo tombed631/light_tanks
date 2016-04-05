@@ -29,4 +29,16 @@ public:
 };
 
 
+////////////////////////////////////////////////////////
+/// An Exception class that is thrown when
+/// an error occured during loading 3D model.
+///
+///	version 1.0
+////////////////////////////////////////////////////////
+class LoadModelError : public std::runtime_error
+{
+public:
+	LoadModelError(const char * msg) : runtime_error(msg) {}
+};
+
 #endif //_GL_EXCEPTIONS_
