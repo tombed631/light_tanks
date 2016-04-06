@@ -18,6 +18,7 @@ void Game::reset()
 bool Game::run(RenderWindow &window)
 {
 	bool backToMenu = true;
+	Font font;
 
 	playerOne = new Player("Tomek", "Textures\\1.jpg");
 	playerTwo = new Player("Sinex", "Textures\\2.jpg");
@@ -27,6 +28,30 @@ bool Game::run(RenderWindow &window)
 
 	//players.push_back(playerOne); 
 	//players.push_back(playerTwo);
+
+	if (!font.loadFromFile("Fonts\\Lato.ttf"))
+	{
+		MessageBox(NULL, "No Font exist!", "ERROR", NULL);
+		return false;
+	}
+
+	// tworzenie tablicy z punktami
+	Text playerOnePoints, playerTwoPoints, pointTitle;
+
+	pointTitle.setString("Score");
+	pointTitle.setFont(font);
+	pointTitle.setCharacterSize(20);
+	pointTitle.setPosition(800/2 - pointTitle.getGlobalBounds().width / 2.f, (float)window.getSize().y -100);
+
+	playerOnePoints.setFont(font);
+	playerOnePoints.setCharacterSize(20);
+	playerOnePoints.setPosition(800 / 3 - pointTitle.getGlobalBounds().width / 2.f, (float)window.getSize().y - 100);
+
+	playerTwoPoints.setFont(font);
+	playerTwoPoints.setCharacterSize(20);
+	playerTwoPoints.setPosition(800-(800 / 3) - pointTitle.getGlobalBounds().width / 2.f, (float)window.getSize().y - 100);
+
+
 	while (isRunningGame)
 	{
 		while (window.pollEvent(eventHandle))
@@ -61,15 +86,24 @@ bool Game::run(RenderWindow &window)
 
 			}
 		}
+		// odswiezanie punktacji
+		ostringstream firstPointsStream, secondPointsStream;
+		firstPointsStream << playerOne->getPoints();
+		playerOnePoints.setString("Player 1\n    " + firstPointsStream.str());
+		secondPointsStream << playerTwo->getPoints();
+		playerTwoPoints.setString("Player 2\n    " + secondPointsStream.str());
 
 		window.clear();
 
 		engine(window);
 		window.draw(*map);
-			if (!playerOne->isHited)
-		window.draw(*playerOne);
+		if (!playerOne->isHited)
+			window.draw(*playerOne);
 		if (!playerTwo->isHited)
 			window.draw(*playerTwo);
+		window.draw(pointTitle);
+		window.draw(playerOnePoints);
+		window.draw(playerTwoPoints);
 		window.display();
 	}
 	return backToMenu;
@@ -187,8 +221,8 @@ void Game::playerHited(Player *player)
 
 	// rozpoznanie ktory gracz zostal trafiony
 	if (playerOne->isHited) // trafiony gracz pierwszy
-		playerTwo->setPoints(playerTwo->getPoints()+1); // dodaj punkt graczowi drugiemu
-	else if (playerTwo->isHited) // trafiony gracz pierwszy
+		playerTwo->setPoints(playerTwo->getPoints() + 1); // dodaj punkt graczowi drugiemu
+	else if (playerTwo->isHited) // trafiony gracz drugi
 		playerOne->setPoints(playerOne->getPoints() + 1);// dodaj punkt graczowi pierwszemu
 	
 }

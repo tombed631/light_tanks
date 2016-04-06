@@ -4,6 +4,7 @@
 
 #include "Includes.h"
 #include "Game.h"
+#include "Help.h"
 /*
  Class to create menu 
 */

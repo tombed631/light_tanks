@@ -9,7 +9,12 @@ Menu::Menu()
 
 void Menu::showMenu(RenderWindow &window)
 {
+	
 	loadFont();
+
+	Text authors("Inf sem.6 GKiO1\nAuthors:\nTomasz Bendarek\nBartlomiej Rys\nMarcin Adrian", font, 15);
+	authors.setPosition(700 - authors.getGlobalBounds().width / 2.f, (float)window.getSize().y - 100);
+
 	Text title("Light Tanks", font, 40);
 	title.setPosition(800 / 2 - title.getGlobalBounds().width/2.f, 20); // set position of title - 800 is 
 	Text menuOptions[optionsNumber];
@@ -45,7 +50,16 @@ void Menu::showMenu(RenderWindow &window)
 				// trzeba tez zaimplementowac sprawdzenie wybranie czolgu - potem
 				isRunningMenu = game.run(window);
 			}
-					
+				
+			// klikniecie myszka lub klawiatura na HELP
+			if (menuOptions[optionsNumber - 2].getColor() == Color::Yellow &&
+				((eventHandle.type == Event::MouseButtonReleased && eventHandle.key.code == Mouse::Left)
+				|| (eventHandle.type == Event::KeyPressed && eventHandle.key.code == Keyboard::Return)))
+			{
+				Help help;
+				// trzeba tez zaimplementowac sprawdzenie wybranie czolgu - potem
+				isRunningMenu = help.showHelp(window);
+			}
 
 
 			// klikniecie przyciskiem do gory - zmiejszany licznik
@@ -98,6 +112,7 @@ void Menu::showMenu(RenderWindow &window)
 		window.draw(title);
 		for (int i = 0; i < optionsNumber; i++)
 			window.draw(menuOptions[i]);
+		window.draw(authors);
 		window.display();
 	}
 }

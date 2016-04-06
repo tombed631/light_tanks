@@ -36,7 +36,7 @@ int Player::getPoints()
 }
 void Player::setPoints(int _points)
 {
-	_points = points;
+	points = _points;
 }
 Sprite Player::copySpriteRotation(bool tankOne)
 {
