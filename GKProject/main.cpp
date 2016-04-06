@@ -11,6 +11,6 @@ void main(void)
 {
 
 	TankWindow window;
-	window.renderWindow(820,640,"Light Tanks");
+	window.renderWindow(820,760,"Light Tanks");
 }
 

@@ -4,6 +4,7 @@
 
 #include "Includes.h"
 #include "Bullet.h"
+/*Klasa reprezentujaca gracza*/
 class Player :public sf::Drawable, public sf::Transformable
 {
 private:
@@ -21,12 +22,13 @@ public:
 	bool isHited; // czy zosta³ trafiony
 	Player();
 	virtual void draw(RenderTarget &target, RenderStates states) const; // wirtualna metoda pozwalajaca rysowac obiekt
-	Player(String _name,String path, float _positionX, float _positionY); //konstruktor z argumentamii
+	Player(String _name,String path); //konstruktor z argumentamii
 	String getName(); // zwraca nazwe zawodnika
 	void moveTank(); // porusza czo³giem gracza - przypisuje oryginalnego sprajta do jego kopii - jesli nie by³o kolizji
 	Vector2f getTankPosition(); //zwraca pozycje czo³gu
 	void bulletShoot(); // nastapil strzal - tworzenie pocisku 
 	vector <Bullet*> getBullets(); // zwraca wektor z pociskami
+	void deleteBullets();
 	Bullet* getSingleBullet(int i);	//zwraca pojedynczy pocisk 
 	CircleShape getBulletsShape(int i);	// zwraca kszta³t pocisku
 	void setBullets(vector <Bullet*> v); // ustala wektor z pociskami
@@ -41,6 +43,6 @@ public:
 
 	int getPoints();
 	void setPoints(int _points);
-
+	void setPlayerRotation(float rotation);
 
 };

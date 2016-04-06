@@ -8,7 +8,7 @@ void Map::draw(RenderTarget &target, RenderStates states) const
 
 void Map::createMap(RenderWindow &gameWindow){
 	windowX = (float)gameWindow.getSize().x;
-	windowY = (float)gameWindow.getSize().y;
+	windowY = (float)gameWindow.getSize().y - 120;
 	ifstream mapFile;
 	string fileData;
 	int cellInfo;

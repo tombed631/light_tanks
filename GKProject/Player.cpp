@@ -1,20 +1,17 @@
 #include "Player.h"
 
 
-Player::Player(String _name, String path, float _positionX, float _positionY)
+Player::Player(String _name, String path)
 {
 	if (!tankTexture.loadFromFile(path))
 	{
 		MessageBox(NULL, "Brak tekstury czolgu!", "ERROR", NULL);
 		return;
 	}
-	positionX = _positionX;
-	positionY = _positionY;
 	tankSprite.setTexture(tankTexture);
-	tankSprite.setPosition(positionX, positionY);
 	tankSprite.setOrigin(80, 128);
 	tankSprite.setScale((float)0.15, (float)0.15);
-	tankSprite.setRotation(180);
+	//tankSprite.setRotation(180);
 	name = _name;
 	isHited = false;
 	points = 0;
@@ -135,7 +132,18 @@ CircleShape Player::getBulletsShape(int i)
 {
 	return bullets[i]->getShape();
 }
-
+void Player::deleteBullets()
+{
+	if (!bullets.empty())
+	{
+		for (vector <Bullet*>::iterator it = bullets.begin(); it != bullets.end(); it++)
+		{
+			delete (*it);
+		}
+		bullets.clear();
+	}
+	
+}
 
 void Player::setBullets(vector <Bullet*> v)
 {
@@ -150,4 +158,8 @@ FloatRect Player::getBounds()
 const Sprite Player::getSprite()
 {
 	return tankSprite;
+}
+void Player::setPlayerRotation(float rotation)
+{
+	tankSprite.setRotation(rotation);
 }

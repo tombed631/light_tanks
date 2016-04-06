@@ -4,7 +4,8 @@
 
 #endif 
 #include "Includes.h"
-class BoundingBox // Used in the BoundingBoxTest
+
+class BoundingBox 
 	{
 	public:
 		template <class T>
