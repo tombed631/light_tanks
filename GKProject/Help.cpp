@@ -12,79 +12,51 @@ bool Help::showHelp(RenderWindow &window)
 	loadFont();
 	Text title("Help", font, 40);
 	title.setPosition(800 / 2 - title.getGlobalBounds().width / 2.f, 20); // set position of title - 800 is 
-	Text firstHelpTitle, firstHelpMove, firstHelpShoot, secondHelpTitle, secondHelpMove, secondHelpShoot, backText;
+	Text texts[6];
+	
+	String strings[] = { "Back", "Player 1", "Player 2", "Move", "Shoot" };
 	Sprite arrowKeysSprite, wsadKeysSprite, spaceKeySprite, pKeySprite;
-	Texture arrowKeysImage, wsadKeysImage, spaceKeyImage, pKeyImage;
-
-	if ((!arrowKeysImage.loadFromFile("Textures\\arrowKeys.png")) || (!wsadKeysImage.loadFromFile("Textures\\WSAD.png")) ||
-		(!spaceKeyImage.loadFromFile("Textures\\spacebar.png")) || (!pKeyImage.loadFromFile("Textures\\pKey.png")))
+	Texture arrowKeysTexture, wsadKeysTexture, spaceKeyTexture, pKeyTexture;
+	
+	if ((!arrowKeysTexture.loadFromFile("Textures\\arrows.png")) || (!wsadKeysTexture.loadFromFile("Textures\\wsad.png")) ||
+		(!spaceKeyTexture.loadFromFile("Textures\\Space.png")) || (!pKeyTexture.loadFromFile("Textures\\pKey.png")))
 	{
 		MessageBox(NULL, "Brak tekstury klawisza!", "ERROR", NULL);
 		return false;
 	}
 
-	// text powrotu
-	backText.setString("Back to menu");
-	backText.setFont(font);
-	backText.setCharacterSize(30);
+
+
 	
+	for (int i = 0; i < 5; i++)
+	{
+		texts[i].setString(strings[i]);
+		texts[i].setFont(font);
+		texts[i].setCharacterSize(30);
+			texts[1].setPosition(550/ 2 - texts[1].getGlobalBounds().width / 2.f, 100.f + 100.f); //player1
+			texts[2].setPosition(1100 / 2 - texts[2].getGlobalBounds().width / 2.f, 100.f +  100.f); // player2
+
+			if (i>2)
+				texts[i].setPosition(200 / 2 - texts[i].getGlobalBounds().width / 2.f, 50.f + (i) * 100.f);// move i shoot
+	}
 	
 
-	// tworzenie opisu sterowania 1 gracza
-	firstHelpTitle.setString("Player 1");
-	firstHelpTitle.setFont(font);
-	firstHelpTitle.setCharacterSize(30);
-	firstHelpTitle.setPosition(200 - firstHelpTitle.getGlobalBounds().width / 2.f, (float)200);
-	textsVector.push_back(firstHelpTitle);
+	arrowKeysSprite.setTexture(arrowKeysTexture);
+	arrowKeysSprite.setPosition(550 / 2 - arrowKeysSprite.getGlobalBounds().width / 2.f, 100.f + 200.f); //player1
+	pKeySprite.setPosition(500 / 2 - pKeySprite.getGlobalBounds().width / 2.f, 100.f + 350); //player1
+	wsadKeysSprite.setTexture(wsadKeysTexture);
+	wsadKeysSprite.setPosition(1100 / 2 - wsadKeysSprite.getGlobalBounds().width / 2.f, 100.f + 200.f); //player1
+	spaceKeySprite.setTexture(spaceKeyTexture);
+	spaceKeySprite.setPosition(1100 / 2 - spaceKeySprite.getGlobalBounds().width / 2.f, 100.f + 350.f); //player1
+	pKeySprite.setTexture(pKeyTexture);
 
-	firstHelpMove.setString("Move:");
-	firstHelpMove.setFont(font);
-	firstHelpMove.setCharacterSize(30);
-	firstHelpMove.setPosition(middlePosition(firstHelpTitle) - firstHelpMove.getGlobalBounds().width/2.f, firstHelpTitle.getPosition().y + firstHelpTitle.getGlobalBounds().height + 10);
-	textsVector.push_back(firstHelpMove);
 
-	arrowKeysSprite.setTexture(arrowKeysImage);
-	arrowKeysSprite.setPosition(middlePosition(firstHelpMove) - arrowKeysSprite.getGlobalBounds().width / 2.f, firstHelpMove.getPosition().y + firstHelpMove.getGlobalBounds().height + 10);
 	imagesVector.push_back(arrowKeysSprite);
-
-	firstHelpShoot.setString("Shoot:");
-	firstHelpShoot.setFont(font);
-	firstHelpShoot.setCharacterSize(30);
-	firstHelpShoot.setPosition(middlePosition(firstHelpTitle) - firstHelpShoot.getGlobalBounds().width / 2.f, arrowKeysSprite.getPosition().y + arrowKeysSprite.getGlobalBounds().height + 10);
-	textsVector.push_back(firstHelpShoot);
-
-	pKeySprite.setTexture(pKeyImage);
-	pKeySprite.setPosition(middlePosition(firstHelpShoot) - pKeySprite.getGlobalBounds().width / 2.f, firstHelpShoot.getPosition().y + firstHelpShoot.getGlobalBounds().height + 10);
-	imagesVector.push_back(pKeySprite);
-	
-
-	// opis sterowania 2 gracza
-	secondHelpTitle.setString("Player 2");
-	secondHelpTitle.setFont(font);
-	secondHelpTitle.setCharacterSize(30);
-	secondHelpTitle.setPosition(600 - secondHelpTitle.getGlobalBounds().width / 2.f, (float)200);
-	textsVector.push_back(secondHelpTitle);
-
-	secondHelpMove.setString("Move:");
-	secondHelpMove.setFont(font);
-	secondHelpMove.setCharacterSize(30);
-	secondHelpMove.setPosition(middlePosition(secondHelpTitle) - secondHelpMove.getGlobalBounds().width / 2.f, secondHelpTitle.getPosition().y + secondHelpTitle.getGlobalBounds().height + 10);
-	textsVector.push_back(secondHelpMove);
-
-	wsadKeysSprite.setTexture(wsadKeysImage);
-	wsadKeysSprite.setPosition(middlePosition(secondHelpMove) - wsadKeysSprite.getGlobalBounds().width / 2.f, secondHelpMove.getPosition().y + secondHelpMove.getGlobalBounds().height + 10);
 	imagesVector.push_back(wsadKeysSprite);
-
-	secondHelpShoot.setString("Shoot:");
-	secondHelpShoot.setFont(font);
-	secondHelpShoot.setCharacterSize(30);
-	secondHelpShoot.setPosition(middlePosition(secondHelpTitle) - secondHelpShoot.getGlobalBounds().width / 2.f, wsadKeysSprite.getPosition().y + wsadKeysSprite.getGlobalBounds().height + 10);
-	textsVector.push_back(secondHelpShoot);
-
-	spaceKeySprite.setTexture(spaceKeyImage);
-	spaceKeySprite.setPosition(middlePosition(secondHelpShoot) - spaceKeySprite.getGlobalBounds().width / 2.f, secondHelpShoot.getPosition().y + secondHelpShoot.getGlobalBounds().height + 10);
 	imagesVector.push_back(spaceKeySprite);
-	
+	imagesVector.push_back(pKeySprite);
+
+
 	while (isRunningHelp)
 	{
 		Vector2f mouse(Mouse::getPosition(window));
@@ -102,22 +74,22 @@ bool Help::showHelp(RenderWindow &window)
 				window.close();
 			}
 			// klikniecie myszka lub klawiatura na wyjscie
-			if (backText.getColor() == Color::Red &&
+			if (texts[0].getColor() == Color::Red &&
 				(eventHandle.type == Event::MouseButtonReleased && eventHandle.key.code == Mouse::Left))
 				isRunningHelp = false;
 		
-			backText.setColor(Color::White);
+			texts[0].setColor(Color::White);
 			// jesli najechalismy myszka
-			if (backText.getGlobalBounds().contains(mouse)){
-				backText.setColor(Color::Red);
+			if (texts[0].getGlobalBounds().contains(mouse)){
+				texts[0].setColor(Color::Red);
 			}
 				
 		}
 		window.clear();
 		window.draw(title);
-		window.draw(backText);
-		for (unsigned int i = 0; i < textsVector.size(); i++)
-			window.draw(textsVector[i]);
+		
+		for (unsigned int i = 0; i < 6; i++)
+			window.draw(texts[i]);
 		for (unsigned int i = 0; i < imagesVector.size(); i++)
 			window.draw(imagesVector[i]);
 		window.display();
@@ -132,9 +104,4 @@ void Help::loadFont()
 		MessageBox(NULL, "No Font exist!", "ERROR", NULL);
 		isRunningHelp = false;
 	}
-}
-
-float Help::middlePosition(Text object)
-{
-	return object.getPosition().x + object.getGlobalBounds().width / 2.f;
 }
