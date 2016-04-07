@@ -12,6 +12,8 @@ private:
 	bool isRunningHelp; // is app running? 
 	Font font;
 	vector <Sprite> imagesVector;
+	Sprite arrowKeysSprite, wsadKeysSprite, spaceKeySprite, pKeySprite;
+	Texture arrowKeysTexture, wsadKeysTexture, spaceKeyTexture, pKeyTexture;
 public:
 	/*Constructor*/
 	Help();

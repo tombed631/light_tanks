@@ -11,16 +11,8 @@ Bullet::Bullet(Vector2f _position, float rotation)
 	bullet.setFillColor(Color::Blue);
 	
 	bullet.setPosition(position);
-	bullet.move(Vector2f(25 * (float)sin(rotation*3.14159265 / 180), 25 * -(float)cos(rotation*3.14159265 / 180)));
-	/*
-	if (!texture.loadFromFile("Textures\\4.jpg"))
-	{
-		MessageBox(NULL, "Brak tekstury pocisku!", "ERROR", NULL);
-		return;
+	bullet.move(Vector2f(15 * (float)sin(rotation*3.14159265 / 180), 15 * -(float)cos(rotation*3.14159265 / 180)));
 
-	}
-	*/
-	//bullet.setTexture(&texture);
 	bullet.setRotation(rotation);
 	bullet.setOrigin((float)radius, (float)radius);
 	angle = 0;

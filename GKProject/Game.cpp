@@ -6,6 +6,11 @@ Game::Game()
 }
 void Game::reset()
 {
+	// rozpoznanie ktory gracz zostal trafiony
+	if (playerOne->isHited) // trafiony gracz pierwszy
+		playerTwo->setPoints(playerTwo->getPoints() + 1); // dodaj punkt graczowi drugiemu
+	if (playerTwo->isHited) // trafiony gracz drugi
+		playerOne->setPoints(playerOne->getPoints() + 1);// dodaj punkt graczowi pierwszemu
 	playerOne->isHited = false;
 	playerTwo->isHited = false;
 	playerOne->deleteBullets();
@@ -74,14 +79,18 @@ bool Game::run(RenderWindow &window)
 			}
 			if ((eventHandle.type == Event::KeyReleased && eventHandle.key.code == Keyboard::Space))
 			{
-  				if (playerOne->getBullets().size()<8 && !playerOne->isHited)
+				// pocisk mozna wystrzelic tylko gdy aktualnie gracz ma mniej niz 7 wystrzelonych oraz
+				// zaden z graczy nie zosta³ trafiony
+				if (playerOne->getBullets().size()<8 && !playerOne->isHited && !playerTwo->isHited)
 				playerOne->bulletShoot();
 				
 			}
 
 			if ((eventHandle.type == Event::KeyReleased && eventHandle.key.code == Keyboard::K))
 			{
-				if (playerTwo->getBullets().size()<8 && !playerTwo->isHited)
+				// pocisk mozna wystrzelic tylko gdy aktualnie gracz ma mniej niz 7 wystrzelonych oraz
+				// zaden z graczy nie zosta³ trafiony
+				if (playerTwo->getBullets().size()<8 && !playerTwo->isHited  && !playerOne->isHited)
 				playerTwo->bulletShoot();
 
 			}
@@ -218,13 +227,6 @@ bool Game::isPlayerHit(Player *player, Bullet *bullet)
 void Game::playerHited(Player *player)
 {
 	player->isHited = true;
-
-	// rozpoznanie ktory gracz zostal trafiony
-	if (playerOne->isHited) // trafiony gracz pierwszy
-		playerTwo->setPoints(playerTwo->getPoints() + 1); // dodaj punkt graczowi drugiemu
-	else if (playerTwo->isHited) // trafiony gracz drugi
-		playerOne->setPoints(playerOne->getPoints() + 1);// dodaj punkt graczowi pierwszemu
-	
 }
 void Game::bulletsEngine(RenderWindow &window, Player *player)
 {
@@ -240,17 +242,22 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 
 			(*it)->updateMove(false); // updatujemy ruch pocisku
 
-
-			if (isPlayerHit(playerOne, *it)) //jesli trafiony zostal gracz pierwszy
-			{
-				playerHited(playerOne);
-				delete (*it);
-				it = v.erase(it);
-				player->setBullets(v); // ustalamy nowy wektor setterem w klasie Player
-				clock.restart();
-				break;
+			
+			if (!playerOne->isHited) // jesli jeszcze nie zostal trafiony gracz pierwszy - dzieki temu trafiony gracz
+			{						// nie poch³ania pociskow po smierci
+				if (isPlayerHit(playerOne, *it)) //jesli trafiony zostal gracz pierwszy
+				{
+					playerHited(playerOne);
+					delete (*it);
+					it = v.erase(it);
+					player->setBullets(v); // ustalamy nowy wektor setterem w klasie Player
+					clock.restart();
+					break;
+				}
 			}
-				
+
+			if (!playerTwo->isHited)// jesli jeszcze nie zostal trafiony gracz pierwszy - dzieki temu trafiony gracz
+			{						// nie poch³ania pociskow po smierci
 			if (isPlayerHit(playerTwo, *it)) //jesli trafiony zostal gracz drugi
 			{
 				playerHited(playerTwo);
@@ -260,7 +267,7 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 				clock.restart();
 				break;
 			}
-				
+			}
 
 
 

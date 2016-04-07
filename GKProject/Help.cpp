@@ -15,8 +15,7 @@ bool Help::showHelp(RenderWindow &window)
 	Text texts[6];
 	
 	String strings[] = { "Back", "Player 1", "Player 2", "Move", "Shoot" };
-	Sprite arrowKeysSprite, wsadKeysSprite, spaceKeySprite, pKeySprite;
-	Texture arrowKeysTexture, wsadKeysTexture, spaceKeyTexture, pKeyTexture;
+	
 	
 	if ((!arrowKeysTexture.loadFromFile("Textures\\arrows.png")) || (!wsadKeysTexture.loadFromFile("Textures\\wsad.png")) ||
 		(!spaceKeyTexture.loadFromFile("Textures\\Space.png")) || (!pKeyTexture.loadFromFile("Textures\\pKey.png")))
