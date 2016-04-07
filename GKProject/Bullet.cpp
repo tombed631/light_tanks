@@ -11,7 +11,7 @@ Bullet::Bullet(Vector2f _position, float rotation)
 	bullet.setFillColor(Color::Blue);
 	
 	bullet.setPosition(position);
-	bullet.move(Vector2f(15 * (float)sin(rotation*3.14159265 / 180), 15 * -(float)cos(rotation*3.14159265 / 180)));
+	bullet.move(Vector2f(18 * (float)sin(rotation*3.14159265 / 180), 18 * -(float)cos(rotation*3.14159265 / 180)));
 
 	bullet.setRotation(rotation);
 	bullet.setOrigin((float)radius, (float)radius);

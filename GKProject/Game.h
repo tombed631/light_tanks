@@ -19,10 +19,11 @@ private:
 	Collision col;				// collision object
 	Time timeToRestart; // czas zycia 
 	Clock clock; // zegar generujacy czas
-
+	Text playerOnePoints, playerTwoPoints, pointTitle;
+	Font font;
 
 public:
-	Game();
+	Game(RenderWindow &window);
 	bool run(RenderWindow &window); // odpala g³ówn¹ petle gry
 	void engine(RenderWindow &window); // silnik gry odpowiedzialny za ruch pojazdów, pocisków i kolizje
 
