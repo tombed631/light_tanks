@@ -45,6 +45,8 @@ void Mesh::bindVertexArray() const{
 	//set vertex texture coordinates pointer
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, textureCoords));
+
+	
 }
 
 ///Unbinds vertex and index buffer objects
@@ -158,11 +160,16 @@ Mesh * Model3D::processMesh(aiMesh * mesh, const aiScene * scene)
 		vertex.position.y = mesh->mVertices[i].y;
 		vertex.position.z = mesh->mVertices[i].z;
 		//normal
-		vertex.normal.x = mesh->mNormals[i].x;
-		vertex.normal.y = mesh->mNormals[i].y;
-		vertex.normal.z = mesh->mNormals[i].z;
+		if (mesh->HasNormals()) {
+			vertex.normal.x = mesh->mNormals[i].x;
+			vertex.normal.y = mesh->mNormals[i].y;
+			vertex.normal.z = mesh->mNormals[i].z;
+		}
+		else
+			vertex.normal = glm::vec3(0.0f, 0.0f, 0.0f);
+
 		//textureCoords
-		if (mesh->mTextureCoords[0]){
+		if (mesh->HasTextureCoords(0)){
 			vertex.textureCoords.x = mesh->mTextureCoords[0][i].x;
 			vertex.textureCoords.y = mesh->mTextureCoords[0][i].y;
 		}

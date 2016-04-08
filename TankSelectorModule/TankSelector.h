@@ -7,6 +7,8 @@
 #include <GL\glew.h>
 #include "GLExceptions.h"
 #include "Model3d.h"
+#include "Camera.h"
+#include "Arcball.h"
 
 #ifdef _DEBUG
 #include <iostream>
@@ -17,14 +19,17 @@
 ///
 ///	version 1.0
 ////////////////////////////////////////////////////////
-class TankSelector{
+class TankSelector final{
 
 public:
 
+	///////////////////TEMP_CONTENT_BEGIN//////////////////////
 	Shader * shader;
 	Model3D * hero;
-
-
+	Camera * camera;
+	ArcBall * arcball;
+	glm::mat4 model_m;
+	///////////////////TEMP_CONTENT_END////////////////////////
 
 	///Default constructor.
 	///Note that you need to set thetarget window 
@@ -58,7 +63,7 @@ private:
 
 	///Renders current frame to the window
 	///and displays it on the screen.
-	void draw() const;
+	void draw();
 
 };
 

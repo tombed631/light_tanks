@@ -17,7 +17,7 @@
 ///
 ///	version 1.1
 ////////////////////////////////////////////////////////
-class Shader {
+class Shader final {
 
 public:
 	

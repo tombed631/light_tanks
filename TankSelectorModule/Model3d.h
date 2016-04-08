@@ -46,7 +46,7 @@ struct Texture{
 ///
 ///	version 1.1
 ////////////////////////////////////////////////////////
-class Mesh{
+class Mesh final{
 public:
 
 	///Creates buffer objects and sends data to this buffers.
@@ -110,7 +110,7 @@ public:
 	}
 
 	///Frees memory used by this model.
-	~Model3D(){
+	virtual ~Model3D(){
 		for (GLuint i = 0; i < meshes.size(); i++)
 			delete meshes[i];
 	}
