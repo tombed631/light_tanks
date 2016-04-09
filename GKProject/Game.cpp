@@ -22,7 +22,18 @@ Game::Game(RenderWindow &window)
 	playerTwoPoints.setCharacterSize(20);
 	playerTwoPoints.setPosition(800 - (800 / 3) - pointTitle.getGlobalBounds().width / 2.f, (float)window.getSize().y - 100);
 
-
+	// ladowanie dzwiekow
+	if ((!DestroySoundBuffer.loadFromFile("Sounds\\Explosion.wav")) || (!ShootSoundBuffer.loadFromFile("Sounds\\Shoot_v2.wav")) ||
+		(!RicochetSoundBuffer.loadFromFile("Sounds\\Ricochet.wav")) || (!MoveSoundBuffer.loadFromFile("Sounds\\TankMove.wav")))
+	{
+		MessageBox(NULL, "Brak dŸwiêków!", "ERROR", NULL);
+		return;
+	}
+	DestroySound.setBuffer(DestroySoundBuffer);
+	ShootSound.setBuffer(ShootSoundBuffer);
+	ShootSound.setVolume(25);
+	RicochetSound.setBuffer(RicochetSoundBuffer);
+	MoveSound.setBuffer(MoveSoundBuffer);
 }
 void Game::reset()
 {
@@ -81,21 +92,27 @@ bool Game::run(RenderWindow &window)
 				isRunningGame = false;
 				players.clear();
 			}
+			if ((eventHandle.type == Event::KeyReleased && eventHandle.key.code == Keyboard::P))
+			{
+				// pocisk mozna wystrzelic tylko gdy aktualnie gracz ma mniej niz 7 wystrzelonych oraz
+				// zaden z graczy nie zosta³ trafiony
+				if (playerOne->getBullets().size() < 8 && !playerOne->isHited && !playerTwo->isHited)
+				{
+					playerOne->bulletShoot();
+					ShootSound.play();
+				}
+				
+			}
+
 			if ((eventHandle.type == Event::KeyReleased && eventHandle.key.code == Keyboard::Space))
 			{
 				// pocisk mozna wystrzelic tylko gdy aktualnie gracz ma mniej niz 7 wystrzelonych oraz
 				// zaden z graczy nie zosta³ trafiony
-				if (playerOne->getBullets().size()<8 && !playerOne->isHited && !playerTwo->isHited)
-				playerOne->bulletShoot();
-				
-			}
-
-			if ((eventHandle.type == Event::KeyReleased && eventHandle.key.code == Keyboard::K))
-			{
-				// pocisk mozna wystrzelic tylko gdy aktualnie gracz ma mniej niz 7 wystrzelonych oraz
-				// zaden z graczy nie zosta³ trafiony
-				if (playerTwo->getBullets().size()<8 && !playerTwo->isHited  && !playerOne->isHited)
-				playerTwo->bulletShoot();
+				if (playerTwo->getBullets().size() < 8 && !playerTwo->isHited  && !playerOne->isHited)
+				{
+					playerTwo->bulletShoot();
+					ShootSound.play();
+				}
 
 			}
 		}
@@ -124,7 +141,7 @@ void Game::moveTank(Player *playerMain, Player *playerSub,bool which)
 	bool rotation = true;
 	bool forwardBackward = true;
 	Sprite X = playerMain->copySpriteRotation(which); // zwraca boundsy kopi sprajta podczas rotacji
-	Sprite Y = playerMain->tankForwardAndBackward(which); // zwraca boundsy kopi sprata podczas ruchu do przodu lub ty³u
+	Sprite Y = playerMain->tankForwardAndBackward(which); // zwraca boundsy kopi sprajta podczas ruchu do przodu lub ty³u
 
 	for (int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
 	{
@@ -136,9 +153,10 @@ void Game::moveTank(Player *playerMain, Player *playerSub,bool which)
 	}
 	if (rotation) // jezeli nie by³o kolizji przypisz nowa rotacje
 		playerMain->assignRotation();
-	if (forwardBackward) // jezeli nie by³o kolizji w przod lub ty³ przypisz nowa pozycje
+	if (forwardBackward){ // jezeli nie by³o kolizji w przod lub ty³ przypisz nowa pozycje
 		playerMain->moveTank();
 
+	}
 
 }
 
@@ -210,6 +228,7 @@ void Game::detectBulletsCollision(Player *player)
 				}
 
 			}
+			RicochetSound.play();
 			player->getSingleBullet(i)->setRotationBullet(newRotation);
 
 		}
@@ -230,6 +249,8 @@ void Game::playerHited(Player *player)
 }
 void Game::bulletsEngine(RenderWindow &window, Player *player)
 {
+	
+	
 
 	detectBulletsCollision(player);
 
@@ -247,6 +268,7 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 			{						// nie poch³ania pociskow po smierci
 				if (isPlayerHit(playerOne, *it)) //jesli trafiony zostal gracz pierwszy
 				{
+					DestroySound.play();
 					playerHited(playerOne);
 					delete (*it);
 					it = v.erase(it);
@@ -260,6 +282,7 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 			{						// nie poch³ania pociskow po smierci
 			if (isPlayerHit(playerTwo, *it)) //jesli trafiony zostal gracz drugi
 			{
+				DestroySound.play();
 				playerHited(playerTwo);
 				delete (*it);
 				it = v.erase(it);

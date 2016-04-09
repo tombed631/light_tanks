@@ -19,8 +19,10 @@ private:
 	Collision col;				// collision object
 	Time timeToRestart; // czas zycia 
 	Clock clock; // zegar generujacy czas
-	Text playerOnePoints, playerTwoPoints, pointTitle;
+	Text playerOnePoints, playerTwoPoints, pointTitle; // punktacja
 	Font font;
+	Sound DestroySound, ShootSound, RicochetSound, MoveSound; // zmienne dzwiekow
+	SoundBuffer DestroySoundBuffer, ShootSoundBuffer, RicochetSoundBuffer, MoveSoundBuffer; // buffery dzwiekow
 
 public:
 	Game(RenderWindow &window);
