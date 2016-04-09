@@ -23,17 +23,21 @@ Game::Game(RenderWindow &window)
 	playerTwoPoints.setPosition(800 - (800 / 3) - pointTitle.getGlobalBounds().width / 2.f, (float)window.getSize().y - 100);
 
 	// ladowanie dzwiekow
-	if ((!DestroySoundBuffer.loadFromFile("Sounds\\Explosion.wav")) || (!ShootSoundBuffer.loadFromFile("Sounds\\Shoot_v2.wav")) ||
-		(!RicochetSoundBuffer.loadFromFile("Sounds\\Ricochet.wav")) || (!MoveSoundBuffer.loadFromFile("Sounds\\TankMove.wav")))
+	if ((!destroySoundBuffer.loadFromFile("Sounds\\Explosion.wav")) || (!shootSoundBuffer.loadFromFile("Sounds\\Shoot_v2.wav")) ||
+		(!ricochetSoundBuffer.loadFromFile("Sounds\\Ricochet.wav")) || (!moveSoundBuffer.loadFromFile("Sounds\\TankMove.wav")) ||
+		(!rotationSoundBuffer.loadFromFile("Sounds\\TankRotation.wav")))
 	{
 		MessageBox(NULL, "Brak dŸwiêków!", "ERROR", NULL);
 		return;
 	}
-	DestroySound.setBuffer(DestroySoundBuffer);
-	ShootSound.setBuffer(ShootSoundBuffer);
-	ShootSound.setVolume(25);
-	RicochetSound.setBuffer(RicochetSoundBuffer);
-	MoveSound.setBuffer(MoveSoundBuffer);
+	destroySound.setBuffer(destroySoundBuffer);
+	shootSound.setBuffer(shootSoundBuffer);
+	shootSound.setVolume(25);
+	ricochetSound.setBuffer(ricochetSoundBuffer);
+	move1Sound.setBuffer(moveSoundBuffer);
+	move2Sound.setBuffer(moveSoundBuffer);
+	rotation1Sound.setBuffer(rotationSoundBuffer);
+	rotation2Sound.setBuffer(rotationSoundBuffer);
 }
 void Game::reset()
 {
@@ -99,7 +103,7 @@ bool Game::run(RenderWindow &window)
 				if (playerOne->getBullets().size() < 8 && !playerOne->isHited && !playerTwo->isHited)
 				{
 					playerOne->bulletShoot();
-					ShootSound.play();
+					shootSound.play();
 				}
 				
 			}
@@ -111,7 +115,7 @@ bool Game::run(RenderWindow &window)
 				if (playerTwo->getBullets().size() < 8 && !playerTwo->isHited  && !playerOne->isHited)
 				{
 					playerTwo->bulletShoot();
-					ShootSound.play();
+					shootSound.play();
 				}
 
 			}
@@ -152,11 +156,27 @@ void Game::moveTank(Player *playerMain, Player *playerSub,bool which)
 			forwardBackward = false;
 	}
 	if (rotation) // jezeli nie by³o kolizji przypisz nowa rotacje
+	{
+		// sprawdzanie ktory gracz i czy juz dzwiek jest wlaczony
+		if (which)
+		{
+			if (playerMain->isRotation() && rotation1Sound.getStatus() != Sound::Status::Playing)
+				rotation1Sound.play();
+			else if (playerMain->isRotation() == false)
+				rotation1Sound.pause();
+		}
+		else
+		{
+			if (playerMain->isRotation() && rotation2Sound.getStatus() != Sound::Status::Playing)
+				rotation2Sound.play();
+			else if (playerMain->isRotation() == false)
+				rotation2Sound.pause();
+		}
+		
 		playerMain->assignRotation();
-	if (forwardBackward){ // jezeli nie by³o kolizji w przod lub ty³ przypisz nowa pozycje
-		playerMain->moveTank();
-
 	}
+	if (forwardBackward) // jezeli nie by³o kolizji w przod lub ty³ przypisz nowa pozycje
+		playerMain->moveTank();
 
 }
 
@@ -228,7 +248,7 @@ void Game::detectBulletsCollision(Player *player)
 				}
 
 			}
-			RicochetSound.play();
+			ricochetSound.play();
 			player->getSingleBullet(i)->setRotationBullet(newRotation);
 
 		}
@@ -268,7 +288,7 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 			{						// nie poch³ania pociskow po smierci
 				if (isPlayerHit(playerOne, *it)) //jesli trafiony zostal gracz pierwszy
 				{
-					DestroySound.play();
+					destroySound.play();
 					playerHited(playerOne);
 					delete (*it);
 					it = v.erase(it);
@@ -282,7 +302,7 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 			{						// nie poch³ania pociskow po smierci
 			if (isPlayerHit(playerTwo, *it)) //jesli trafiony zostal gracz drugi
 			{
-				DestroySound.play();
+				destroySound.play();
 				playerHited(playerTwo);
 				delete (*it);
 				it = v.erase(it);
@@ -329,5 +349,15 @@ void Game::engine(RenderWindow &window)
 	bulletsEngine(window, playerOne);
 	bulletsEngine(window, playerTwo);
 
+	if ((playerOne->isMoving() == true) && (move1Sound.getStatus() != Sound::Status::Playing))
+		move1Sound.play();
+	else if (playerOne->isMoving() == false)
+		move1Sound.stop();
 
+	if ((playerTwo->isMoving() == true) && (move2Sound.getStatus() != Sound::Status::Playing))
+		move2Sound.play();
+	else if (playerTwo->isMoving() == false)
+		move2Sound.stop();
+
+	
 }

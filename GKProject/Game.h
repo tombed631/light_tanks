@@ -21,8 +21,8 @@ private:
 	Clock clock; // zegar generujacy czas
 	Text playerOnePoints, playerTwoPoints, pointTitle; // punktacja
 	Font font;
-	Sound DestroySound, ShootSound, RicochetSound, MoveSound; // zmienne dzwiekow
-	SoundBuffer DestroySoundBuffer, ShootSoundBuffer, RicochetSoundBuffer, MoveSoundBuffer; // buffery dzwiekow
+	Sound destroySound, shootSound, ricochetSound, move1Sound, move2Sound, rotation1Sound, rotation2Sound; // zmienne dzwiekow
+	SoundBuffer destroySoundBuffer, shootSoundBuffer, ricochetSoundBuffer, moveSoundBuffer, rotationSoundBuffer; // buffery dzwiekow
 
 public:
 	Game(RenderWindow &window);
