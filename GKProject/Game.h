@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Collision.h"
 #include "Map.h"
+#include "ParticleSystem.h"
 
 /*Klasa uruchomieniowa gry*/
 class Game
@@ -21,8 +22,11 @@ private:
 	Clock clock; // zegar generujacy czas
 	Text playerOnePoints, playerTwoPoints, pointTitle; // punktacja
 	Font font;
-	Sound destroySound, shootSound, ricochetSound, move1Sound, move2Sound, rotation1Sound, rotation2Sound; // zmienne dzwiekow
-	SoundBuffer destroySoundBuffer, shootSoundBuffer, ricochetSoundBuffer, moveSoundBuffer, rotationSoundBuffer; // buffery dzwiekow
+	Sound destroySound, shootSound, ricochetSound; // zmienne dzwiekow
+	SoundBuffer destroySoundBuffer, shootSoundBuffer, ricochetSoundBuffer; // buffery dzwiekow
+	vector <ParticleSystem*> explosions;
+	
+
 
 public:
 	Game(RenderWindow &window);
