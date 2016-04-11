@@ -8,7 +8,7 @@ class Bullet : public Drawable, public Transformable
 {
 private:
 	const int radius = 5;	//promien
-	const int speed = 250; // szybkosc pocisku
+	const int speed = 175; // szybkosc pocisku
 	sf::CircleShape bullet; // ksztalt 
 	Vector2f position; // pozycja poczatkowa
 	Vector2f velocity; //  przemieszczenie

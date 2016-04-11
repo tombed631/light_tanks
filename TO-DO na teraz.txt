@@ -1,5 +1,3 @@
--wykrywanie kolizji pocisk czo³g (TOMEK)
-	trzeba zmieniæ miejsce wystrza³u pocisku, przesun¹æ go przed czo³g a nie w czo³gu.
 
 
 -dodanie dŸwiêku ? SINEX
