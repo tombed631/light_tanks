@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Collision.h"
 #include "Map.h"
+#include "ParticleSystem.h"
 
 /*Klasa uruchomieniowa gry*/
 class Game
@@ -19,8 +20,13 @@ private:
 	Collision col;				// collision object
 	Time timeToRestart; // czas zycia 
 	Clock clock; // zegar generujacy czas
-	Text playerOnePoints, playerTwoPoints, pointTitle;
+	Text playerOnePoints, playerTwoPoints, pointTitle; // punktacja
 	Font font;
+	Sound destroySound, shootSound, ricochetSound; // zmienne dzwiekow
+	SoundBuffer destroySoundBuffer, shootSoundBuffer, ricochetSoundBuffer; // buffery dzwiekow
+	vector <ParticleSystem*> explosions;
+	
+
 
 public:
 	Game(RenderWindow &window);

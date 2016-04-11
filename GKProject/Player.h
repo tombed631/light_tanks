@@ -12,7 +12,7 @@ private:
 	Texture tankTexture; // textura czo³gu
 	Vector2f direction;  // kierunek w ktorym porusza sie czo³g
 	Vector2f velocity; //prêdkosc czo³gu
-	const static int speed = 150; // szybkosc czo³gu
+	const static int speed = 50; // szybkosc czo³gu
 	Clock deltaClock;; // krok czasowy
 	String name; // nazwa gracza
 	float positionX, positionY; // pozycja gracza
@@ -40,7 +40,8 @@ public:
 	Sprite tankForwardAndBackward(bool tankOne); // ustawia kopie sprajta w przód lub ty³. 
 													//argument sprawdza o ktory czolg chodzi (osobne sterowanie dla pierwszego i drugiego)
 	void assignRotation();	// ustawienie rotacji sprajta jako przypisanie do niego kopii która nie kolidowa³a
-
+	bool isMoving();
+	bool isRotation();
 	int getPoints();
 	void setPoints(int _points);
 	void setPlayerRotation(float rotation);
