@@ -16,6 +16,7 @@ Bullet::Bullet(Vector2f _position, float rotation)
 	bullet.setRotation(rotation);
 	bullet.setOrigin((float)radius, (float)radius);
 	angle = 0;
+	
 }
 void Bullet::draw(RenderTarget &target, RenderStates states) const
 {

@@ -1,6 +1,6 @@
 #include "Game.h"
 
-ParticleSystem firstTankExplosions(1000), secondTankExplosions(1000);
+
 
 Game::Game(RenderWindow &window)
 {
@@ -31,10 +31,13 @@ Game::Game(RenderWindow &window)
 		MessageBox(NULL, "Brak dŸwiêków!", "ERROR", NULL);
 		return;
 	}
+
 	destroySound.setBuffer(destroySoundBuffer);
 	shootSound.setBuffer(shootSoundBuffer);
 	shootSound.setVolume(25);
 	ricochetSound.setBuffer(ricochetSoundBuffer);
+	firstTankExplosions = new ParticleSystem(1000);
+	secondTankExplosions = new ParticleSystem(1000);
 }
 void Game::reset()
 {
@@ -51,8 +54,6 @@ void Game::reset()
 	playerOnePoints.setString("Player 1\n    " + firstPointsStream.str());
 	secondPointsStream << playerTwo->getPoints();
 	playerTwoPoints.setString("Player 2\n    " + secondPointsStream.str());
-
-
 	playerOne->isHited = false;
 	playerTwo->isHited = false;
 	playerOne->deleteBullets();
@@ -74,10 +75,8 @@ bool Game::run(RenderWindow &window)
 	map->createMap(window);
 
 	// create a clock to track the elapsed time
-	sf::Clock clock1, clock2;
+	sf::Clock clock1, clock2, clock3;
 
-	ParticleSystem test(1000);
-	
 
 	while (isRunningGame)
 	{
@@ -126,37 +125,15 @@ bool Game::run(RenderWindow &window)
 
 
 		}
-		// update it
-		/*if (firstTankExplosions != NULL)
-			if (!firstTankExplosions->update(elapsed))
-			{
-				delete (firstTankExplosions);
-				firstTankExplosions = NULL;
-			}
-		if (secondTankExplosions != NULL)
-			if (!secondTankExplosions->update(elapsed))
-			{
-				delete (secondTankExplosions);
-				secondTankExplosions == NULL;
-			}*/
-		
+
 		sf::Time elapsed1 = clock1.restart();
-		firstTankExplosions.update(elapsed1);
+		firstTankExplosions->update(elapsed1);
 		
 		elapsed1 = clock2.restart();
-		secondTankExplosions.update(elapsed1);
-		for (vector <ParticleSystem*>::iterator it = explosions.begin(); it != explosions.end(); ++it)
-		{
-			(*it)->update(elapsed1);
-			if ((*it)->isAlive == false){
-				//delete (*it);
-				//it = explosions.erase(it);
-			}
-		}
-				
-
-		
-
+		secondTankExplosions->update(elapsed1);
+		elapsed1 = clock3.restart();
+		playerOne->getBulletExplosion()->update(elapsed1);
+		playerTwo->getBulletExplosion()->update(elapsed1);
 		window.clear();
 
 		engine(window);
@@ -168,19 +145,14 @@ bool Game::run(RenderWindow &window)
 		window.draw(pointTitle);
 		window.draw(playerOnePoints);
 		window.draw(playerTwoPoints);
-		/*if (firstTankExplosions != NULL)
-			window.draw(*firstTankExplosions);
-		if (secondTankExplosions != NULL)
-			window.draw(*secondTankExplosions);*/
-		for (vector <ParticleSystem*>::iterator it = explosions.begin(); it != explosions.end(); ++it)
-		{
-			window.draw((**it));
-		}
 
-		window.draw(firstTankExplosions);
-		window.draw(secondTankExplosions);
-		
-		
+
+
+		window.draw(*firstTankExplosions);
+		window.draw(*secondTankExplosions);
+	
+		window.draw(*playerOne->getBulletExplosion());
+		window.draw(*playerTwo->getBulletExplosion()); 
 		window.display();
 	}
 	return backToMenu;
@@ -302,10 +274,7 @@ void Game::playerHited(Player *player)
 void Game::bulletsEngine(RenderWindow &window, Player *player)
 {
 	
-	
-
 	detectBulletsCollision(player);
-
 	vector <Bullet*> v = player->getBullets();
 	if (!v.empty()) // jezeli wektor z pociskami nie jest pusty - czyli nastapil wystrzal i sa jakies w wektorze
 	{
@@ -320,7 +289,7 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 			{						// nie poch³ania pociskow po smierci
 				if (isPlayerHit(playerOne, *it)) //jesli trafiony zostal gracz pierwszy
 				{
-					firstTankExplosions.setEmitter(playerOne->getTankPosition(), 1000);
+					firstTankExplosions->setEmitter(playerOne->getTankPosition(), 1000);
 
 					destroySound.play();
 					playerHited(playerOne);
@@ -334,30 +303,30 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 
 			if (!playerTwo->isHited)// jesli jeszcze nie zostal trafiony gracz pierwszy - dzieki temu trafiony gracz
 			{						// nie poch³ania pociskow po smierci
-			if (isPlayerHit(playerTwo, *it)) //jesli trafiony zostal gracz drugi
-			{
-				secondTankExplosions.setEmitter(playerTwo->getTankPosition(), 1000);
+				if (isPlayerHit(playerTwo, *it)) //jesli trafiony zostal gracz drugi
+				{
+					secondTankExplosions->setEmitter(playerTwo->getTankPosition(), 1000);
 
-				destroySound.play();
-				playerHited(playerTwo);
-				delete (*it);
-				it = v.erase(it);
-				player->setBullets(v); // ustalamy nowy wektor setterem w klasie Player
-				clock.restart();
-				break;
-			}
+					destroySound.play();
+					playerHited(playerTwo);
+					delete (*it);
+					it = v.erase(it);
+					player->setBullets(v); // ustalamy nowy wektor setterem w klasie Player
+					clock.restart();
+					break;
+				}
 			}
 
 
 
 			if ((*it)->getElapsedTime()) // sprawdzamy czy nie ma zniknac po X sek
 			{
-				ParticleSystem *buff = new ParticleSystem(1000);
-				buff->setEmitter((*it)->getPositionBullet(),100);
-				explosions.push_back(buff);
+			
+				player->setEmiter(*it);
 				delete (*it);
 				it = v.erase(it);
-
+				
+			
 				player->setBullets(v); // ustalamy nowy wektor setterem w klasie Player
 				break;
 			}

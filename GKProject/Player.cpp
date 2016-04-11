@@ -15,6 +15,7 @@ Player::Player(String _name, String path)
 	name = _name;
 	isHited = false;
 	points = 0;
+	bulletExplosion = new ParticleSystem(100);
 }
 void Player::draw(RenderTarget &target, RenderStates states) const
 {
@@ -180,4 +181,13 @@ bool Player::isRotation()
 	else
 		return false;
 
+}
+void Player::setEmiter(Bullet *bullet)
+{
+	bulletExplosion->setEmitter(bullet->getPositionBullet(), 1000);
+}
+
+ParticleSystem*::Player::getBulletExplosion()
+{
+	return bulletExplosion;
 }

@@ -4,6 +4,7 @@
 
 #include "Includes.h"
 #include "Bullet.h"
+#include "ParticleSystem.h"
 /*Klasa reprezentujaca gracza*/
 class Player :public sf::Drawable, public sf::Transformable
 {
@@ -12,12 +13,13 @@ private:
 	Texture tankTexture; // textura czo³gu
 	Vector2f direction;  // kierunek w ktorym porusza sie czo³g
 	Vector2f velocity; //prêdkosc czo³gu
-	const static int speed = 50; // szybkosc czo³gu
+	const static int speed = 150; // szybkosc czo³gu
 	Clock deltaClock;; // krok czasowy
 	String name; // nazwa gracza
 	float positionX, positionY; // pozycja gracza
 	vector <Bullet*> bullets; // tablica z pociskami
 	int points;					// punkty gracza
+	ParticleSystem *bulletExplosion;
 public:
 	bool isHited; // czy zosta³ trafiony
 	Player();
@@ -45,5 +47,7 @@ public:
 	int getPoints();
 	void setPoints(int _points);
 	void setPlayerRotation(float rotation);
+	void setEmiter(Bullet *bullet);
+	ParticleSystem *getBulletExplosion();
 
 };

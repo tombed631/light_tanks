@@ -6,7 +6,6 @@
 #include "Player.h"
 #include "Collision.h"
 #include "Map.h"
-#include "ParticleSystem.h"
 
 /*Klasa uruchomieniowa gry*/
 class Game
@@ -25,7 +24,7 @@ private:
 	Sound destroySound, shootSound, ricochetSound; // zmienne dzwiekow
 	SoundBuffer destroySoundBuffer, shootSoundBuffer, ricochetSoundBuffer; // buffery dzwiekow
 	vector <ParticleSystem*> explosions;
-	
+	ParticleSystem *firstTankExplosions, *secondTankExplosions, *bulletExplosion;
 
 
 public:
