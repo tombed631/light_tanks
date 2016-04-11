@@ -1,7 +1,5 @@
 #include "Game.h"
 
-ParticleSystem firstTankExplosions(1000), secondTankExplosions(1000);
-
 Game::Game(RenderWindow &window)
 {
 	isRunningGame = true;
@@ -24,17 +22,7 @@ Game::Game(RenderWindow &window)
 	playerTwoPoints.setCharacterSize(20);
 	playerTwoPoints.setPosition(800 - (800 / 3) - pointTitle.getGlobalBounds().width / 2.f, (float)window.getSize().y - 100);
 
-	// ladowanie dzwiekow
-	if ((!destroySoundBuffer.loadFromFile("Sounds\\Explosion.wav")) || (!shootSoundBuffer.loadFromFile("Sounds\\Shoot_v2.wav")) ||
-		(!ricochetSoundBuffer.loadFromFile("Sounds\\Ricochet.wav")))
-	{
-		MessageBox(NULL, "Brak dŸwiêków!", "ERROR", NULL);
-		return;
-	}
-	destroySound.setBuffer(destroySoundBuffer);
-	shootSound.setBuffer(shootSoundBuffer);
-	shootSound.setVolume(25);
-	ricochetSound.setBuffer(ricochetSoundBuffer);
+
 }
 void Game::reset()
 {
@@ -73,12 +61,6 @@ bool Game::run(RenderWindow &window)
 	map = new Map();
 	map->createMap(window);
 
-	// create a clock to track the elapsed time
-	sf::Clock clock1, clock2;
-
-	ParticleSystem test(1000);
-	
-
 	while (isRunningGame)
 	{
 		while (window.pollEvent(eventHandle))
@@ -99,62 +81,25 @@ bool Game::run(RenderWindow &window)
 				isRunningGame = false;
 				players.clear();
 			}
-			if ((eventHandle.type == Event::KeyReleased && eventHandle.key.code == Keyboard::P))
-			{
-				// pocisk mozna wystrzelic tylko gdy aktualnie gracz ma mniej niz 7 wystrzelonych oraz
-				// zaden z graczy nie zosta³ trafiony
-				if (playerOne->getBullets().size() < 8 && !playerOne->isHited && !playerTwo->isHited)
-				{
-					playerOne->bulletShoot();
-					shootSound.play();
-				}
-				
-			}
-
 			if ((eventHandle.type == Event::KeyReleased && eventHandle.key.code == Keyboard::Space))
 			{
 				// pocisk mozna wystrzelic tylko gdy aktualnie gracz ma mniej niz 7 wystrzelonych oraz
 				// zaden z graczy nie zosta³ trafiony
-				if (playerTwo->getBullets().size() < 8 && !playerTwo->isHited  && !playerOne->isHited)
-				{
-					playerTwo->bulletShoot();
-					shootSound.play();
-
-				}
-
-			}
-
-
-		}
-		// update it
-		/*if (firstTankExplosions != NULL)
-			if (!firstTankExplosions->update(elapsed))
-			{
-				delete (firstTankExplosions);
-				firstTankExplosions = NULL;
-			}
-		if (secondTankExplosions != NULL)
-			if (!secondTankExplosions->update(elapsed))
-			{
-				delete (secondTankExplosions);
-				secondTankExplosions == NULL;
-			}*/
-		
-		sf::Time elapsed1 = clock1.restart();
-		firstTankExplosions.update(elapsed1);
-		
-		elapsed1 = clock2.restart();
-		secondTankExplosions.update(elapsed1);
-		for (vector <ParticleSystem*>::iterator it = explosions.begin(); it != explosions.end(); ++it)
-		{
-			(*it)->update(elapsed1);
-			if ((*it)->isAlive == false){
-				//delete (*it);
-				//it = explosions.erase(it);
-			}
-		}
+				if (playerOne->getBullets().size()<8 && !playerOne->isHited && !playerTwo->isHited)
+				playerOne->bulletShoot();
 				
+			}
 
+			if ((eventHandle.type == Event::KeyReleased && eventHandle.key.code == Keyboard::K))
+			{
+				// pocisk mozna wystrzelic tylko gdy aktualnie gracz ma mniej niz 7 wystrzelonych oraz
+				// zaden z graczy nie zosta³ trafiony
+				if (playerTwo->getBullets().size()<8 && !playerTwo->isHited  && !playerOne->isHited)
+				playerTwo->bulletShoot();
+
+			}
+		}
+		// odswiezanie punktacji
 		
 
 		window.clear();
@@ -168,19 +113,6 @@ bool Game::run(RenderWindow &window)
 		window.draw(pointTitle);
 		window.draw(playerOnePoints);
 		window.draw(playerTwoPoints);
-		/*if (firstTankExplosions != NULL)
-			window.draw(*firstTankExplosions);
-		if (secondTankExplosions != NULL)
-			window.draw(*secondTankExplosions);*/
-		for (vector <ParticleSystem*>::iterator it = explosions.begin(); it != explosions.end(); ++it)
-		{
-			window.draw((**it));
-		}
-
-		window.draw(firstTankExplosions);
-		window.draw(secondTankExplosions);
-		
-		
 		window.display();
 	}
 	return backToMenu;
@@ -192,7 +124,7 @@ void Game::moveTank(Player *playerMain, Player *playerSub,bool which)
 	bool rotation = true;
 	bool forwardBackward = true;
 	Sprite X = playerMain->copySpriteRotation(which); // zwraca boundsy kopi sprajta podczas rotacji
-	Sprite Y = playerMain->tankForwardAndBackward(which); // zwraca boundsy kopi sprajta podczas ruchu do przodu lub ty³u
+	Sprite Y = playerMain->tankForwardAndBackward(which); // zwraca boundsy kopi sprata podczas ruchu do przodu lub ty³u
 
 	for (int i = 0; i < map->getWallsSize(); i++) // iteracja tablic ze scianami
 	{
@@ -203,12 +135,10 @@ void Game::moveTank(Player *playerMain, Player *playerSub,bool which)
 			forwardBackward = false;
 	}
 	if (rotation) // jezeli nie by³o kolizji przypisz nowa rotacje
-	{
-		// sprawdzanie ktory gracz i czy juz dzwiek jest wlaczony
 		playerMain->assignRotation();
-	}
 	if (forwardBackward) // jezeli nie by³o kolizji w przod lub ty³ przypisz nowa pozycje
 		playerMain->moveTank();
+
 
 }
 
@@ -280,7 +210,6 @@ void Game::detectBulletsCollision(Player *player)
 				}
 
 			}
-			ricochetSound.play();
 			player->getSingleBullet(i)->setRotationBullet(newRotation);
 
 		}
@@ -301,8 +230,6 @@ void Game::playerHited(Player *player)
 }
 void Game::bulletsEngine(RenderWindow &window, Player *player)
 {
-	
-	
 
 	detectBulletsCollision(player);
 
@@ -320,9 +247,6 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 			{						// nie poch³ania pociskow po smierci
 				if (isPlayerHit(playerOne, *it)) //jesli trafiony zostal gracz pierwszy
 				{
-					firstTankExplosions.setEmitter(playerOne->getTankPosition(), 1000);
-
-					destroySound.play();
 					playerHited(playerOne);
 					delete (*it);
 					it = v.erase(it);
@@ -336,9 +260,6 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 			{						// nie poch³ania pociskow po smierci
 			if (isPlayerHit(playerTwo, *it)) //jesli trafiony zostal gracz drugi
 			{
-				secondTankExplosions.setEmitter(playerTwo->getTankPosition(), 1000);
-
-				destroySound.play();
 				playerHited(playerTwo);
 				delete (*it);
 				it = v.erase(it);
@@ -352,12 +273,8 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 
 			if ((*it)->getElapsedTime()) // sprawdzamy czy nie ma zniknac po X sek
 			{
-				ParticleSystem *buff = new ParticleSystem(1000);
-				buff->setEmitter((*it)->getPositionBullet(),100);
-				explosions.push_back(buff);
 				delete (*it);
 				it = v.erase(it);
-
 				player->setBullets(v); // ustalamy nowy wektor setterem w klasie Player
 				break;
 			}
@@ -390,5 +307,4 @@ void Game::engine(RenderWindow &window)
 	bulletsEngine(window, playerTwo);
 
 
-	
 }

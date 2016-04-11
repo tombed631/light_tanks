@@ -16,7 +16,6 @@
 #include <stdlib.h>
 #include <cstdlib>
 #include <limits>
-#include <SFML/Audio.hpp>
 
 
 using namespace sf;
