@@ -1,8 +1,5 @@
-#version 130
+#version 120
 
-//layout(location = 0) in vec3 in_position;
-//layout(location = 1) in vec3 in_normal;
-//layout(location = 2) in vec2 in_TexCoord;
 
 attribute vec3 in_position;
 attribute vec3 in_normal;
@@ -10,7 +7,7 @@ attribute vec2 in_TexCoord;
 
 varying vec2 textureCoord;
 varying vec3 normal;
-
+varying vec3 fragWorldPos;
 
 
 //contains 3 transformation matrices
@@ -20,8 +17,8 @@ uniform mat4 projection;
 
 void main()
 {
-	gl_Position = projection * view * model * vec4(in_position, 1.0f);	//transform object coords from local to clip space
-	//gl_Position = vec4(in_position, 1.0f);	//transform object coords from local to clip space
+	gl_Position = projection * view * model * vec4(in_position, 1.0);	//transform object coords from local to clip space
+	fragWorldPos = vec3(model * vec4(in_position, 1.0));	//pass fragment world coords to fragmentShader 
 	textureCoord = in_TexCoord;
 	normal = in_normal;
 }

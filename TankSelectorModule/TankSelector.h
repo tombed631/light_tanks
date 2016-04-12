@@ -7,12 +7,11 @@
 #include <GL\glew.h>
 #include "GLExceptions.h"
 #include "Model3d.h"
+#include "ModelLoader.h"
 #include "Camera.h"
 #include "Arcball.h"
+#include "Light.h"
 
-#ifdef _DEBUG
-#include <iostream>
-#endif
 
 ////////////////////////////////////////////////////////
 ///	Provides GUI for tank selecting option in game menu.
@@ -24,11 +23,13 @@ class TankSelector final{
 public:
 
 	///////////////////TEMP_CONTENT_BEGIN//////////////////////
-	Shader * shader;
-	Model3D * hero;
-	Camera * camera;
-	ArcBall * arcball;
-	glm::mat4 model_m;
+	Shader modelShader;
+	Shader lightShader;
+	LightCube light;
+	Model3D model3d;
+	glm::mat4 model3d_modelMatrix, light_modelMatrix, projectionMatrix, viewMatrix;
+	ArcBall arcball;
+	Camera camera;
 	///////////////////TEMP_CONTENT_END////////////////////////
 
 	///Default constructor.

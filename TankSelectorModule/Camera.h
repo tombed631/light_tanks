@@ -24,6 +24,25 @@ public:
 		position(position), front(front), up(glm::vec3(0.0f, 1.0f, 0.0f)) {
 	}
 	
+	///Returns camera position in world space.
+	glm::vec3 getPosition() const {
+		return this->position;
+	}
+
+	///Sets camera position in world space.
+	void setPosition(const glm::vec3 pos) {
+		this->position = pos;
+	}
+
+	///Returns camera front vector.
+	glm::vec3 getFront() const {
+		return this->front;
+	}
+
+	///Sets camera front vector.
+	void setFront(const glm::vec3 front) {
+		this->front = front;
+	}
 
 	///Returns view matrix, that is ready to use
 	///to transform coordinates from world space to the view space.

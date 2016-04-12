@@ -23,6 +23,7 @@ public:
 		arcballOn = false;
 	}
 
+
 	///Sets target window size.
 	///winWidth		Target window width
 	///winHeight	Target window height

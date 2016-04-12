@@ -3,13 +3,71 @@
 
 using namespace std;
 
+///Creates a new shader which is a copy of other specified shader object.
+///Note that if the specified shader is not compiled, this one will not be too.
+///shader	Shader used to create a copy.
+///Throws ShaderCompileError if compilation failed.
+Shader::Shader(const Shader & shader) {
+	this->vertexShaderPath = shader.vertexShaderPath;
+	this->fragmentShaderPath = shader.fragmentShaderPath;
+	if (shader.isCompiled())
+		build();
+	else
+		this->shaderProgram = 0;
+}
+
+///Moves shader program from specified shader objects to this shader object.
+///Note that if the specified shader is not compiled, this one will not be too.
+Shader::Shader(Shader && shader) {
+	this->vertexShaderPath = shader.vertexShaderPath;
+	this->fragmentShaderPath = shader.fragmentShaderPath;
+	this->shaderProgram = shader.shaderProgram;
+	shader.shaderProgram = 0;
+}
+
+
+///Assigns a copy of other specified shader object to this shader object.
+///Note that if the specified shader is not compiled, this one will not be too.
+///shader	Shader used to create a copy.
+///Throws ShaderCompileError if compilation failed.
+Shader & Shader::operator=(const Shader & shader) {
+	if (this != &shader) {
+		this->vertexShaderPath = shader.vertexShaderPath;
+		this->fragmentShaderPath = shader.fragmentShaderPath;
+		if (shader.isCompiled())
+			build();	//no need to remove shader program if any exists, because bulid method do this.
+		else {
+			if (this->shaderProgram != 0)
+				glDeleteProgram(this->shaderProgram);
+			this->shaderProgram = 0;
+		}
+	}
+	return *this;
+}
+
+
+///Moves shader program from specified shader objects to this shader object.
+///Note that if the specified shader is not compiled, this one will not be too.
+Shader & Shader::operator=(Shader && shader) {
+	if (this != &shader) {
+		if (this->isCompiled())
+			glDeleteProgram(this->shaderProgram);
+		this->vertexShaderPath = shader.vertexShaderPath;
+		this->fragmentShaderPath = shader.fragmentShaderPath;
+		this->shaderProgram = shader.shaderProgram;
+
+		shader.shaderProgram = 0;
+	}
+	return *this;
+}
+
+
+
 ///Creates shader program from specified vertex and fragment shaders.
 ///Note that the current shader program will be deleted if existed
 ///and the new one will be built.
-///vertexShaderPath			path to the vertex shader source file
-///fragmentShaderPath		path to the fragment shader source file
-///Throws ShaderCompileError if compilation failed
-void Shader::build(const GLchar * vertexShaderPath, const GLchar * fragmentShaderPath){
+///Throws ShaderCompileError if compilation failed.
+void Shader::build(){
 
 	const GLchar *  vertexShaderCode, * fragmentShaderCode;	//contains source code of shaders
 	ifstream vertexShaderFile, fragmentShaderFile;	//for reading code from file
@@ -21,13 +79,13 @@ void Shader::build(const GLchar * vertexShaderPath, const GLchar * fragmentShade
 	//set exception flags
 	vertexShaderFile.exceptions(ifstream::badbit | ifstream::failbit);
 
-	if (shaderProgram != 0)
+	if (this->shaderProgram != 0)
 		glDeleteProgram(shaderProgram);
 
 	try{
 		//open files
-		vertexShaderFile.open(vertexShaderPath);	
-		fragmentShaderFile.open(fragmentShaderPath);
+		vertexShaderFile.open(this->vertexShaderPath);	
+		fragmentShaderFile.open(this->fragmentShaderPath);
 		stringstream stream;
 
 		//read code from files
