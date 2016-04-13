@@ -4,7 +4,7 @@ using namespace std;
 
 void TankWindow::renderWindow(int height, int width, string name)
 {
-	RenderWindow window(sf::VideoMode(height, width, 64), name);
+	RenderWindow window(sf::VideoMode(height, width, 64), name,sf::Style::Default, sf::ContextSettings(24));
 	window.setFramerateLimit(100);
 	menu.showMenu(window);
 }

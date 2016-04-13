@@ -9,9 +9,10 @@ Player::Player(String _name, String path)
 		return;
 	}
 	tankSprite.setTexture(tankTexture);
-	tankSprite.setOrigin(80, 128);
-	tankSprite.setScale((float)0.15, (float)0.15);
-	//tankSprite.setRotation(180);
+	tankSprite.setColor(sf::Color::Green);
+	tankSprite.setOrigin(18, 26.5);
+	
+	
 	name = _name;
 	isHited = false;
 	points = 0;
@@ -45,16 +46,16 @@ Sprite Player::copySpriteRotation(bool tankOne)
 	if (tankOne)
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			copy.setRotation(copy.getRotation() - 3);
+			copy.setRotation(copy.getRotation() -2 );
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			copy.setRotation(copy.getRotation() + 3);
+			copy.setRotation(copy.getRotation() + 2);
 	}
 	else 
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-			copy.setRotation(copy.getRotation() - 3);
+			copy.setRotation(copy.getRotation() - 2);
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-			copy.setRotation(copy.getRotation() + 3);
+			copy.setRotation(copy.getRotation() + 2);
 	}
 	return copy;
 }

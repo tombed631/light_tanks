@@ -41,6 +41,7 @@ bool Help::showHelp(RenderWindow &window)
 	
 
 	arrowKeysSprite.setTexture(arrowKeysTexture);
+	arrowKeysSprite.setColor(Color::Blue);
 	arrowKeysSprite.setPosition(550 / 2 - arrowKeysSprite.getGlobalBounds().width / 2.f, 100.f + 200.f); //player1
 	pKeySprite.setPosition(500 / 2 - pKeySprite.getGlobalBounds().width / 2.f, 100.f + 350); //player1
 	wsadKeysSprite.setTexture(wsadKeysTexture);

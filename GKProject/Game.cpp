@@ -58,8 +58,8 @@ void Game::reset()
 	playerTwo->isHited = false;
 	playerOne->deleteBullets();
 	playerTwo->deleteBullets();
-	playerOne->setTankPosition(Vector2f(760,50));
-	playerTwo->setTankPosition(Vector2f(40, 50));
+	playerOne->setTankPosition(Vector2f(700,35));
+	playerTwo->setTankPosition(Vector2f(40, 35));
 	playerOne->setPlayerRotation(180);
 	playerTwo->setPlayerRotation(180);
 }
@@ -68,8 +68,8 @@ bool Game::run(RenderWindow &window)
 	bool backToMenu = true;
 	
 
-	playerOne = new Player("Tomek", "Textures\\1.jpg");
-	playerTwo = new Player("Sinex", "Textures\\2.jpg");
+	playerOne = new Player("Tomek", "Textures\\tank2.png");
+	playerTwo = new Player("Sinex", "Textures\\tank2.png");
 	reset();
 	map = new Map();
 	map->createMap(window);
