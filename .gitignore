@@ -285,3 +285,6 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+TankSelectorModule/packages.config
+GKProject/GKProject.vcxproj.filters
+TankSelectorModule/TankSelectorModule.vcxproj.filters
