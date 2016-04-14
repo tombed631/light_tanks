@@ -33,8 +33,9 @@ public:
 	{};
 
 	bool isAlive = false;
+	bool colors;
 
-	void setEmitter(sf::Vector2f position, int time);
+	void setEmitter(sf::Vector2f position, int time, int _angle, int _speed, bool colors);
 
 	void update(sf::Time elapsed);
 

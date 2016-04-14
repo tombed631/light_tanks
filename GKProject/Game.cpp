@@ -38,15 +38,29 @@ Game::Game(RenderWindow &window)
 	ricochetSound.setBuffer(ricochetSoundBuffer);
 	firstTankExplosions = new ParticleSystem(1000);
 	secondTankExplosions = new ParticleSystem(1000);
+	pointChanging = new ParticleSystem(100);
 }
 void Game::reset()
 {
-
+	
+	Vector2f pointPosition;
 	// rozpoznanie ktory gracz zostal trafiony
 	if (playerOne->isHited) // trafiony gracz pierwszy
+	{
 		playerTwo->setPoints(playerTwo->getPoints() + 1); // dodaj punkt graczowi drugiemu
+		pointPosition = playerTwoPoints.getPosition();
+		pointPosition.x += (playerTwoPoints.getGlobalBounds().width / 2) - 13;
+		pointPosition.y += playerTwoPoints.getGlobalBounds().height - 10;
+		pointChanging->setEmitter(pointPosition, 1000, 10, 20, false);
+	}
 	if (playerTwo->isHited) // trafiony gracz drugi
+	{
 		playerOne->setPoints(playerOne->getPoints() + 1);// dodaj punkt graczowi pierwszemu
+		pointPosition = playerOnePoints.getPosition();
+		pointPosition.x += (playerOnePoints.getGlobalBounds().width / 2) - 13;
+		pointPosition.y += playerOnePoints.getGlobalBounds().height - 10;
+		pointChanging->setEmitter(pointPosition, 1000, 10, 20, false);
+	}
 
 	// zmiana punktow z inty na stringi
 	ostringstream firstPointsStream, secondPointsStream;
@@ -54,6 +68,7 @@ void Game::reset()
 	playerOnePoints.setString("Player 1\n    " + firstPointsStream.str());
 	secondPointsStream << playerTwo->getPoints();
 	playerTwoPoints.setString("Player 2\n    " + secondPointsStream.str());
+	//playerOnePoints.
 	playerOne->isHited = false;
 	playerTwo->isHited = false;
 	playerOne->deleteBullets();
@@ -75,7 +90,7 @@ bool Game::run(RenderWindow &window)
 	map->createMap(window);
 
 	// create a clock to track the elapsed time
-	sf::Clock clock1, clock2, clock3;
+	sf::Clock clock1, clock2, clock3, clock4;
 
 
 	while (isRunningGame)
@@ -128,12 +143,14 @@ bool Game::run(RenderWindow &window)
 
 		sf::Time elapsed1 = clock1.restart();
 		firstTankExplosions->update(elapsed1);
-		
 		elapsed1 = clock2.restart();
 		secondTankExplosions->update(elapsed1);
 		elapsed1 = clock3.restart();
 		playerOne->getBulletExplosion()->update(elapsed1);
 		playerTwo->getBulletExplosion()->update(elapsed1);
+		elapsed1 = clock4.restart();
+		pointChanging->update(elapsed1);
+
 		window.clear();
 
 		engine(window);
@@ -153,6 +170,8 @@ bool Game::run(RenderWindow &window)
 	
 		window.draw(*playerOne->getBulletExplosion());
 		window.draw(*playerTwo->getBulletExplosion()); 
+
+		window.draw(*pointChanging);
 		window.display();
 	}
 	return backToMenu;
@@ -289,7 +308,7 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 			{						// nie poch³ania pociskow po smierci
 				if (isPlayerHit(playerOne, *it)) //jesli trafiony zostal gracz pierwszy
 				{
-					firstTankExplosions->setEmitter(playerOne->getTankPosition(), 1000);
+					firstTankExplosions->setEmitter(playerOne->getTankPosition(), 1000, 360, 50, true);
 
 					destroySound.play();
 					playerHited(playerOne);
@@ -305,7 +324,7 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 			{						// nie poch³ania pociskow po smierci
 				if (isPlayerHit(playerTwo, *it)) //jesli trafiony zostal gracz drugi
 				{
-					secondTankExplosions->setEmitter(playerTwo->getTankPosition(), 1000);
+					secondTankExplosions->setEmitter(playerTwo->getTankPosition(), 1000, 360, 50, true);
 
 					destroySound.play();
 					playerHited(playerTwo);

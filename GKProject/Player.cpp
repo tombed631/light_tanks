@@ -185,7 +185,7 @@ bool Player::isRotation()
 }
 void Player::setEmiter(Bullet *bullet)
 {
-	bulletExplosion->setEmitter(bullet->getPositionBullet(), 1000);
+	bulletExplosion->setEmitter(bullet->getPositionBullet(), 1000, 360, 50, true);
 }
 
 ParticleSystem*::Player::getBulletExplosion()

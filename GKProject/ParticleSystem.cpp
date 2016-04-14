@@ -2,20 +2,22 @@
 
 
 
-void ParticleSystem::setEmitter(sf::Vector2f position, int time)
+void ParticleSystem::setEmitter(sf::Vector2f position, int time, int _angle, int _speed, bool _colors)
 {
 	isAlive = true;
+	colors = _colors;
 	m_emitter = position;
 	for (std::size_t index = 0; index < m_particles.size(); ++index)
 	{
 		// give a random velocity and lifetime to the particle
-		float angle = (std::rand() % 360) * 3.14f / 180.f;
-		float speed = (std::rand() % 50) + 10.f;
+		float angle = (90 + (std::rand() % _angle)) * 3.14f / 180.f;
+		float speed = (std::rand() % _speed) + 10.f;
 		m_particles[index].velocity = sf::Vector2f(std::cos(angle) * speed, std::sin(angle) * speed);
 		m_particles[index].lifetime = sf::milliseconds((std::rand() % 200) + time);
 
 		// reset the position of the corresponding vertex
-		m_vertices[index].position = m_emitter;
+		m_vertices[index].position.x = m_emitter.x + (std::rand() % 10);
+		m_vertices[index].position.y = m_emitter.y + (std::rand() % 10);
 	}
 	visible = true;
 };
@@ -40,28 +42,28 @@ void ParticleSystem::update(sf::Time elapsed)
 
 				// update the alpha (transparency) of the particle according to its lifetime
 				float ratio = p.lifetime.asSeconds() / m_lifetime.asSeconds();
-
-				if (!(m_vertices[i].color == Color::Red) || !(m_vertices[i].color == Color::Yellow))
-				{
-					switch (red_yellow)
+				if (colors)
+					if (!(m_vertices[i].color == Color::Red) || !(m_vertices[i].color == Color::Yellow))
 					{
-						case 0:
-							m_vertices[i].color = Color::Red;
-							red_yellow++;
-							break;
+						switch (red_yellow)
+						{
+							case 0:
+								m_vertices[i].color = Color::Red;
+								red_yellow++;
+								break;
 
-						case 1:
-							m_vertices[i].color = Color::Red;
-							red_yellow++;
-							break;
-						case 2:
-							m_vertices[i].color = Color::Yellow;
-							red_yellow = 0;
-							break;
-					}
+							case 1:
+								m_vertices[i].color = Color::Red;
+								red_yellow++;
+								break;
+							case 2:
+								m_vertices[i].color = Color::Yellow;
+								red_yellow = 0;
+								break;
+						}
 						
 					
-				}
+					}
 					
 				m_vertices[i].color.a = static_cast<sf::Uint8>(ratio * 255);
 			}
