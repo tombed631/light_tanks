@@ -4,24 +4,26 @@
 
 #include "Shader.h"
 
+namespace p3d{
 
-////////////////////////////////////////////////////////
-///	Abstract class that represents something 
-/// that can be drawn on the screen.
-///
-///	version 1.0
-////////////////////////////////////////////////////////
-class Drawable {
+	////////////////////////////////////////////////////////
+	///	Abstract class that represents something 
+	/// that can be drawn on the screen.
+	///
+	///	version 1.0
+	////////////////////////////////////////////////////////
+	class Drawable {
 
-public:
+	public:
 
-	///Draws the object on the screen.
-	///shader	Shader used to draw.
-	virtual void draw(const Shader & shader) const = 0;
+		///Draws the object on the screen.
+		///shader	Shader used to draw.
+		virtual void draw(const p3d::Shader & shader) const = 0;
 
-	virtual ~Drawable() = default;
+		virtual ~Drawable() = default;
 
-};
+	};
 
+}
 
 #endif	//_DRAWABE_H_

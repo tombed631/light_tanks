@@ -41,6 +41,28 @@ void Menu::showMenu(RenderWindow &window)
 				|| (eventHandle.type == Event::KeyPressed && eventHandle.key.code == Keyboard::Return)))
 				isRunningMenu = false;
 
+			// klikniecie myszka na wybor czolgu
+			if (menuOptions[optionsNumber - 3].getColor() == Color::Green &&
+				((eventHandle.type == Event::MouseButtonReleased && eventHandle.key.code == Mouse::Left)
+				|| (eventHandle.type == Event::KeyPressed && eventHandle.key.code == Keyboard::Return)))
+			{
+				try {
+					p3d::TankSelector(window).run();
+				}
+				catch(p3d::ShaderCompileError & e) {
+#ifdef _DEBUG
+					cout << e.what() << endl;
+#endif
+					MessageBox(NULL, "Cannot compile shaders!", "ERROR", NULL);
+				}
+				catch (p3d::LoadModelError & e) {
+#ifdef _DEBUG
+					cout << e.what() << endl;
+#endif
+					MessageBox(NULL, "Cannot load models!", "ERROR", NULL);
+				}
+			}
+
 			// klikniecie myszka lub klawiatura na PLAY
 			if (menuOptions[optionsNumber - 4].getColor() == Color::Blue &&
 				((eventHandle.type == Event::MouseButtonReleased && eventHandle.key.code == Mouse::Left)

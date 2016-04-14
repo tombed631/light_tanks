@@ -4,7 +4,6 @@
 
 #include <SFML\Graphics.hpp>
 #include "TankTypes.h"
-#include <GL\glew.h>
 #include "GLExceptions.h"
 #include "Model3d.h"
 #include "ModelLoader.h"
@@ -12,61 +11,63 @@
 #include "Arcball.h"
 #include "Light.h"
 
+namespace p3d {
 
-////////////////////////////////////////////////////////
-///	Provides GUI for tank selecting option in game menu.
-///
-///	version 1.0
-////////////////////////////////////////////////////////
-class TankSelector final{
+	////////////////////////////////////////////////////////
+	///	Provides GUI for tank selecting option in game menu.
+	///
+	///	version 1.0
+	////////////////////////////////////////////////////////
+	class TankSelector final {
 
-public:
+	public:
 
-	///////////////////TEMP_CONTENT_BEGIN//////////////////////
-	Shader modelShader;
-	Shader lightShader;
-	LightCube light;
-	Model3D model3d;
-	glm::mat4 model3d_modelMatrix, light_modelMatrix, projectionMatrix, viewMatrix;
-	ArcBall arcball;
-	Camera camera;
-	///////////////////TEMP_CONTENT_END////////////////////////
+		///////////////////TEMP_CONTENT_BEGIN//////////////////////
+		Shader modelShader;
+		Shader lightShader;
+		LightCube light;
+		Model3D model3d;
+		glm::mat4 model3d_modelMatrix, light_modelMatrix, projectionMatrix, viewMatrix;
+		ArcBall arcball;
+		Camera camera;
+		///////////////////TEMP_CONTENT_END////////////////////////
 
-	///Default constructor.
-	///Note that you need to set thetarget window 
-	///before you actually use TankSelector created with default constructor.
-	///See setTargetWindow method.
-	TankSelector() = default;
+		///Default constructor.
+		///Note that you need to set thetarget window 
+		///before you actually use TankSelector created with default constructor.
+		///See setTargetWindow method.
+		TankSelector() = default;
 
-	///Creates TankSelector.
-	///sf::RenderWindow * window		Target window for rendering
-	explicit TankSelector(sf::RenderWindow & window) {
-		gameWindow = &window;
-	}
+		///Creates TankSelector.
+		///sf::RenderWindow * window		Target window for rendering
+		explicit TankSelector(sf::RenderWindow & window) {
+			gameWindow = &window;
+		}
 
-	///Default destructor
-	~TankSelector() = default;
+		///Default destructor
+		~TankSelector() = default;
 
-	///Sets target window for rendering
-	void setTargetWindow(sf::RenderWindow & window){
-		gameWindow = &window;
-	}
+		///Sets target window for rendering
+		void setTargetWindow(sf::RenderWindow & window) {
+			gameWindow = &window;
+		}
 
-	///Starts TankSelector.
-	///Returns tank types chose by players.
-	///Throws GLEWInitError when failed to initialize GLEW
-	PlTankTypes run();
+		///Starts TankSelector.
+		///Returns tank types chose by players.
+		///Throws GLEWInitError when failed to initialize GLEW
+		PlTankTypes run();
 
-private:
+	private:
 
-	///Pointer to the target window for rendering
-	sf::RenderWindow * gameWindow;
+		///Pointer to the target window for rendering
+		sf::RenderWindow * gameWindow;
 
-	///Renders current frame to the window
-	///and displays it on the screen.
-	void draw();
+		///Renders current frame to the window
+		///and displays it on the screen.
+		void draw();
 
-};
+	};
 
+}
 
 #endif //_TANK_SELECTOR_

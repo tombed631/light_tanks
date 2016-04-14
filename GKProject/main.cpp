@@ -1,16 +1,20 @@
-#include <SFML/OpenGL.hpp>
-#include <SFML/Graphics.hpp>
-#include <stdlib.h>
-#include <cstdlib>
-#include <Windows.h>
-#include <math.h>
+#include "Includes.h"
 #include "TankWindow.h"
-using namespace sf;
+
 using namespace std;
+
 void main(void)
 {
-
+	
 	TankWindow window;
-	window.renderWindow(820,760,"Light Tanks");
+	try {
+		window.renderWindow(820, 760, "Light Tanks");
+	}
+	catch (p3d::GLEWInitError & e) {
+#ifdef _DEBUG
+		cout << e.what();
+#endif
+		MessageBox(NULL, "Cannot lauch the game!", "ERROR", NULL);
+	}
 }
 

@@ -4,9 +4,8 @@
 
 #define NOMINMAX
 
-
 #include <Windows.h>
-#include <SFML/OpenGL.hpp>
+#include <GL\glew.h>
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <string>

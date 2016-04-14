@@ -287,3 +287,4 @@ paket-files/
 TankSelectorModule/packages.config
 GKProject/GKProject.vcxproj.filters
 TankSelectorModule/TankSelectorModule.vcxproj.filters
+*.config
