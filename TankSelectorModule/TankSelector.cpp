@@ -18,10 +18,10 @@ PlTankTypes TankSelector::run(){
 	sf::Event event;
 	///////////////////TEMP_CONTENT_BEGIN///////////////////
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
 	modelShader = Shader("../TankSelectorModule/vertexShader.glsl", "../TankSelectorModule/fragmentShader.glsl");
 	lightShader = Shader("../TankSelectorModule/lightSrcVerxShd.glsl", "../TankSelectorModule/lightSrcFragShd.glsl");
 	model3d = ModelLoader::loadFromFile("../../graphics/abrams/Abrams_BF3.obj");
+	//model3d = ModelLoader::loadFromFile("../../graphics/hero/nanosuit.obj");
 	model3d_modelMatrix = glm::scale(model3d_modelMatrix, glm::vec3(0.01f, 0.01f, 0.01f));
 	GLfloat width = gameWindow->getSize().x, height = gameWindow->getSize().y;
 	projectionMatrix = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
@@ -29,8 +29,8 @@ PlTankTypes TankSelector::run(){
 	viewMatrix = camera.getViewMatrix();
 	arcball = ArcBall(gameWindow->getSize().x, gameWindow->getSize().y);
 	Light _light;
-	_light.ambientIntensity = glm::vec3(0.2f, 0.2f, 0.2f);
-	_light.diffuseIntensity = glm::vec3(0.5f, 0.5f, 0.5f);
+	_light.ambientIntensity = glm::vec3(0.5f, 0.5f, 0.5f);
+	_light.diffuseIntensity = glm::vec3(0.8f, 0.8f, 0.8f);
 	_light.specularIntensity = glm::vec3(1.0f, 1.0f, 1.0f);
 	_light.position = glm::vec3(10.0f, 3.0f, 2.0f);
 	light.setLight(_light);

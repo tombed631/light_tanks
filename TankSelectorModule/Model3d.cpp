@@ -140,7 +140,6 @@ void Mesh::draw(const Shader & shader) const{
 		glUniform1i(glGetUniformLocation(shader.getProgram(), (type + number).c_str()), i);
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);	//bind texture to the active texture unit
 	}
-	glActiveTexture(GL_TEXTURE0);
 
 	//Bind vertex & indices buffers
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -174,6 +173,11 @@ void Mesh::draw(const Shader & shader) const{
 	glDisableVertexAttribArray(posLoc);
 	glDisableVertexAttribArray(normLoc);
 	glDisableVertexAttribArray(texLoc);
+
+	for (GLuint i = 0; i < this->textures.size(); i++) {
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
 		
 }
 

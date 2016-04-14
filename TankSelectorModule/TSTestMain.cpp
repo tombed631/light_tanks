@@ -9,8 +9,7 @@
 
 int main(void){
 
-	//create a sfml window
-	sf::RenderWindow window(sf::VideoMode(800, 600), "TankSelector");
+	sf::RenderWindow window(sf::VideoMode(800, 600), "TankSelector",sf::Style::Default, sf::ContextSettings(24));
 
 	//launch tank selector and capture the result
 	try{

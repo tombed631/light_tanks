@@ -15,6 +15,7 @@ varying vec3 fragWorldPos;	//fragment world coords
 
 uniform vec3 viewPos; //camera world coords
 
+//out vec4 out_color;
 
 //lighting texture maps
 uniform sampler2D texture_diffuse1;
@@ -45,7 +46,8 @@ void main()
 
 	//gl_FragColor = vec4(1.0,1.0,1.0,0.0); //set white color
 
-
+	//out_color = vec4(ambient + diffuse + specular, 1.0);
 	gl_FragColor = vec4(ambient + diffuse + specular, 1.0);
+	//gl_FragColor = vec4(texture(texture_diffuse1, textureCoord));
 	
 }
