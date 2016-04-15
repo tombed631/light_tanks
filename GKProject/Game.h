@@ -24,7 +24,7 @@ private:
 	Sound destroySound, shootSound, ricochetSound; // zmienne dzwiekow
 	SoundBuffer destroySoundBuffer, shootSoundBuffer, ricochetSoundBuffer; // buffery dzwiekow
 	vector <ParticleSystem*> explosions;
-	ParticleSystem *firstTankExplosions, *secondTankExplosions, *bulletExplosion, *pointChanging;
+	ParticleSystem *firstTankExplosions, *secondTankExplosions, *bulletExplosion, *firstPointChanging, *secondPointChanging;
 
 
 public:

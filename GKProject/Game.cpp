@@ -38,7 +38,8 @@ Game::Game(RenderWindow &window)
 	ricochetSound.setBuffer(ricochetSoundBuffer);
 	firstTankExplosions = new ParticleSystem(1000);
 	secondTankExplosions = new ParticleSystem(1000);
-	pointChanging = new ParticleSystem(100);
+	firstPointChanging = new ParticleSystem(100);
+	secondPointChanging = new ParticleSystem(100);
 }
 void Game::reset()
 {
@@ -51,7 +52,7 @@ void Game::reset()
 		pointPosition = playerTwoPoints.getPosition();
 		pointPosition.x += (playerTwoPoints.getGlobalBounds().width / 2) - 13;
 		pointPosition.y += playerTwoPoints.getGlobalBounds().height - 10;
-		pointChanging->setEmitter(pointPosition, 1000, 10, 20, false);
+		firstPointChanging->setEmitter(pointPosition, 1000, 10, 20, false);
 	}
 	if (playerTwo->isHited) // trafiony gracz drugi
 	{
@@ -59,7 +60,7 @@ void Game::reset()
 		pointPosition = playerOnePoints.getPosition();
 		pointPosition.x += (playerOnePoints.getGlobalBounds().width / 2) - 13;
 		pointPosition.y += playerOnePoints.getGlobalBounds().height - 10;
-		pointChanging->setEmitter(pointPosition, 1000, 10, 20, false);
+		secondPointChanging->setEmitter(pointPosition, 1000, 10, 20, false);
 	}
 
 	// zmiana punktow z inty na stringi
@@ -90,7 +91,7 @@ bool Game::run(RenderWindow &window)
 	map->createMap(window);
 
 	// create a clock to track the elapsed time
-	sf::Clock clock1, clock2, clock3, clock4;
+	sf::Clock clock1, clock2, clock3, clock4, clock5;
 
 
 	while (isRunningGame)
@@ -148,8 +149,11 @@ bool Game::run(RenderWindow &window)
 		elapsed1 = clock3.restart();
 		playerOne->getBulletExplosion()->update(elapsed1);
 		playerTwo->getBulletExplosion()->update(elapsed1);
+
 		elapsed1 = clock4.restart();
-		pointChanging->update(elapsed1);
+		firstPointChanging->update(elapsed1);
+		elapsed1 = clock5.restart();
+		secondPointChanging->update(elapsed1);
 
 		window.clear();
 
@@ -164,14 +168,18 @@ bool Game::run(RenderWindow &window)
 		window.draw(playerTwoPoints);
 
 
-
+		// rysowanie eksplozji graczy
 		window.draw(*firstTankExplosions);
 		window.draw(*secondTankExplosions);
 	
+		// rysowanie eksplozji pocisków
 		window.draw(*playerOne->getBulletExplosion());
 		window.draw(*playerTwo->getBulletExplosion()); 
 
-		window.draw(*pointChanging);
+		// rysowanie efektów zmian punktów
+		window.draw(*firstPointChanging);
+		window.draw(*secondPointChanging);
+
 		window.display();
 	}
 	return backToMenu;
