@@ -11,13 +11,13 @@ void Menu::showMenu(RenderWindow &window)
 	
 	loadFont();
 
-	Text authors("Inf sem.6 GKiO1\nAuthors:\nTomasz Bendarek\nBartlomiej Rys\nMarcin Adrian", font, 15);
+	Text authors("Inf sem.6 GKiO1\nAuthors:\nTomasz Bednarek\nBartlomiej Rys\nMarcin Adrian", font, 15);
 	authors.setPosition(700 - authors.getGlobalBounds().width / 2.f, (float)window.getSize().y - 100);
 
 	Text title("Light Tanks", font, 40);
 	title.setPosition(800 / 2 - title.getGlobalBounds().width/2.f, 20); // set position of title - 800 is 
 	Text menuOptions[optionsNumber];
-	string str[] = { "Play", "Choose Tank","Help", "Exit" };
+	string str[] = { "Play", "Choose Tank","Controls", "Exit" };
 	for (int i = 0; i<optionsNumber; i++)
 	{
 		menuOptions[i].setFont(font);
