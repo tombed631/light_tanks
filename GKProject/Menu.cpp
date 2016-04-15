@@ -4,7 +4,6 @@ Menu::Menu()
 {
 	isRunningMenu = true;
 	counter = 0;
-	
 }
 
 void Menu::showMenu(RenderWindow &window)
@@ -47,7 +46,8 @@ void Menu::showMenu(RenderWindow &window)
 				|| (eventHandle.type == Event::KeyPressed && eventHandle.key.code == Keyboard::Return)))
 			{
 				try {
-					p3d::TankSelector(window).run();
+					tankSelector.setTargetWindow(window);	//set window
+					tankSelector.run();	//run tank selector
 				}
 				catch(p3d::ShaderCompileError & e) {
 #ifdef _DEBUG

@@ -14,6 +14,7 @@ void TankWindow::renderWindow(int height, int width, string name)
 		throw p3d::GLEWInitError();	//throw ex and shut down the game or remove 3d from game XD
 	}
 
-	menu.showMenu(window);
+	//menu.showMenu(window);
+	Menu().showMenu(window);
 }
 

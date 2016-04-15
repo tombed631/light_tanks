@@ -2,20 +2,18 @@
 #ifndef _TANK_TYPES_
 #define _TANK_TYPES_
 
+#include <glm\glm.hpp>
+
 namespace p3d {
 
-	//
-	//	Defines possible types of the tanks.
-	//
-	enum class TankType : char { RED_FLAMINGO, GREEN_DESTROYER, WHITE_NIGGA };
+	/// Defines player id's
+	enum class Player : char { PLAYER_1, PLAYER_2 };
 
 
-	//
-	//	Structure that stores types of tanks for two players.
-	//
-	struct PlTankTypes {
-		TankType firstPlayerTankType;
-		TankType secondPlayerTankType;
+	///Stores colors of player 1&2 tanks.
+	struct PlTankColors {
+		glm::vec3 firstPlayerColor;
+		glm::vec3 secondPlayerColor;
 	};
 
 }

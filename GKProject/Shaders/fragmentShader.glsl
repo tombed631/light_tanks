@@ -14,6 +14,7 @@ varying vec2 textureCoord;	//texture coordinate
 varying vec3 fragWorldPos;	//fragment world coords
 
 uniform vec3 viewPos; //camera world coords
+uniform vec3 color;
 
 //out vec4 out_color;
 
@@ -41,13 +42,13 @@ void main()
 	//specular light
 	vec3 viewDir = normalize(viewPos - fragWorldPos);
 	vec3 reflectDir = reflect(-lightDir, norm);
-	float spec = pow(max(dot(viewDir, reflectDir),0.0), 32);
+	float spec = pow(max(dot(viewDir, reflectDir),0.0), 64);
 	vec3 specular = light.specular * spec * vec3(texture(texture_specular1, textureCoord));
 
 	//gl_FragColor = vec4(1.0,1.0,1.0,0.0); //set white color
 
 	//out_color = vec4(ambient + diffuse + specular, 1.0);
-	gl_FragColor = vec4(ambient + diffuse + specular, 1.0);
+	gl_FragColor = vec4((ambient + diffuse + specular) * color, 1.0);
 	//gl_FragColor = vec4(texture(texture_diffuse1, textureCoord));
 	
 }

@@ -15,6 +15,7 @@ namespace p3d {
 
 	////////////////////////////////////////////////////////
 	///	Provides GUI for tank selecting option in game menu.
+	/// Requires initialized GLEW to work.
 	///
 	///	version 1.0
 	////////////////////////////////////////////////////////
@@ -22,49 +23,59 @@ namespace p3d {
 
 	public:
 
-		///////////////////TEMP_CONTENT_BEGIN//////////////////////
-		Shader modelShader;
-		Shader lightShader;
-		LightCube light;
-		Model3D model3d;
-		glm::mat4 model3d_modelMatrix, light_modelMatrix, projectionMatrix, viewMatrix;
-		ArcBall arcball;
-		Camera camera;
-		///////////////////TEMP_CONTENT_END////////////////////////
-
 		///Default constructor.
-		///Note that you need to set thetarget window 
+		///Note that you need to set the target window 
 		///before you actually use TankSelector created with default constructor.
 		///See setTargetWindow method.
-		TankSelector() = default;
+		TankSelector();
 
 		///Creates TankSelector.
 		///sf::RenderWindow * window		Target window for rendering
-		explicit TankSelector(sf::RenderWindow & window) {
-			gameWindow = &window;
-		}
+		explicit TankSelector(sf::RenderWindow & window);
 
 		///Default destructor
 		~TankSelector() = default;
 
 		///Sets target window for rendering
-		void setTargetWindow(sf::RenderWindow & window) {
-			gameWindow = &window;
-		}
+		void setTargetWindow(sf::RenderWindow & window);
 
 		///Starts TankSelector.
-		///Returns tank types chose by players.
-		///Throws GLEWInitError when failed to initialize GLEW
-		PlTankTypes run();
+		///Returns tank colors chose by players.
+		PlTankColors run();
 
 	private:
 
 		///Pointer to the target window for rendering
 		sf::RenderWindow * gameWindow;
 
+		///Shaders
+		Shader tankShader;	
+		Shader lightShader;
+		///Light
+		LightCube light;
+		///Tank model
+		Model3D tank;
+		///Transformation matrices
+		glm::mat4 tankModelMatrix, lightModelMatrix, projectionMatrix, viewMatrix;
+		///Arcball
+		ArcBall arcball;
+		///Camera
+		Camera camera;
+		///Colors of players tanks.
+		PlTankColors playerColors;
+		///Contains color of currently seleted player.
+		glm::vec3 currentPlayerColor;
+		///currently selected player
+		Player currentPlayer;
+
+
+
 		///Renders current frame to the window
 		///and displays it on the screen.
 		void draw();
+
+		///Set up TankSelector.
+		void setup();
 
 	};
 
