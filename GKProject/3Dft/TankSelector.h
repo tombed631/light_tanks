@@ -48,6 +48,9 @@ namespace p3d {
 		///Pointer to the target window for rendering
 		sf::RenderWindow * gameWindow;
 
+		///determines whether main loop is running or not
+		bool isRunning;
+
 		///Shaders
 		Shader tankShader;	
 		Shader lightShader;
@@ -76,6 +79,15 @@ namespace p3d {
 
 		///Set up TankSelector.
 		void setup();
+
+		///Handles mouse events.
+		void handleMouseEvents();
+
+		///Handles keyboard events.
+		void handleKeyboardEvents();
+
+		///Handles window events.
+		void handleWindowEvents();
 
 	};
 

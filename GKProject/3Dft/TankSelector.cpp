@@ -26,7 +26,7 @@ namespace p3d {
 
 	///Sets up TankSelector
 	void TankSelector::setup() {
-		
+		isRunning = false;
 		tankShader = Shader("../GKProject/Shaders/vertexShader.glsl", "../GKProject/Shaders/fragmentShader.glsl");
 		lightShader = Shader("../GKProject/Shaders/lightSrcVerxShd.glsl", "../GKProject/Shaders/lightSrcFragShd.glsl");
 		tank = ModelLoader::loadFromFile("../GKProject/Models/abrams/Abrams_BF3.obj");
@@ -49,7 +49,7 @@ namespace p3d {
 		_light.ambientIntensity = glm::vec3(0.3f, 0.3f, 0.3f);
 		_light.diffuseIntensity = glm::vec3(0.6f, 0.6f, 0.6f);
 		_light.specularIntensity = glm::vec3(1.0f, 1.0f, 1.0f);
-		_light.position = glm::vec3(-20.0f, 3.0f, 10.0f);
+		_light.position = glm::vec3(0.0f, 3.0f, 10.0f);
 		light.setLight(_light);
 		lightModelMatrix = glm::scale(lightModelMatrix, glm::vec3(0.005f, 0.005f, 0.005f));
 		lightModelMatrix = glm::translate(lightModelMatrix, light.getLight().position);
@@ -91,11 +91,7 @@ namespace p3d {
 	///Returns tank colors chose by players.
 	PlTankColors TankSelector::run() {
 
-		//determines whether main loop is running or not
-		bool isRunning = true;
-
-		//contains event that is currently processed
-		sf::Event event;
+		isRunning = true;
 		
 		//Enable depth test
 		glEnable(GL_DEPTH_TEST);
@@ -103,85 +99,10 @@ namespace p3d {
 		//____Main__loop_________
 		while (isRunning) {
 
-			//Check window's events
-			while (gameWindow->pollEvent(event)) {
-
-				if (event.type == sf::Event::Closed)
-					isRunning = false; //exit tank selector
-				else if (event.type == sf::Event::KeyPressed) {
-					if (event.key.code == sf::Keyboard::P) {
-						if (currentPlayer == Player::PLAYER_1) {
-							//save player 1 color
-							playerColors.firstPlayerColor = currentPlayerColor;
-							//change to player 2
-							currentPlayerColor = playerColors.secondPlayerColor;
-							currentPlayer = Player::PLAYER_2;
-						}
-						else {
-							playerColors.secondPlayerColor = currentPlayerColor;
-							currentPlayerColor = playerColors.firstPlayerColor;
-							currentPlayer = Player::PLAYER_1;
-						}
-					}
-				}
-			}
-
-
-			
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-				if (arcball.isEnabled()) {
-					sf::Vector2i mousePosition = sf::Mouse::getPosition(*gameWindow);
-					arcball.drag(mousePosition.x, mousePosition.y);
-				}
-				else {
-					sf::Vector2i mousePosition = sf::Mouse::getPosition(*gameWindow);
-					arcball.enable(mousePosition.x, mousePosition.y);
-				}
-			}
-			else {
-				arcball.disable();
-			}
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-				isRunning = false;
-			}
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-					currentPlayerColor.r += COLOR_CHANGE_STEP;
-					if (currentPlayerColor.r > 1.0f)
-						currentPlayerColor.r = 1.0f;
-				}
-				else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-					currentPlayerColor.r -= COLOR_CHANGE_STEP;
-					if (currentPlayerColor.r < 0.0f)
-						currentPlayerColor.r = 0.0f;
-				}
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::G)) {
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-					currentPlayerColor.g += COLOR_CHANGE_STEP;
-					if (currentPlayerColor.g > 1.0f)
-						currentPlayerColor.g = 1.0f;
-				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-					currentPlayerColor.g -= COLOR_CHANGE_STEP;
-					if (currentPlayerColor.g < 0.0f)
-						currentPlayerColor.g = 0.0f;
-				}
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-					currentPlayerColor.b += COLOR_CHANGE_STEP;
-					if (currentPlayerColor.b > 1.0f)
-						currentPlayerColor.b = 1.0f;
-				}
-				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-					currentPlayerColor.b -= COLOR_CHANGE_STEP;
-					if (currentPlayerColor.b < 0.0f)
-						currentPlayerColor.b = 0.0f;
-				}
-			}
+			//Check if any event occured
+			handleWindowEvents();
+			handleMouseEvents();
+			handleKeyboardEvents();
 
 			//display current frame
 			draw();
@@ -216,12 +137,104 @@ namespace p3d {
 		glUniform3f(glGetUniformLocation(program, "color"), currentPlayerColor.r, currentPlayerColor.g, currentPlayerColor.b);
 		tank.draw(tankShader);
 
-		//draw light (optional)
-		lightShader.use();
-		light.draw(lightShader);
+		//draw light (optional) - uncomment next 2 following lines to draw light source.
+		//lightShader.use();
+		//light.draw(lightShader);
 		
 
 		gameWindow->display();
 	}
 
+
+	///Handles mouse events.
+	void TankSelector::handleMouseEvents() {
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+			if (arcball.isEnabled()) {
+				sf::Vector2i mousePosition = sf::Mouse::getPosition(*gameWindow);
+				arcball.drag(mousePosition.x, mousePosition.y);
+			}
+			else {
+				sf::Vector2i mousePosition = sf::Mouse::getPosition(*gameWindow);
+				arcball.enable(mousePosition.x, mousePosition.y);
+			}
+		}
+		else {
+			arcball.disable();
+		}
+	}
+
+	///Handles keyboard events.
+	void TankSelector::handleKeyboardEvents() {
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+				currentPlayerColor.r += COLOR_CHANGE_STEP;
+				if (currentPlayerColor.r > 1.0f)
+					currentPlayerColor.r -= 1.0f;
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+				currentPlayerColor.r -= COLOR_CHANGE_STEP;
+				if (currentPlayerColor.r < 0.0f)
+					currentPlayerColor.r += 1.0f;
+			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::G)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+				currentPlayerColor.g += COLOR_CHANGE_STEP;
+				if (currentPlayerColor.g > 1.0f)
+					currentPlayerColor.g -= 1.0f;
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+				currentPlayerColor.g -= COLOR_CHANGE_STEP;
+				if (currentPlayerColor.g < 0.0f)
+					currentPlayerColor.g += 1.0f;
+			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+				currentPlayerColor.b += COLOR_CHANGE_STEP;
+				if (currentPlayerColor.b > 1.0f)
+					currentPlayerColor.b -= 1.0f;
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+				currentPlayerColor.b -= COLOR_CHANGE_STEP;
+				if (currentPlayerColor.b < 0.0f)
+					currentPlayerColor.b += 1.0f;
+			}
+		}
+	}
+
+	///Handles window events.
+	void TankSelector::handleWindowEvents() {
+
+		//contains event that is currently processed
+		sf::Event event;
+
+		while (gameWindow->pollEvent(event)) {
+
+			if (event.type == sf::Event::Closed)
+				isRunning = false; //exit tank selector
+			else if (event.type == sf::Event::KeyPressed) {
+				if (event.key.code == sf::Keyboard::P) {
+					if (currentPlayer == Player::PLAYER_1) {
+						//save player 1 color
+						playerColors.firstPlayerColor = currentPlayerColor;
+						//change to player 2
+						currentPlayerColor = playerColors.secondPlayerColor;
+						currentPlayer = Player::PLAYER_2;
+					}
+					else {
+						playerColors.secondPlayerColor = currentPlayerColor;
+						currentPlayerColor = playerColors.firstPlayerColor;
+						currentPlayer = Player::PLAYER_1;
+					}
+				}
+				else if (event.key.code == sf::Keyboard::Escape) {
+					isRunning = false;
+				}
+			}
+		}
+	}
 }
+
+
