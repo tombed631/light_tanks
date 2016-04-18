@@ -31,7 +31,15 @@ Game::Game(RenderWindow &window)
 		MessageBox(NULL, "Brak dŸwiêków!", "ERROR", NULL);
 		return;
 	}
-
+	if (!scoreBoardTankTextureOne.loadFromFile("Textures\\tankScoreBoardOne.png")|| !scoreBoardTankTextureTwo.loadFromFile("Textures\\tankScoreBoardTwo.png"))
+	{
+		MessageBox(NULL, "Brak tesktur scoreboardow!", "ERROR", NULL);
+		return;
+	}
+	scoreBoardTankSpriteOne.setTexture(scoreBoardTankTextureOne);
+	scoreBoardTankSpriteTwo.setTexture(scoreBoardTankTextureTwo);
+	scoreBoardTankSpriteOne.setPosition(80, 650);
+	scoreBoardTankSpriteTwo.setPosition(600, 650);
 	destroySound.setBuffer(destroySoundBuffer);
 	shootSound.setBuffer(shootSoundBuffer);
 	shootSound.setVolume(25);
@@ -74,19 +82,22 @@ void Game::reset()
 	playerTwo->isHited = false;
 	playerOne->deleteBullets();
 	playerTwo->deleteBullets();
-	playerOne->setTankPosition(Vector2f(700,35));
-	playerTwo->setTankPosition(Vector2f(40, 35));
+	playerTwo->setTankPosition(Vector2f(700,35));
+	playerOne->setTankPosition(Vector2f(40, 35));
 	playerOne->setPlayerRotation(180);
 	playerTwo->setPlayerRotation(180);
 }
-bool Game::run(RenderWindow &window)
+bool Game::run(RenderWindow &window, p3d::PlTankColors playerColors)
 {
 	bool backToMenu = true;
 	
-
-	playerOne = new Player("Tomek", "Textures\\tank2.png");
-	playerTwo = new Player("Sinex", "Textures\\tank2.png");
+	Vector3i colorOne = Vector3i((int)255.f*playerColors.firstPlayerColor.x, (int)255.f*playerColors.firstPlayerColor.y, (int)255.f*playerColors.firstPlayerColor.z);
+	Vector3i colorTwo = Vector3i((int)255.f*playerColors.secondPlayerColor.x, (int)255.f*playerColors.secondPlayerColor.y, (int)255.f*playerColors.secondPlayerColor.z);
+	playerOne = new Player("Tomek", "Textures\\tank2.png", colorOne);
+	playerTwo = new Player("Sinex", "Textures\\tank2.png", colorTwo);
 	reset();
+	scoreBoardTankSpriteOne.setColor(Color(colorOne.x,colorOne.y,colorOne.z));
+	scoreBoardTankSpriteTwo.setColor(Color(colorTwo.x, colorTwo.y, colorTwo.z));
 	map = new Map();
 	map->createMap(window);
 
@@ -179,7 +190,8 @@ bool Game::run(RenderWindow &window)
 		// rysowanie efektów zmian punktów
 		window.draw(*firstPointChanging);
 		window.draw(*secondPointChanging);
-
+		window.draw(scoreBoardTankSpriteOne);
+		window.draw(scoreBoardTankSpriteTwo);
 		window.display();
 	}
 	return backToMenu;

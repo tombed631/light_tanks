@@ -5,6 +5,8 @@
 #include "Includes.h"
 #include "Bullet.h"
 #include "ParticleSystem.h"
+#include "3Dft\TankSelector.h"
+#include "3Dft\TankTypes.h"
 /*Klasa reprezentujaca gracza*/
 class Player :public sf::Drawable, public sf::Transformable
 {
@@ -24,7 +26,7 @@ public:
 	bool isHited; // czy zosta³ trafiony
 	Player();
 	virtual void draw(RenderTarget &target, RenderStates states) const; // wirtualna metoda pozwalajaca rysowac obiekt
-	Player(String _name,String path); //konstruktor z argumentamii
+	Player(String _name, String path, Vector3i colors); //konstruktor z argumentamii
 	String getName(); // zwraca nazwe zawodnika
 	void moveTank(); // porusza czo³giem gracza - przypisuje oryginalnego sprajta do jego kopii - jesli nie by³o kolizji
 	Vector2f getTankPosition(); //zwraca pozycje czo³gu

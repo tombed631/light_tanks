@@ -5,19 +5,37 @@ Menu::Menu()
 	isRunningMenu = true;
 	counter = 0;
 }
+void Menu::showWarning(Time &time)
+{
+	
+	
+	chooseColorText.setString("First Choose color!");
+	chooseColorText.setFont(font);
+	chooseColorText.setCharacterSize(20);
+	chooseColorText.setColor(Color::Red);
+	chooseColorText.setPosition(800 / 2 - chooseColorText.getGlobalBounds().width / 2.f, (float)700);
 
+	
+	if (time.asSeconds() > 1.5)
+	{
+
+		isWarningShow = false;
+		
+	}
+}
 void Menu::showMenu(RenderWindow &window)
 {
 	
+	Clock clock;
+	p3d::PlTankColors playerColors; // kolory graczy
 	loadFont();
-
+	bool isColorChoose = false;
 	Text authors("Inf sem.6 GKiO1\nAuthors:\nTomasz Bednarek\nBartlomiej Rys\nMarcin Adrian", font, 15);
 	authors.setPosition(700 - authors.getGlobalBounds().width / 2.f, (float)window.getSize().y - 100);
-
 	Text title("Light Tanks", font, 40);
 	title.setPosition(800 / 2 - title.getGlobalBounds().width/2.f, 20); // set position of title - 800 is 
 	Text menuOptions[optionsNumber];
-	string str[] = { "Play", "Choose Tank","Controls", "Exit" };
+	string str[] = { "Play", "Choose color","Controls", "Exit" };
 	for (int i = 0; i<optionsNumber; i++)
 	{
 		menuOptions[i].setFont(font);
@@ -47,20 +65,25 @@ void Menu::showMenu(RenderWindow &window)
 			{
 				try {
 					tankSelector.setTargetWindow(window);	//set window
-					tankSelector.run();	//run tank selector
+					playerColors = tankSelector.run();	//run tank selector
+					
 				}
 				catch(p3d::ShaderCompileError & e) {
-#ifdef _DEBUG
+				#ifdef _DEBUG
 					cout << e.what() << endl;
-#endif
+				#endif
 					MessageBox(NULL, "Cannot compile shaders!", "ERROR", NULL);
 				}
 				catch (p3d::LoadModelError & e) {
-#ifdef _DEBUG
+				#ifdef _DEBUG
 					cout << e.what() << endl;
-#endif
+				#endif
 					MessageBox(NULL, "Cannot load models!", "ERROR", NULL);
 				}
+				isWarningShow = false;
+			
+				isColorChoose = true;
+
 			}
 
 			// klikniecie myszka lub klawiatura na PLAY
@@ -68,9 +91,24 @@ void Menu::showMenu(RenderWindow &window)
 				((eventHandle.type == Event::MouseButtonReleased && eventHandle.key.code == Mouse::Left)
 				 || (eventHandle.type == Event::KeyPressed && eventHandle.key.code == Keyboard::Return)))
 			{
-				Game game(window);
-				// trzeba tez zaimplementowac sprawdzenie wybranie czolgu - potem
-				isRunningMenu = game.run(window);
+				Time time = clock.restart();
+				
+				
+				if (!isColorChoose)
+				{
+
+						isWarningShow = true;
+						time = clock.getElapsedTime();
+						showWarning(time);
+						
+				}
+				else
+				{
+					Game game(window);
+					// trzeba tez zaimplementowac sprawdzenie wybranie czolgu - potem
+					isRunningMenu = game.run(window, playerColors);
+				}
+				
 			}
 				
 			// klikniecie myszka lub klawiatura na HELP
@@ -134,6 +172,8 @@ void Menu::showMenu(RenderWindow &window)
 		window.draw(title);
 		for (int i = 0; i < optionsNumber; i++)
 			window.draw(menuOptions[i]);
+		if (isWarningShow)
+			window.draw(chooseColorText);
 		window.draw(authors);
 		window.display();
 	}

@@ -25,11 +25,12 @@ private:
 	SoundBuffer destroySoundBuffer, shootSoundBuffer, ricochetSoundBuffer; // buffery dzwiekow
 	vector <ParticleSystem*> explosions;
 	ParticleSystem *firstTankExplosions, *secondTankExplosions, *bulletExplosion, *firstPointChanging, *secondPointChanging;
-
+	Texture scoreBoardTankTextureOne, scoreBoardTankTextureTwo;
+	Sprite scoreBoardTankSpriteOne, scoreBoardTankSpriteTwo;
 
 public:
 	Game(RenderWindow &window);
-	bool run(RenderWindow &window); // odpala g³ówn¹ petle gry
+	bool run(RenderWindow &window, p3d::PlTankColors playerColors); // odpala g³ówn¹ petle gry
 	void engine(RenderWindow &window); // silnik gry odpowiedzialny za ruch pojazdów, pocisków i kolizje
 
 	void reset();

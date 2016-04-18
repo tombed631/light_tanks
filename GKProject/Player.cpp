@@ -1,7 +1,7 @@
 #include "Player.h"
 
 
-Player::Player(String _name, String path)
+Player::Player(String _name, String path, Vector3i colors)
 {
 	if (!tankTexture.loadFromFile(path))
 	{
@@ -9,10 +9,8 @@ Player::Player(String _name, String path)
 		return;
 	}
 	tankSprite.setTexture(tankTexture);
-	tankSprite.setColor(sf::Color::Green);
+	tankSprite.setColor(sf::Color(colors.x, colors.y, colors.z));
 	tankSprite.setOrigin(18, 26.5);
-	
-	
 	name = _name;
 	isHited = false;
 	points = 0;
