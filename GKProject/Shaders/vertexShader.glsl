@@ -20,5 +20,6 @@ void main()
 	gl_Position = projection * view * model * vec4(in_position, 1.0);	//transform object coords from local to clip space
 	fragWorldPos = vec3(model * vec4(in_position, 1.0));	//pass fragment world coords to fragmentShader 
 	textureCoord = in_TexCoord;
-	normal = in_normal;
+	//normal = in_normal;
+	normal = vec3(model * vec4(in_normal, 1.0));
 }

@@ -42,7 +42,7 @@ void main()
 	//specular light
 	vec3 viewDir = normalize(viewPos - fragWorldPos);
 	vec3 reflectDir = reflect(-lightDir, norm);
-	float spec = pow(max(dot(viewDir, reflectDir),0.0), 64);
+	float spec = pow(max(dot(viewDir, reflectDir),0.0), 32);
 	vec3 specular = light.specular * spec * vec3(texture(texture_specular1, textureCoord));
 
 	//gl_FragColor = vec4(1.0,1.0,1.0,0.0); //set white color
