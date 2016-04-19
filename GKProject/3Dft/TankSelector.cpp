@@ -33,8 +33,6 @@ namespace p3d {
 		camera = Camera(glm::vec3(0.0f, 0.0f, 0.3f));
 		
 		playerColors = { glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f) };
-		currentPlayerColor = playerColors.firstPlayerColor;
-		currentPlayer = Player::PLAYER_1;
 
 		tankModelMatrix = glm::scale(tankModelMatrix, glm::vec3(0.01f, 0.01f, 0.01f));
 		viewMatrix = camera.getViewMatrix();
@@ -92,6 +90,9 @@ namespace p3d {
 	PlTankColors TankSelector::run() {
 
 		isRunning = true;
+		//Select currently configured player as player 1
+		currentPlayerColor = playerColors.firstPlayerColor;
+		currentPlayer = Player::PLAYER_1;
 		
 		//Enable depth test
 		glEnable(GL_DEPTH_TEST);
@@ -109,6 +110,12 @@ namespace p3d {
 
 		} //____Main__loop____end.
 
+		//Store last configured color
+		if (currentPlayer == Player::PLAYER_1)
+			playerColors.firstPlayerColor = currentPlayerColor;
+		else 
+			playerColors.secondPlayerColor = currentPlayerColor;
+		
 
 
 		// prepare context for SFML
