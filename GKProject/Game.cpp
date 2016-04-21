@@ -336,6 +336,7 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 					it = v.erase(it);
 					player->setBullets(v); // ustalamy nowy wektor setterem w klasie Player
 					clock.restart();
+					playerOne->setTankPosition(Vector2f(-500, -500));
 					break;
 				}
 			}
@@ -352,6 +353,7 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 					it = v.erase(it);
 					player->setBullets(v); // ustalamy nowy wektor setterem w klasie Player
 					clock.restart();
+					playerTwo->setTankPosition(Vector2f(-500, -500));
 					break;
 				}
 			}
