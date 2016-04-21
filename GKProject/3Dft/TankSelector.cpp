@@ -1,8 +1,27 @@
 
 #include "TankSelector.h"
+#include <iostream>
 
 ///Determines how much color will change by one step
 #define COLOR_CHANGE_STEP 0.01
+///Button used to activate arcball (== start rotating tank model)
+#define ARCBALL_ACTIVATE_BUTTON	sf::Mouse::Middle
+///Button used to switch between players
+#define SWITCH_PLAYER_BUTTON sf::Keyboard::P
+///Buttons used to configure color
+#define INCREASE_RGBVALUE_BUTTON sf::Keyboard::Up
+#define DECREASE_RGBVALUE_BUTTON sf::Keyboard::Down
+#define CONFIG_RGBVALUE_R_BUTTON sf::Keyboard::R
+#define CONFIG_RGBVALUE_G_BUTTON sf::Keyboard::G
+#define CONFIG_RGBVALUE_B_BUTTON sf::Keyboard::B
+///Button used to return to the game menu
+#define RETURN_TO_MENU_BUTTON sf::Keyboard::Escape
+///Defines camera settings
+#define CAMERA_DEFAULT_DISTANCE 1.0f
+#define CAMERA_MIN_DISTANCE 0.5f
+#define CAMERA_MAX_DISTANCE 2.0f
+#define CAMERA_DISTANCE_STEP 0.05f
+
 
 namespace p3d {
 
@@ -29,13 +48,13 @@ namespace p3d {
 		isRunning = false;
 		tankShader = Shader("../GKProject/Shaders/vertexShader.glsl", "../GKProject/Shaders/fragmentShader.glsl");
 		lightShader = Shader("../GKProject/Shaders/lightSrcVerxShd.glsl", "../GKProject/Shaders/lightSrcFragShd.glsl");
-		tank = ModelLoader::loadFromFile("../GKProject/Models/abrams/Abrams_BF3.obj");
-		camera = Camera(glm::vec3(0.0f, 0.0f, 0.3f));
+		tank = ModelLoader::loadFromFile("../GKProject/Models/Tank/Tank.obj");
+		floor = ModelLoader::loadFromFile("../GKProject/Models/floor/floor.obj");
+		camera = Camera(glm::vec3(0.0f, 0.2f, 1.0f));
 		
 		playerColors = { glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f) };
 
-		tankModelMatrix = glm::scale(tankModelMatrix, glm::vec3(0.01f, 0.01f, 0.01f));
-		viewMatrix = camera.getViewMatrix();
+		tankModelMatrix = glm::scale(tankModelMatrix, glm::vec3(0.05f, 0.05f, 0.05f));
 
 		if (gameWindow != nullptr) {
 			GLfloat width = gameWindow->getSize().x, height = gameWindow->getSize().y;
@@ -45,7 +64,7 @@ namespace p3d {
 		
 		Light _light;
 		_light.ambientIntensity = glm::vec3(0.3f, 0.3f, 0.3f);
-		_light.diffuseIntensity = glm::vec3(0.6f, 0.6f, 0.6f);
+		_light.diffuseIntensity = glm::vec3(0.7f, 0.7f, 0.7f);
 		_light.specularIntensity = glm::vec3(1.0f, 1.0f, 1.0f);
 		_light.position = glm::vec3(0.0f, 3.0f, 10.0f);
 		light.setLight(_light);
@@ -58,7 +77,6 @@ namespace p3d {
 		tankShader.use();
 		GLuint program = tankShader.getProgram();
 		if (gameWindow != nullptr) glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-		glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		glUniform3f(glGetUniformLocation(program, "light.ambient"), _light.ambientIntensity.x, _light.ambientIntensity.y, _light.ambientIntensity.z);
 		glUniform3f(glGetUniformLocation(program, "light.diffuse"), _light.diffuseIntensity.x, _light.diffuseIntensity.y, _light.diffuseIntensity.z);
 		glUniform3f(glGetUniformLocation(program, "light.specular"), _light.specularIntensity.x, _light.specularIntensity.y, _light.specularIntensity.z);
@@ -67,7 +85,6 @@ namespace p3d {
 		lightShader.use();
 		program = lightShader.getProgram();
 		if (gameWindow != nullptr) glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-		glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
 		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, glm::value_ptr(lightModelMatrix));
 	}
 
@@ -93,6 +110,10 @@ namespace p3d {
 		//Select currently configured player as player 1
 		currentPlayerColor = playerColors.firstPlayerColor;
 		currentPlayer = Player::PLAYER_1;
+		//Set default camera distance
+		glm::vec3 cameraPos = camera.getPosition();
+		cameraPos.z = CAMERA_DEFAULT_DISTANCE;
+		camera.setPosition(cameraPos);
 		
 		//Enable depth test
 		glEnable(GL_DEPTH_TEST);
@@ -134,12 +155,23 @@ namespace p3d {
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		glm::mat4 viewMatrix = camera.getViewMatrix();
+		tankShader.use();
+		GLuint program = tankShader.getProgram();
+
+		//draw floor
+		glm::mat4 floorModelMatrix;
+		floorModelMatrix = glm::scale(floorModelMatrix, glm::vec3(0.5f, 0.5f, 0.5f));
+		floorModelMatrix = glm::translate(floorModelMatrix, glm::vec3(0.0f, 0.03f, 0.0f));
+		glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
+		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, glm::value_ptr(floorModelMatrix));
+		glUniform3f(glGetUniformLocation(program, "color"), 1.0f, 1.0f, 1.0f);
+		floor.draw(tankShader);
+
 		//get tank rotation from arcball
 		tankModelMatrix = arcball.getUpdatedModelMatrix(tankModelMatrix);
 		
-		//drawtank
-		tankShader.use();
-		GLuint program = tankShader.getProgram();
+		//draw tank
 		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, glm::value_ptr(tankModelMatrix));
 		glUniform3f(glGetUniformLocation(program, "color"), currentPlayerColor.r, currentPlayerColor.g, currentPlayerColor.b);
 		tank.draw(tankShader);
@@ -155,15 +187,20 @@ namespace p3d {
 
 	///Handles mouse events.
 	void TankSelector::handleMouseEvents() {
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-			if (arcball.isEnabled()) {
-				sf::Vector2i mousePosition = sf::Mouse::getPosition(*gameWindow);
+		if (sf::Mouse::isButtonPressed(ARCBALL_ACTIVATE_BUTTON)) {
+			sf::Vector2i mousePosition = sf::Mouse::getPosition(*gameWindow);
+			int winWidth = gameWindow->getSize().x;
+			int winHeight = gameWindow->getSize().y;
+			if (mousePosition.x > winWidth)
+				mousePosition.x = winWidth;
+			else if (mousePosition.x < 0)
+				mousePosition.x = 0;
+			mousePosition.y = winHeight / 2;
+
+			if (arcball.isEnabled())
 				arcball.drag(mousePosition.x, mousePosition.y);
-			}
-			else {
-				sf::Vector2i mousePosition = sf::Mouse::getPosition(*gameWindow);
+			else
 				arcball.enable(mousePosition.x, mousePosition.y);
-			}
 		}
 		else {
 			arcball.disable();
@@ -173,37 +210,37 @@ namespace p3d {
 	///Handles keyboard events.
 	void TankSelector::handleKeyboardEvents() {
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		if (sf::Keyboard::isKeyPressed(CONFIG_RGBVALUE_R_BUTTON)) {
+			if (sf::Keyboard::isKeyPressed(INCREASE_RGBVALUE_BUTTON)) {
 				currentPlayerColor.r += COLOR_CHANGE_STEP;
 				if (currentPlayerColor.r > 1.0f)
 					currentPlayerColor.r -= 1.0f;
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+			else if (sf::Keyboard::isKeyPressed(DECREASE_RGBVALUE_BUTTON)) {
 				currentPlayerColor.r -= COLOR_CHANGE_STEP;
 				if (currentPlayerColor.r < 0.0f)
 					currentPlayerColor.r += 1.0f;
 			}
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::G)) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		if (sf::Keyboard::isKeyPressed(CONFIG_RGBVALUE_G_BUTTON)) {
+			if (sf::Keyboard::isKeyPressed(INCREASE_RGBVALUE_BUTTON)) {
 				currentPlayerColor.g += COLOR_CHANGE_STEP;
 				if (currentPlayerColor.g > 1.0f)
 					currentPlayerColor.g -= 1.0f;
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+			else if (sf::Keyboard::isKeyPressed(DECREASE_RGBVALUE_BUTTON)) {
 				currentPlayerColor.g -= COLOR_CHANGE_STEP;
 				if (currentPlayerColor.g < 0.0f)
 					currentPlayerColor.g += 1.0f;
 			}
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		if (sf::Keyboard::isKeyPressed(CONFIG_RGBVALUE_B_BUTTON)) {
+			if (sf::Keyboard::isKeyPressed(INCREASE_RGBVALUE_BUTTON)) {
 				currentPlayerColor.b += COLOR_CHANGE_STEP;
 				if (currentPlayerColor.b > 1.0f)
 					currentPlayerColor.b -= 1.0f;
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+			else if (sf::Keyboard::isKeyPressed(DECREASE_RGBVALUE_BUTTON)) {
 				currentPlayerColor.b -= COLOR_CHANGE_STEP;
 				if (currentPlayerColor.b < 0.0f)
 					currentPlayerColor.b += 1.0f;
@@ -222,7 +259,7 @@ namespace p3d {
 			if (event.type == sf::Event::Closed)
 				isRunning = false; //exit tank selector
 			else if (event.type == sf::Event::KeyPressed) {
-				if (event.key.code == sf::Keyboard::P) {
+				if (event.key.code == SWITCH_PLAYER_BUTTON) {
 					if (currentPlayer == Player::PLAYER_1) {
 						//save player 1 color
 						playerColors.firstPlayerColor = currentPlayerColor;
@@ -236,9 +273,18 @@ namespace p3d {
 						currentPlayer = Player::PLAYER_1;
 					}
 				}
-				else if (event.key.code == sf::Keyboard::Escape) {
+				else if (event.key.code == RETURN_TO_MENU_BUTTON) {
 					isRunning = false;
 				}
+			}
+			else if (event.type == sf::Event::MouseWheelMoved) {
+				glm::vec3 cameraPos = camera.getPosition();
+				cameraPos.z -= event.mouseWheel.delta * CAMERA_DISTANCE_STEP;
+				if (cameraPos.z > CAMERA_MAX_DISTANCE)
+					cameraPos.z = CAMERA_MAX_DISTANCE;
+				else if (cameraPos.z < CAMERA_MIN_DISTANCE)
+					cameraPos.z = CAMERA_MIN_DISTANCE;
+				camera.setPosition(cameraPos);
 			}
 		}
 	}

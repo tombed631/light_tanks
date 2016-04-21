@@ -9,11 +9,12 @@ namespace p3d {
 	///vertices		Mesh vertices
 	///indices		Mesh indices
 	///textures		Mesh textures
-	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures) {
+	Mesh::Mesh(std::vector<Vertex> & vertices, std::vector<GLuint> & indices, std::vector<Texture> & textures, Material & material) {
 
 		this->vertices = vertices;
 		this->indices = indices;
 		this->textures = textures;
+		this->material = material;
 
 		//create vertex and index buffer objects
 		glGenBuffers(1, &VBO);
@@ -35,6 +36,7 @@ namespace p3d {
 		this->vertices = mesh.vertices;
 		this->indices = mesh.indices;
 		this->textures = mesh.textures;
+		this->material = mesh.material;
 
 		//create vertex and index buffer objects
 		glGenBuffers(1, &this->VBO);
@@ -62,6 +64,7 @@ namespace p3d {
 			this->vertices = mesh.vertices;
 			this->indices = mesh.indices;
 			this->textures = mesh.textures;
+			this->material = mesh.material;
 
 			//create vertex and index buffer objects
 			glGenBuffers(1, &this->VBO);
@@ -88,6 +91,7 @@ namespace p3d {
 		this->vertices = std::move(mesh.vertices);
 		this->indices = std::move(mesh.indices);
 		this->textures = std::move(mesh.textures);
+		this->material = mesh.material;
 
 		this->VBO = mesh.VBO;
 		this->IBO = mesh.IBO;
@@ -109,6 +113,7 @@ namespace p3d {
 			this->vertices = std::move(mesh.vertices);
 			this->indices = std::move(mesh.indices);
 			this->textures = std::move(mesh.textures);
+			this->material = mesh.material;
 
 			this->VBO = mesh.VBO;
 			this->IBO = mesh.IBO;
@@ -126,22 +131,36 @@ namespace p3d {
 	void Mesh::draw(const Shader & shader) const {
 
 		GLuint diffuseNr = 1, specularNr = 1;
+		GLuint program = shader.getProgram();
 
-		////Set textures in shader program
-		for (GLuint i = 0; i < textures.size(); i++) {
+		//Set textures if mesh has any
+		if (textures.size() > 0) {
+			
+			glUniform1i(glGetUniformLocation(program, "isTextured"), 1);
+			
+			//Set textures in shader program
+			for (GLuint i = 0; i < textures.size(); i++) {
 
-			std::stringstream ss;
-			std::string number;
-			std::string type = textures[i].type;
-			glActiveTexture(GL_TEXTURE0 + i);	//activate texture unit
-			if (type == "texture_diffuse")
-				number = std::to_string(diffuseNr++);
-			else if (type == "texture_specular")
-				number = std::to_string(specularNr++);
-			//set specified sampler to active texture unit
-			glUniform1i(glGetUniformLocation(shader.getProgram(), (type + number).c_str()), i);
-			glBindTexture(GL_TEXTURE_2D, textures[i].id);	//bind texture to the active texture unit
-		}
+				std::stringstream ss;
+				std::string number;
+				std::string type = textures[i].type;
+				glActiveTexture(GL_TEXTURE0 + i);	//activate texture unit
+				if (type == "texture_diffuse")
+					number = std::to_string(diffuseNr++);
+				else if (type == "texture_specular")
+					number = std::to_string(specularNr++);
+				//set specified sampler to active texture unit
+				glUniform1i(glGetUniformLocation(program, (type + number).c_str()), i);
+				glBindTexture(GL_TEXTURE_2D, textures[i].id);	//bind texture to the active texture unit
+			}
+		}else
+			glUniform1i(glGetUniformLocation(program, "isTextured"), 0);
+
+		//Set material
+		glUniform3f(glGetUniformLocation(program, "material.color_ambient"), material.color_ambient.r, material.color_ambient.g, material.color_ambient.b);
+		glUniform3f(glGetUniformLocation(program, "material.color_diffuse"), material.color_diffuse.r, material.color_diffuse.g, material.color_diffuse.b);
+		glUniform3f(glGetUniformLocation(program, "material.color_specular"), material.color_specular.r, material.color_specular.g, material.color_specular.b);
+		glUniform1f(glGetUniformLocation(program, "material.shininess"), material.shininess);
 
 		//Bind vertex & indices buffers
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -149,9 +168,9 @@ namespace p3d {
 
 		//Get attributes locations
 		GLuint texLoc, normLoc, posLoc;
-		texLoc = glGetAttribLocation(shader.getProgram(), "in_TexCoord");
-		normLoc = glGetAttribLocation(shader.getProgram(), "in_normal");
-		posLoc = glGetAttribLocation(shader.getProgram(), "in_position");
+		texLoc = glGetAttribLocation(program, "in_TexCoord");
+		normLoc = glGetAttribLocation(program, "in_normal");
+		posLoc = glGetAttribLocation(program, "in_position");
 
 		//set vertex position pointer
 		glEnableVertexAttribArray(posLoc);

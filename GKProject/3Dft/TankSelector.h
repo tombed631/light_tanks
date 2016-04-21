@@ -58,8 +58,9 @@ namespace p3d {
 		LightCube light;
 		///Tank model
 		Model3D tank;
+		Model3D floor;
 		///Transformation matrices
-		glm::mat4 tankModelMatrix, lightModelMatrix, projectionMatrix, viewMatrix;
+		glm::mat4 tankModelMatrix, lightModelMatrix, projectionMatrix;
 		///Arcball
 		ArcBall arcball;
 		///Camera

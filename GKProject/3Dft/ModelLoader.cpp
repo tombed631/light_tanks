@@ -56,6 +56,7 @@ namespace p3d {
 		std::vector<Vertex> vertices;
 		std::vector<GLuint> indices;
 		std::vector<Texture> textures;
+		Material mesh_material;
 
 		//Get all vertices data
 		for (GLuint i = 0; i < mesh->mNumVertices; i++)
@@ -101,6 +102,22 @@ namespace p3d {
 		{
 			aiMaterial * material = scene->mMaterials[mesh->mMaterialIndex];
 
+			//get material properties
+			aiColor3D color;
+			material->Get(AI_MATKEY_COLOR_AMBIENT, color);
+			mesh_material.color_ambient.r = color.r;
+			mesh_material.color_ambient.g = color.g;
+			mesh_material.color_ambient.b = color.b;
+			material->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+			mesh_material.color_diffuse.r = color.r;
+			mesh_material.color_diffuse.g = color.g;
+			mesh_material.color_diffuse.b = color.b;
+			material->Get(AI_MATKEY_COLOR_SPECULAR, color);
+			mesh_material.color_specular.r = color.r;
+			mesh_material.color_specular.g = color.g;
+			mesh_material.color_specular.b = color.b;
+			material->Get(AI_MATKEY_SHININESS, mesh_material.shininess);
+
 			//get diffuse maps
 			std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse", texL, dir);
 			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
@@ -110,7 +127,7 @@ namespace p3d {
 		}
 
 		//return new Mesh
-		return Mesh(vertices, indices, textures);
+		return Mesh(vertices, indices, textures, mesh_material);
 	}
 
 	///Checks all material textures of a specified type and loads them if they are not loaded yet.

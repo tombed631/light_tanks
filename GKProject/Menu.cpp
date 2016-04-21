@@ -63,23 +63,10 @@ void Menu::showMenu(RenderWindow &window)
 				((eventHandle.type == Event::MouseButtonReleased && eventHandle.key.code == Mouse::Left)
 				|| (eventHandle.type == Event::KeyPressed && eventHandle.key.code == Keyboard::Return)))
 			{
-				try {
-					tankSelector.setTargetWindow(window);	//set window
-					playerColors = tankSelector.run();	//run tank selector
+				
+				tankSelector.setTargetWindow(window);	//set window
+				playerColors = tankSelector.run();	//run tank selector
 					
-				}
-				catch(p3d::ShaderCompileError & e) {
-				#ifdef _DEBUG
-					cout << e.what() << endl;
-				#endif
-					MessageBox(NULL, "Cannot compile shaders!", "ERROR", NULL);
-				}
-				catch (p3d::LoadModelError & e) {
-				#ifdef _DEBUG
-					cout << e.what() << endl;
-				#endif
-					MessageBox(NULL, "Cannot load models!", "ERROR", NULL);
-				}
 				isWarningShow = false;
 			
 				isColorChoose = true;

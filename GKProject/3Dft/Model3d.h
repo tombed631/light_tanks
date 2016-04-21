@@ -46,6 +46,18 @@ namespace p3d {
 	};
 
 	////////////////////////////////////////////////////////
+	/// Represents a single material. 
+	///
+	///	version 1.0
+	////////////////////////////////////////////////////////
+	struct Material {
+		glm::vec3 color_diffuse;
+		glm::vec3 color_specular;
+		glm::vec3 color_ambient;
+		float shininess;
+	};
+
+	////////////////////////////////////////////////////////
 	/// Represents a single drawable object.  
 	///
 	///	version 1.2
@@ -57,7 +69,7 @@ namespace p3d {
 		///vertices		Mesh vertices
 		///indices		Mesh indices
 		///textures		Mesh textures
-		Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures);
+		Mesh(std::vector<Vertex> & vertices, std::vector<GLuint> & indices, std::vector<Texture> & textures, Material & material);
 
 		///Creates new mesh that is a copy of the other specified mesh.
 		Mesh(const Mesh &);
@@ -95,6 +107,9 @@ namespace p3d {
 
 		///Contains object's textures
 		std::vector<Texture> textures;
+
+		///Contains properties of the object material.
+		Material material;
 
 	};
 

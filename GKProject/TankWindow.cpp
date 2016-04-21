@@ -14,7 +14,20 @@ void TankWindow::renderWindow(int height, int width, string name)
 		throw p3d::GLEWInitError();	//throw ex and shut down the game or remove 3d from game XD
 	}
 
-	//menu.showMenu(window);
-	Menu().showMenu(window);
+	try {
+		Menu().showMenu(window);
+	}
+	catch (p3d::ShaderCompileError & e) {
+	#ifdef _DEBUG
+		cout << e.what() << endl;
+	#endif
+		MessageBox(NULL, "Cannot compile shaders!", "ERROR", NULL);
+	}
+	catch (p3d::LoadModelError & e) {
+	#ifdef _DEBUG
+		cout << e.what() << endl;
+	#endif
+		MessageBox(NULL, "Cannot load models!", "ERROR", NULL);
+	}
 }
 
