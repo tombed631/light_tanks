@@ -7,7 +7,6 @@
 class Help
 {
 private:
-private:
 	Event eventHandle; //handle events
 	bool isRunningHelp; // is app running? 
 	Font font;
@@ -18,7 +17,7 @@ public:
 	/*Constructor*/
 	Help();
 	/*Shows Menu in window */
-	bool showHelp(RenderWindow &window);
+	bool showHelp(RenderWindow &window, p3d::PlTankColors colors );
 	/*Load font from file*/
 	void loadFont();
 

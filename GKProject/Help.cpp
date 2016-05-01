@@ -5,7 +5,7 @@ Help::Help()
 	isRunningHelp = true;
 }
 
-bool Help::showHelp(RenderWindow &window)
+bool Help::showHelp(RenderWindow &window, p3d::PlTankColors colors)
 {
 	bool backToMenu = true;
 
@@ -41,16 +41,40 @@ bool Help::showHelp(RenderWindow &window)
 	
 
 	arrowKeysSprite.setTexture(arrowKeysTexture);
-	arrowKeysSprite.setColor(Color::Blue);
+	
+	
 	arrowKeysSprite.setPosition(550 / 2 - arrowKeysSprite.getGlobalBounds().width / 2.f, 100.f + 200.f); //player1
 	pKeySprite.setPosition(500 / 2 - pKeySprite.getGlobalBounds().width / 2.f, 100.f + 350); //player1
 	wsadKeysSprite.setTexture(wsadKeysTexture);
+	
 	wsadKeysSprite.setPosition(1100 / 2 - wsadKeysSprite.getGlobalBounds().width / 2.f, 100.f + 200.f); //player1
 	spaceKeySprite.setTexture(spaceKeyTexture);
 	spaceKeySprite.setPosition(1100 / 2 - spaceKeySprite.getGlobalBounds().width / 2.f, 100.f + 350.f); //player1
 	pKeySprite.setTexture(pKeyTexture);
-
-
+	Vector3i colorOne = Vector3i((int)255.f*colors.firstPlayerColor.x, (int)255.f*colors.firstPlayerColor.y, (int)255.f*colors.firstPlayerColor.z);
+	Vector3i colorTwo = Vector3i((int)255.f*colors.secondPlayerColor.x, (int)255.f*colors.secondPlayerColor.y, (int)255.f*colors.secondPlayerColor.z);
+	if ((colors.firstPlayerColor.x == 0 && colors.firstPlayerColor.y == 0 && colors.firstPlayerColor.z == 0))
+	{
+		arrowKeysSprite.setColor(Color::White);
+		pKeySprite.setColor(Color::White);
+		
+	}
+	else
+	{
+		arrowKeysSprite.setColor(Color(colorOne.x, colorOne.y, colorOne.z));
+		pKeySprite.setColor(Color(colorOne.x, colorOne.y, colorOne.z));
+	}
+	if (colors.secondPlayerColor.x == 0 && colors.secondPlayerColor.y == 0 && colors.secondPlayerColor.z == 0)
+	{
+		wsadKeysSprite.setColor(Color::White);
+		spaceKeySprite.setColor(Color::White);
+	}
+	else
+	{
+		wsadKeysSprite.setColor(Color(colorTwo.x, colorTwo.y, colorTwo.z));
+		spaceKeySprite.setColor(Color(colorTwo.x, colorTwo.y, colorTwo.z));	
+	}
+		
 	imagesVector.push_back(arrowKeysSprite);
 	imagesVector.push_back(wsadKeysSprite);
 	imagesVector.push_back(spaceKeySprite);
