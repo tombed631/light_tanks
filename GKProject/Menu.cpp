@@ -8,9 +8,9 @@ Menu::Menu()
 void Menu::showWarning(Time &time)
 {
 	
-	
+	sf::Font * font = FontManager::getInstance().getFont("Lato.ttf");
 	chooseColorText.setString("First Choose color!");
-	chooseColorText.setFont(font);
+	chooseColorText.setFont(*font);
 	chooseColorText.setCharacterSize(20);
 	chooseColorText.setColor(Color::Red);
 	chooseColorText.setPosition(800 / 2 - chooseColorText.getGlobalBounds().width / 2.f, (float)700);
@@ -28,17 +28,17 @@ void Menu::showMenu(RenderWindow &window)
 	
 	Clock clock;
 	p3d::PlTankColors playerColors; // kolory graczy
-	loadFont();
+	sf::Font * font = FontManager::getInstance().getFont("Lato.ttf");
 	bool isColorChoose = false;
-	Text authors("Inf sem.6 GKiO1\nAuthors:\nTomasz Bednarek\nBartlomiej Rys\nMarcin Adrian", font, 15);
+	Text authors("Inf sem.6 GKiO1\nAuthors:\nTomasz Bednarek\nBartlomiej Rys\nMarcin Adrian", *font, 15);
 	authors.setPosition(700 - authors.getGlobalBounds().width / 2.f, (float)window.getSize().y - 100);
-	Text title("Light Tanks", font, 40);
+	Text title("Light Tanks", *font, 40);
 	title.setPosition(800 / 2 - title.getGlobalBounds().width/2.f, 20); // set position of title - 800 is 
 	Text menuOptions[optionsNumber];
 	string str[] = { "Play", "Choose color","Controls", "Exit" };
 	for (int i = 0; i<optionsNumber; i++)
 	{
-		menuOptions[i].setFont(font);
+		menuOptions[i].setFont(*font);
 		menuOptions[i].setCharacterSize(30);
 		menuOptions[i].setString(str[i]);
 		menuOptions[i].setPosition(800 / 2 - menuOptions[i].getGlobalBounds().width / 2.f, (float)200 + i * 60);
@@ -164,12 +164,4 @@ void Menu::showMenu(RenderWindow &window)
 		window.draw(authors);
 		window.display();
 	}
-}
-void Menu::loadFont()
-{
-		if (!font.loadFromFile("Fonts\\Lato.ttf"))
-		{
-			MessageBox(NULL, "No Font exist!", "ERROR", NULL);
-			isRunningMenu = false;
-		}
 }

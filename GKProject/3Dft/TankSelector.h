@@ -10,6 +10,10 @@
 #include "Camera.h"
 #include "Arcball.h"
 #include "Light.h"
+#include "../FontManager.h"
+#include <SFML\Graphics.hpp>
+#include <sstream>
+#include <iostream>
 
 namespace p3d {
 
@@ -71,9 +75,11 @@ namespace p3d {
 		glm::vec3 currentPlayerColor;
 		///currently selected player
 		Player currentPlayer;
-
-
-
+		
+		///Text to display
+		sf::Text colorValueText[3];
+		sf::Text playerText;
+		
 		///Renders current frame to the window
 		///and displays it on the screen.
 		void draw();
@@ -90,6 +96,8 @@ namespace p3d {
 		///Handles window events.
 		void handleWindowEvents();
 
+		///Updates text
+		void updateText();
 	};
 
 }

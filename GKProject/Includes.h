@@ -16,6 +16,7 @@
 #include <cstdlib>
 #include <limits>
 #include <SFML/Audio.hpp>
+#include "FontManager.h"
 
 
 using namespace sf;

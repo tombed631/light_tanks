@@ -7,20 +7,16 @@ Game::Game(RenderWindow &window)
 	isRunningGame = true;
 	pointTitle.setString("Score");
 
-	if (!font.loadFromFile("Fonts\\Lato.ttf"))
-	{
-		MessageBox(NULL, "No Font exist!", "ERROR", NULL);
-		return;
-	}
-	pointTitle.setFont(font);
+	sf::Font * font = FontManager::getInstance().getFont("Lato.ttf");
+	pointTitle.setFont(*font);
 	pointTitle.setCharacterSize(20);
 	pointTitle.setPosition(800 / 2 - pointTitle.getGlobalBounds().width / 2.f, (float)window.getSize().y - 100);
 
-	playerOnePoints.setFont(font);
+	playerOnePoints.setFont(*font);
 	playerOnePoints.setCharacterSize(20);
 	playerOnePoints.setPosition(800 / 3 - pointTitle.getGlobalBounds().width / 2.f, (float)window.getSize().y - 100);
 
-	playerTwoPoints.setFont(font);
+	playerTwoPoints.setFont(*font);
 	playerTwoPoints.setCharacterSize(20);
 	playerTwoPoints.setPosition(800 - (800 / 3) - pointTitle.getGlobalBounds().width / 2.f, (float)window.getSize().y - 100);
 

@@ -20,7 +20,6 @@ private:
 	Time timeToRestart; // czas zycia 
 	Clock clock; // zegar generujacy czas
 	Text playerOnePoints, playerTwoPoints, pointTitle; // punktacja
-	Font font;
 	Sound destroySound, shootSound, ricochetSound; // zmienne dzwiekow
 	SoundBuffer destroySoundBuffer, shootSoundBuffer, ricochetSoundBuffer; // buffery dzwiekow
 	vector <ParticleSystem*> explosions;

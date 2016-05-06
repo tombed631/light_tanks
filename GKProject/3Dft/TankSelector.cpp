@@ -21,10 +21,10 @@
 #define CAMERA_MIN_DISTANCE 0.5f
 #define CAMERA_MAX_DISTANCE 2.0f
 #define CAMERA_DISTANCE_STEP 0.05f
-
+///Defines text parameters
+#define TEXT_CHARACTER_SIZE 15
 
 namespace p3d {
-
 
 	///Default constructor.
 	///Note that you need to set thetarget window 
@@ -46,12 +46,12 @@ namespace p3d {
 	///Sets up TankSelector
 	void TankSelector::setup() {
 		isRunning = false;
-		tankShader = Shader("../GKProject/Shaders/vertexShader.glsl", "../GKProject/Shaders/fragmentShader.glsl");
-		lightShader = Shader("../GKProject/Shaders/lightSrcVerxShd.glsl", "../GKProject/Shaders/lightSrcFragShd.glsl");
-		tank = ModelLoader::loadFromFile("../GKProject/Models/Tank/Tank.obj");
-		floor = ModelLoader::loadFromFile("../GKProject/Models/floor/floor.obj");
+		tankShader = Shader("Shaders/vertexShader.glsl", "Shaders/fragmentShader.glsl");
+		lightShader = Shader("Shaders/lightSrcVerxShd.glsl", "Shaders/lightSrcFragShd.glsl");
+		tank = ModelLoader::loadFromFile("Models/Tank/Tank.obj");
+		floor = ModelLoader::loadFromFile("Models/floor/floor.obj");
 		camera = Camera(glm::vec3(0.0f, 0.2f, 1.0f));
-		
+
 		playerColors = { glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f) };
 
 		tankModelMatrix = glm::scale(tankModelMatrix, glm::vec3(0.05f, 0.05f, 0.05f));
@@ -86,6 +86,17 @@ namespace p3d {
 		program = lightShader.getProgram();
 		if (gameWindow != nullptr) glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_FALSE, glm::value_ptr(lightModelMatrix));
+
+		//text settings
+		sf::Font * font = FontManager::getInstance().getFont("Lato.ttf");
+		playerText.setFont(*font);
+		playerText.setPosition(10, 10);
+		playerText.setCharacterSize(TEXT_CHARACTER_SIZE);
+		for (unsigned int i = 0; i < 3; i++) {
+			colorValueText[i].setFont(*font);
+			colorValueText[i].setPosition(10, (i+1) * 20 + 10);
+			colorValueText[i].setCharacterSize(TEXT_CHARACTER_SIZE);
+		}
 	}
 
 	///Sets target window for rendering
@@ -114,6 +125,7 @@ namespace p3d {
 		glm::vec3 cameraPos = camera.getPosition();
 		cameraPos.z = CAMERA_DEFAULT_DISTANCE;
 		camera.setPosition(cameraPos);
+
 		
 		//Enable depth test
 		glEnable(GL_DEPTH_TEST);
@@ -126,6 +138,8 @@ namespace p3d {
 			handleMouseEvents();
 			handleKeyboardEvents();
 
+			updateText();
+		
 			//display current frame
 			draw();
 
@@ -180,6 +194,12 @@ namespace p3d {
 		//lightShader.use();
 		//light.draw(lightShader);
 		
+		//Draw text
+		gameWindow->pushGLStates();
+		gameWindow->draw(playerText);
+		for (unsigned int i = 0; i < 3; i++)
+			gameWindow->draw(colorValueText[i]);
+		gameWindow->popGLStates();
 
 		gameWindow->display();
 	}
@@ -287,6 +307,28 @@ namespace p3d {
 				camera.setPosition(cameraPos);
 			}
 		}
+	}
+
+	///Updates text
+	void TankSelector::updateText()
+	{
+		std::stringstream stream;
+		stream.precision(2);
+		stream.setf(std::ios::fixed);
+		stream << currentPlayerColor.r;
+		colorValueText[0].setString("R = " + stream.str());
+		stream.clear();
+		stream.str(std::string());	//clear sstream
+		stream << currentPlayerColor.g;
+		colorValueText[1].setString("G = " + stream.str());
+		stream.clear();
+		stream.str(std::string());	//clear sstream
+		stream << currentPlayerColor.b;
+		colorValueText[2].setString("B = " + stream.str());
+		if (currentPlayer == Player::PLAYER_1)
+			playerText.setString("Player: 1");
+		else
+			playerText.setString("Player: 2");
 	}
 }
 

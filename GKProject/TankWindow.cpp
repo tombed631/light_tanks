@@ -5,7 +5,7 @@ using namespace std;
 
 void TankWindow::renderWindow(int height, int width, string name)
 {
-	RenderWindow window(sf::VideoMode(height, width, 64), name,sf::Style::Default, sf::ContextSettings(24));
+	RenderWindow window(sf::VideoMode(height, width, 64), name,sf::Style::Titlebar | sf::Style::Close, sf::ContextSettings(24));
 	window.setFramerateLimit(100);
 
 	//initialize glew
@@ -28,6 +28,12 @@ void TankWindow::renderWindow(int height, int width, string name)
 		cout << e.what() << endl;
 	#endif
 		MessageBox(NULL, "Cannot load models!", "ERROR", NULL);
+	}
+	catch (LoadFontError & e) {
+	#ifdef _DEBUG
+		cout << e.what() << endl;
+	#endif
+		MessageBox(NULL, "Cannot load font!", "ERROR", NULL);
 	}
 }
 
