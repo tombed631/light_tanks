@@ -5,6 +5,7 @@ using namespace std;
 
 void TankWindow::renderWindow(int height, int width, string name)
 {
+
 	RenderWindow window(sf::VideoMode(height, width, 64), name,sf::Style::Titlebar | sf::Style::Close, sf::ContextSettings(24));
 	window.setFramerateLimit(100);
 

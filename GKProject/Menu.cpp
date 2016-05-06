@@ -105,7 +105,7 @@ void Menu::showMenu(RenderWindow &window)
 			{
 				Help help;
 				// trzeba tez zaimplementowac sprawdzenie wybranie czolgu - potem
-				isRunningMenu = help.showHelp(window);
+				isRunningMenu = help.showHelp(window, playerColors);
 			}
 
 

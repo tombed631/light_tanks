@@ -17,7 +17,8 @@
 #include <limits>
 #include <SFML/Audio.hpp>
 #include "FontManager.h"
-
+#include "3Dft\TankSelector.h"
+#include "3Dft\TankTypes.h"
 
 using namespace sf;
 using namespace std;
