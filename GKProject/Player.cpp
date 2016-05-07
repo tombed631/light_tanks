@@ -65,32 +65,52 @@ Sprite Player::tankForwardAndBackward(bool tankOne)
 	velocity.y = 0;
 	sf::Time dt = deltaClock.restart();
 	double angle = tankSprite.getRotation()*3.14159265 / 180;
-
 	if (tankOne) // jesli gracz pierwszy wykonuje ruch
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		{
-			velocity.x = (speed * (float)sin(angle)*dt.asSeconds());
-			velocity.y = -speed * (float)cos(angle)*dt.asSeconds();
+			if (speed < 150)
+				speed += 2;
+			else
+				speed = 150;
+			
 		}
+		else
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		{
-			velocity.x = -speed * (float)sin(angle)*dt.asSeconds();
-			velocity.y = speed * (float)cos(angle)*dt.asSeconds();
+			if (speed > -150)
+				speed -= 2;
+			else
+				speed = -150;
+			
 		}
+		else
+			speed = 0;
+			velocity.x = (speed * (float)sin(angle)*dt.asSeconds());
+			velocity.y = -speed * (float)cos(angle)*dt.asSeconds();
 	}
 	else if (!tankOne) // jesli drugi gracz
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		{
-			velocity.x = (speed * (float)sin(angle)*dt.asSeconds());
-			velocity.y = -speed * (float)cos(angle)*dt.asSeconds();
+			if (speed < 150)
+				speed += 2;
+			else
+				speed = 150;
 		}
+		else
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
-			velocity.x = -speed * (float)sin(angle)*dt.asSeconds();
-			velocity.y = speed * (float)cos(angle)*dt.asSeconds();
+			if (speed > -150)
+				speed -= 2;
+			else
+				speed = -150;
+
 		}
+		else
+			speed = 0;
+		velocity.x = (speed * (float)sin(angle)*dt.asSeconds());
+		velocity.y = -speed * (float)cos(angle)*dt.asSeconds();
 	}
 	copy.move(velocity);
 	return copy;
