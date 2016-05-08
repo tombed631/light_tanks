@@ -23,12 +23,74 @@ void Menu::showWarning(Time &time)
 		
 	}
 }
+string Menu::setPlayerOneName(RenderWindow &window, bool playerOne, p3d::PlTankColors playerColors) // jezeli nick gracza pierwszego - true, jezeli 2 - false.
+{
+	Vector3i color;
+	string player = "";
+	if (playerOne)
+	{
+		player = "Player One ";
+		color = Vector3i((int)255.f*playerColors.firstPlayerColor.x, (int)255.f*playerColors.firstPlayerColor.y, (int)255.f*playerColors.firstPlayerColor.z);
+	}
+	else
+
+	{
+		player = "Player Two ";
+		color = Vector3i((int)255.f*playerColors.secondPlayerColor.x, (int)255.f*playerColors.secondPlayerColor.y, (int)255.f*playerColors.secondPlayerColor.z);
+	}
+
+	sf::Font * font = FontManager::getInstance().getFont("hongkong.ttf");
+	Text title(player + "nick: \n\n\n\n\n \t\t\t\t Press Enter", *font, 30);
+	title.setStyle(Text::Bold);
+	title.setColor(Color::White);
+	title.setPosition(270, 170);
+	string name;
+	Event event;
+	bool toReturn = false;
+	while (!toReturn)
+	{
+		Text textName(name, *font, 40);
+		
+		while (window.pollEvent(event))
+		{
+			if (event.type == Event::Closed || event.type == Event::KeyPressed &&
+				event.key.code == Keyboard::Escape)
+			{
+				name = "PlayerWithNoNameException";
+				toReturn = true;
+				break;
+			}
+				
+
+			if (event.type == sf::Event::TextEntered)
+			{
+				if (event.text.unicode >= 32 && event.text.unicode <= 126 && name.length()<15)
+					name += ((char)event.text.unicode);
+				else if (event.text.unicode == 8)
+					name = name.substr(0, name.length() - 1);
+			}
+			if (event.type == Event::KeyPressed && event.key.code == Keyboard::Return && name.length()>0)
+			{
+				toReturn = true;
+			}
+		}
+		textName.setPosition(335, 250);
+		textName.setColor(Color(color.x, color.y, color.z));
+		textName.setStyle(Text::Bold);
+		window.clear();
+		window.draw(title);
+		window.draw(textName);
+		window.display();
+	}
+
+	return name;
+}
 void Menu::showMenu(RenderWindow &window)
 {
 	
 	Clock clock;
 	p3d::PlTankColors playerColors; // kolory graczy
-	sf::Font * font = FontManager::getInstance().getFont("Lato.ttf");
+	sf::Font * font = FontManager::getInstance().getFont("hongkong.ttf");
 	bool isColorChoose = false;
 	Text authors("Inf sem.6 GKiO1\nAuthors:\nTomasz Bednarek\nBartlomiej Rys\nMarcin Adrian", *font, 15);
 	authors.setPosition(700 - authors.getGlobalBounds().width / 2.f, (float)window.getSize().y - 100);
@@ -91,9 +153,14 @@ void Menu::showMenu(RenderWindow &window)
 				}
 				else
 				{
-					Game game(window);
-					// trzeba tez zaimplementowac sprawdzenie wybranie czolgu - potem
-					isRunningMenu = game.run(window, playerColors);
+					string playerOneName = setPlayerOneName(window, true, playerColors);
+					string playerTwoName = setPlayerOneName(window, false, playerColors);
+					if (playerOneName != "PlayerWithNoNameException")
+					{
+						Game game(window);
+						isRunningMenu = game.run(window, playerColors, playerOneName,playerTwoName);
+					}
+					
 				}
 				
 			}

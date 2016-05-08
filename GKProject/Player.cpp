@@ -183,6 +183,10 @@ void Player::setPlayerRotation(float rotation)
 {
 	tankSprite.setRotation(rotation);
 }
+float Player::getPlayerRotation()
+{
+	return tankSprite.getRotation();
+}
 
 bool Player::isMoving()
 {

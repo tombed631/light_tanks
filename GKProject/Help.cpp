@@ -9,7 +9,7 @@ bool Help::showHelp(RenderWindow &window, p3d::PlTankColors colors)
 {
 	bool backToMenu = true;
 
-	sf::Font * font = FontManager::getInstance().getFont("Lato.ttf");
+	sf::Font * font = FontManager::getInstance().getFont("hongkong.ttf");
 	Text title("Help", *font, 40);
 	title.setPosition(800 / 2 - title.getGlobalBounds().width / 2.f, 20); // set position of title - 800 is 
 	Text texts[6];

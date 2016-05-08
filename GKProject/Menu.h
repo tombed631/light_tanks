@@ -25,4 +25,5 @@ public:
 	/*Shows Menu in window */
 	void showMenu(RenderWindow &window);
 	void showWarning(Time &time);
+	string setPlayerOneName(RenderWindow &window, bool playerOne, p3d::PlTankColors playerColors);
 };

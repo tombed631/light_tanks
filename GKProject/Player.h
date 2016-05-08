@@ -50,5 +50,5 @@ public:
 	void setPlayerRotation(float rotation);
 	void setEmiter(Bullet *bullet);
 	ParticleSystem *getBulletExplosion();
-
+	float getPlayerRotation();
 };

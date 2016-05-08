@@ -6,8 +6,8 @@ Game::Game(RenderWindow &window)
 {
 	isRunningGame = true;
 	pointTitle.setString("Score");
-
-	sf::Font * font = FontManager::getInstance().getFont("Lato.ttf");
+	
+	sf::Font * font = FontManager::getInstance().getFont("hongkong.ttf");
 	pointTitle.setFont(*font);
 	pointTitle.setCharacterSize(20);
 	pointTitle.setPosition(800 / 2 - pointTitle.getGlobalBounds().width / 2.f, (float)window.getSize().y - 100);
@@ -70,27 +70,28 @@ void Game::reset()
 	// zmiana punktow z inty na stringi
 	ostringstream firstPointsStream, secondPointsStream;
 	firstPointsStream << playerOne->getPoints();
-	playerOnePoints.setString("Player 1\n    " + firstPointsStream.str());
+	playerOnePoints.setString(playerOne->getName() + "\n    " + firstPointsStream.str());
 	secondPointsStream << playerTwo->getPoints();
-	playerTwoPoints.setString("Player 2\n    " + secondPointsStream.str());
+	playerTwoPoints.setString(playerTwo->getName() + "\n    " + secondPointsStream.str());
 	//playerOnePoints.
 	playerOne->isHited = false;
 	playerTwo->isHited = false;
 	playerOne->deleteBullets();
 	playerTwo->deleteBullets();
-	playerTwo->setTankPosition(Vector2f(700,35));
-	playerOne->setTankPosition(Vector2f(40, 35));
+	playerTwo->setTankPosition(Vector2f(700,40));
+	playerOne->setTankPosition(Vector2f(40, 40));
 	playerOne->setPlayerRotation(180);
 	playerTwo->setPlayerRotation(180);
 }
-bool Game::run(RenderWindow &window, p3d::PlTankColors playerColors)
+bool Game::run(RenderWindow &window, p3d::PlTankColors playerColors, string playerOneName, string playerTwoName)
 {
-	bool backToMenu = true;
-	
 	Vector3i colorOne = Vector3i((int)255.f*playerColors.firstPlayerColor.x, (int)255.f*playerColors.firstPlayerColor.y, (int)255.f*playerColors.firstPlayerColor.z);
 	Vector3i colorTwo = Vector3i((int)255.f*playerColors.secondPlayerColor.x, (int)255.f*playerColors.secondPlayerColor.y, (int)255.f*playerColors.secondPlayerColor.z);
-	playerOne = new Player("Tomek", "Textures\\tank2.png", colorOne);
-	playerTwo = new Player("Sinex", "Textures\\tank2.png", colorTwo);
+	bool backToMenu = true;
+	playerOne = new Player(playerOneName, "Textures\\tank2.png", colorOne);
+	playerTwo = new Player(playerTwoName, "Textures\\tank2.png", colorTwo);
+	
+	
 	reset();
 	scoreBoardTankSpriteOne.setColor(Color(colorOne.x,colorOne.y,colorOne.z));
 	scoreBoardTankSpriteTwo.setColor(Color(colorTwo.x, colorTwo.y, colorTwo.z));
@@ -210,13 +211,11 @@ void Game::moveTank(Player *playerMain, Player *playerSub,bool which)
 			forwardBackward = false;
 	}
 	if (rotation) // jezeli nie by³o kolizji przypisz nowa rotacje
-	{
-		// sprawdzanie ktory gracz i czy juz dzwiek jest wlaczony
 		playerMain->assignRotation();
-	}
 	if (forwardBackward) // jezeli nie by³o kolizji w przod lub ty³ przypisz nowa pozycje
 		playerMain->moveTank();
 
+	
 }
 
 
