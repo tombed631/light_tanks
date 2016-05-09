@@ -15,7 +15,6 @@ Player::Player(String _name, String path, Vector3i colors)
 	isHited = false;
 	points = 0;
 	bulletExplosion = new ParticleSystem(100);
-	speed = 0;
 }
 void Player::draw(RenderTarget &target, RenderStates states) const
 {
@@ -71,44 +70,24 @@ Sprite Player::tankForwardAndBackward(bool tankOne)
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		{
-			if (speed < 150)
-				speed += 2;
-			else
-				speed = 150;
+			velocity.x = (speed * (float)sin(angle)*dt.asSeconds());
+			velocity.y = -speed * (float)cos(angle)*dt.asSeconds();
 		}
-		else
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		{
-			if (speed > -150)
-				speed -= 2;
-			else
-				speed = -150;
+			velocity.x = -speed * (float)sin(angle)*dt.asSeconds();
+			velocity.y = speed * (float)cos(angle)*dt.asSeconds();
 		}
-		else
-		{
-
-		}
-
-		velocity.x = (speed * (float)sin(angle)*dt.asSeconds());
-		velocity.y = -speed * (float)cos(angle)*dt.asSeconds();
 	}
 	else if (!tankOne) // jesli drugi gracz
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		{
-			if (speed < 150)
-				speed += 2;
-			else
-				speed = 150;
 			velocity.x = (speed * (float)sin(angle)*dt.asSeconds());
 			velocity.y = -speed * (float)cos(angle)*dt.asSeconds();
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
-			if (speed < 150)
-				speed += 2;
-			else
-				speed = 150;
 			velocity.x = -speed * (float)sin(angle)*dt.asSeconds();
 			velocity.y = speed * (float)cos(angle)*dt.asSeconds();
 		}
