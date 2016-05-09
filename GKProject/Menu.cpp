@@ -23,7 +23,13 @@ void Menu::showWarning(Time &time)
 		
 	}
 }
-string Menu::setPlayerOneName(RenderWindow &window, bool playerOne, p3d::PlTankColors playerColors) // jezeli nick gracza pierwszego - true, jezeli 2 - false.
+
+
+
+
+
+
+string Menu::setPlayerName(RenderWindow &window, bool playerOne, p3d::PlTankColors playerColors) // jezeli nick gracza pierwszego - true, jezeli 2 - false.
 {
 	Vector3i color;
 	string player = "";
@@ -43,7 +49,7 @@ string Menu::setPlayerOneName(RenderWindow &window, bool playerOne, p3d::PlTankC
 	Text title(player + "nick: \n\n\n\n\n \t\t\t\t Press Enter", *font, 30);
 	title.setStyle(Text::Bold);
 	title.setColor(Color::White);
-	title.setPosition(270, 170);
+	title.setPosition(800 / 2 - title.getGlobalBounds().width / 2.f, 170);
 	string name;
 	Event event;
 	bool toReturn = false;
@@ -53,15 +59,18 @@ string Menu::setPlayerOneName(RenderWindow &window, bool playerOne, p3d::PlTankC
 		
 		while (window.pollEvent(event))
 		{
-			if (event.type == Event::Closed || event.type == Event::KeyPressed &&
+			if (event.type == Event::KeyPressed &&
 				event.key.code == Keyboard::Escape)
 			{
 				name = "PlayerWithNoNameException";
 				toReturn = true;
 				break;
 			}
-				
 
+			if (event.type == Event::Closed)
+			{
+				window.close();
+			}
 			if (event.type == sf::Event::TextEntered)
 			{
 				if (event.text.unicode >= 32 && event.text.unicode <= 126 && name.length()<15)
@@ -74,7 +83,7 @@ string Menu::setPlayerOneName(RenderWindow &window, bool playerOne, p3d::PlTankC
 				toReturn = true;
 			}
 		}
-		textName.setPosition(335, 250);
+		textName.setPosition(800 / 2 - textName.getGlobalBounds().width / 2.f, 250);
 		textName.setColor(Color(color.x, color.y, color.z));
 		textName.setStyle(Text::Bold);
 		window.clear();
@@ -85,6 +94,9 @@ string Menu::setPlayerOneName(RenderWindow &window, bool playerOne, p3d::PlTankC
 
 	return name;
 }
+
+
+
 void Menu::showMenu(RenderWindow &window)
 {
 	
@@ -153,8 +165,8 @@ void Menu::showMenu(RenderWindow &window)
 				}
 				else
 				{
-					string playerOneName = setPlayerOneName(window, true, playerColors);
-					string playerTwoName = setPlayerOneName(window, false, playerColors);
+					string playerOneName = setPlayerName(window, true, playerColors);
+					string playerTwoName = setPlayerName(window, false, playerColors);
 					if (playerOneName != "PlayerWithNoNameException")
 					{
 						Game game(window);

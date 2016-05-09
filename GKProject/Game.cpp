@@ -67,6 +67,7 @@ void Game::reset()
 		secondPointChanging->setEmitter(pointPosition, 1000, 10, 20, false);
 	}
 
+
 	// zmiana punktow z inty na stringi
 	ostringstream firstPointsStream, secondPointsStream;
 	firstPointsStream << playerOne->getPoints();
@@ -166,6 +167,8 @@ bool Game::run(RenderWindow &window, p3d::PlTankColors playerColors, string play
 		window.clear();
 
 		engine(window);
+		if (!isRunningGame)
+			break;
 		window.draw(*map);
 		if (!playerOne->isHited)
 			window.draw(*playerOne);
@@ -375,7 +378,14 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 		
 		timeToRestart = clock.getElapsedTime();
 		if (timeToRestart.asSeconds() > 3.f)
-			reset();
+		{
+				reset();
+				if (playerOne->getPoints() == 2 || playerTwo->getPoints() == 2)
+				{
+					finalResults(window, playerOne, playerTwo);
+				}
+		}
+			
 		
 	}
 		
@@ -385,7 +395,60 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 	}
 }
 
+void Game::finalResults(RenderWindow &window, Player *playerOne, Player *playerTwo)
+{
+	Event event;
+	bool toReturn = false;
+	sf::Font * font = FontManager::getInstance().getFont("hongkong.ttf");
+	Text title, result;
+	while (!toReturn)
+	{
+		while (window.pollEvent(event))
+		{
+			if (event.type == Event::Closed)
+			{
+				window.close();
+			}
+			if (event.type == Event::KeyPressed &&
+				(event.key.code == Keyboard::Escape || event.key.code == Keyboard::Return))
+			{
+				toReturn = true;
+			}
+		}
 
+		if (playerOne->getPoints() == playerTwo->getPoints())
+			title.setString("Draw!");
+		else
+		{
+			if (playerOne->getPoints() > playerTwo->getPoints()) // jesli wygral gracz pierwszy
+				title.setString(playerOne->getName() + " Win!!!");
+			else
+				title.setString(playerTwo->getName() + " Win!!!");
+		}
+		title.setFont(*font);
+		title.setCharacterSize(60);
+		title.setColor(Color::Red);
+		title.setPosition(800 / 2 - title.getGlobalBounds().width / 2.f, 200);
+		title.setStyle(Text::Bold);
+		string results = "\t\t Final Result \n\n \t\t " ;
+		results += playerOne->getName() + "   " + to_string(playerOne->getPoints());
+		results += " : " + to_string(playerTwo->getPoints()) +"   " +playerTwo->getName();
+		results += "\n\n\n \t\t\t\t\t\t Press Enter";
+		result.setString(results);
+		result.setCharacterSize(30);
+		result.setFont(*font);
+		result.setPosition(800 / 2 - result.getGlobalBounds().width / 2.f, 300  );
+		result.setColor(Color::White);
+		window.clear();
+		window.draw(result);
+		window.draw(title);
+		window.display();
+
+
+	}
+	isRunningGame = false;
+
+}
 void Game::engine(RenderWindow &window)
 {
 
