@@ -14,7 +14,7 @@ private:
 	Texture tankTexture; // textura czo³gu
 	Vector2f direction;  // kierunek w ktorym porusza sie czo³g
 	Vector2f velocity; //prêdkosc czo³gu
-	const static int speed = 150; // szybkosc czo³gu
+	float speed = 0; // szybkosc czo³gu
 	Clock deltaClock;; // krok czasowy
 	String name; // nazwa gracza
 	float positionX, positionY; // pozycja gracza
@@ -50,5 +50,5 @@ public:
 	void setPlayerRotation(float rotation);
 	void setEmiter(Bullet *bullet);
 	ParticleSystem *getBulletExplosion();
-
+	float getPlayerRotation();
 };

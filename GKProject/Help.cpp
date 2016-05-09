@@ -9,8 +9,8 @@ bool Help::showHelp(RenderWindow &window, p3d::PlTankColors colors)
 {
 	bool backToMenu = true;
 
-	loadFont();
-	Text title("Help", font, 40);
+	sf::Font * font = FontManager::getInstance().getFont("hongkong.ttf");
+	Text title("Help", *font, 40);
 	title.setPosition(800 / 2 - title.getGlobalBounds().width / 2.f, 20); // set position of title - 800 is 
 	Text texts[6];
 	
@@ -30,7 +30,7 @@ bool Help::showHelp(RenderWindow &window, p3d::PlTankColors colors)
 	for (int i = 0; i < 5; i++)
 	{
 		texts[i].setString(strings[i]);
-		texts[i].setFont(font);
+		texts[i].setFont(*font);
 		texts[i].setCharacterSize(30);
 			texts[1].setPosition(550/ 2 - texts[1].getGlobalBounds().width / 2.f, 100.f + 100.f); //player1
 			texts[2].setPosition(1100 / 2 - texts[2].getGlobalBounds().width / 2.f, 100.f +  100.f); // player2
@@ -119,13 +119,4 @@ bool Help::showHelp(RenderWindow &window, p3d::PlTankColors colors)
 		window.display();
 	}
 	return backToMenu;
-}
-
-void Help::loadFont()
-{
-	if (!font.loadFromFile("Fonts\\Lato.ttf"))
-	{
-		MessageBox(NULL, "No Font exist!", "ERROR", NULL);
-		isRunningHelp = false;
-	}
 }
