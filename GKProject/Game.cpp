@@ -54,16 +54,14 @@ void Game::reset()
 	{
 		playerTwo->setPoints(playerTwo->getPoints() + 1); // dodaj punkt graczowi drugiemu
 		pointPosition = playerTwoPoints.getPosition();
-		pointPosition.x += (playerTwoPoints.getGlobalBounds().width / 2) - 13;
-		pointPosition.y += playerTwoPoints.getGlobalBounds().height - 10;
+		pointPosition.y += playerTwoPoints.getGlobalBounds().height/2 + 7;
 		firstPointChanging->setEmitter(pointPosition, 1000, 10, 20, false);
 	}
 	if (playerTwo->isHited) // trafiony gracz drugi
 	{
 		playerOne->setPoints(playerOne->getPoints() + 1);// dodaj punkt graczowi pierwszemu
 		pointPosition = playerOnePoints.getPosition();
-		pointPosition.x += (playerOnePoints.getGlobalBounds().width / 2) - 13;
-		pointPosition.y += playerOnePoints.getGlobalBounds().height - 10;
+		pointPosition.y += playerOnePoints.getGlobalBounds().height/2 + 7;
 		secondPointChanging->setEmitter(pointPosition, 1000, 10, 20, false);
 	}
 
@@ -71,16 +69,45 @@ void Game::reset()
 	// zmiana punktow z inty na stringi
 	ostringstream firstPointsStream, secondPointsStream;
 	firstPointsStream << playerOne->getPoints();
-	playerOnePoints.setString(playerOne->getName() + "\n    " + firstPointsStream.str());
+	playerOnePoints.setString(playerOne->getName() + "\n" + firstPointsStream.str());
 	secondPointsStream << playerTwo->getPoints();
-	playerTwoPoints.setString(playerTwo->getName() + "\n    " + secondPointsStream.str());
-	//playerOnePoints.
+	playerTwoPoints.setString(playerTwo->getName() + "\n" + secondPointsStream.str());
 	playerOne->isHited = false;
 	playerTwo->isHited = false;
 	playerOne->deleteBullets();
 	playerTwo->deleteBullets();
-	playerTwo->setTankPosition(Vector2f(700,40));
-	playerOne->setTankPosition(Vector2f(40, 40));
+	// losowanie pozycji
+	int FirstPosition, SecondPosition;
+
+	int randFirstPosition = std::rand() % 3;
+	switch (randFirstPosition)
+	{
+	case 0:
+		FirstPosition = 40;
+		break;
+	case 1:
+		FirstPosition = 320;
+		break;
+	case 2:
+		FirstPosition = 590;
+		break;
+	}
+
+	int randSecondPosition = std::rand() % 3;
+	switch (randSecondPosition)
+	{
+	case 0:
+		SecondPosition = 40;
+		break;
+	case 1:
+		SecondPosition = 320;
+		break;
+	case 2:
+		SecondPosition = 590;
+		break;
+	}
+	playerTwo->setTankPosition(Vector2f(780, FirstPosition));
+	playerOne->setTankPosition(Vector2f(40, SecondPosition));
 	playerOne->setPlayerRotation(180);
 	playerTwo->setPlayerRotation(180);
 }
@@ -380,7 +407,7 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 		if (timeToRestart.asSeconds() > 3.f)
 		{
 				reset();
-				if (playerOne->getPoints() == 2 || playerTwo->getPoints() == 2)
+				if (playerOne->getPoints() == 10 || playerTwo->getPoints() == 10)
 				{
 					finalResults(window, playerOne, playerTwo);
 				}

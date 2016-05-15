@@ -12,7 +12,27 @@ void Map::createMap(RenderWindow &gameWindow){
 	ifstream mapFile;
 	string fileData;
 	int cellInfo;
-	mapFile.open("Maps\\Map1.txt", ios::in);
+	string mapPath = "Maps\\";
+	int chooseMap = std::rand() % 5;
+	switch (chooseMap)
+	{
+	case 0:
+		mapPath += "Map1.txt";
+		break;
+	case 1:
+		mapPath += "Map2.txt";
+		break;
+	case 2:
+		mapPath += "Map3.txt";
+		break;
+	case 3:
+		mapPath += "Map4.txt";
+		break;
+	case 4:
+		mapPath += "Map5.txt";
+		break;
+	}
+	mapFile.open(mapPath, ios::in);
 	if (mapFile.good() == false){
 		MessageBox(NULL, "Brak shematu mapy!", "ERROR", NULL);
 		return;

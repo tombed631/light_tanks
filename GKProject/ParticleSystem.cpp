@@ -16,8 +16,8 @@ void ParticleSystem::setEmitter(sf::Vector2f position, int time, int _angle, int
 		m_particles[index].lifetime = sf::milliseconds((std::rand() % 200) + time);
 
 		// reset the position of the corresponding vertex
-		m_vertices[index].position.x = m_emitter.x + (std::rand() % 10);
-		m_vertices[index].position.y = m_emitter.y + (std::rand() % 10);
+		m_vertices[index].position.x = m_emitter.x + (std::rand() % 13);
+		m_vertices[index].position.y = m_emitter.y + (std::rand() % 13);
 	}
 	visible = true;
 };
