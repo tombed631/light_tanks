@@ -54,32 +54,60 @@ void Game::reset()
 	{
 		playerTwo->setPoints(playerTwo->getPoints() + 1); // dodaj punkt graczowi drugiemu
 		pointPosition = playerTwoPoints.getPosition();
-		pointPosition.x += (playerTwoPoints.getGlobalBounds().width / 2) - 13;
-		pointPosition.y += playerTwoPoints.getGlobalBounds().height - 10;
+		pointPosition.y += playerTwoPoints.getGlobalBounds().height/2 + 7;
 		firstPointChanging->setEmitter(pointPosition, 1000, 10, 20, false);
 	}
 	if (playerTwo->isHited) // trafiony gracz drugi
 	{
 		playerOne->setPoints(playerOne->getPoints() + 1);// dodaj punkt graczowi pierwszemu
 		pointPosition = playerOnePoints.getPosition();
-		pointPosition.x += (playerOnePoints.getGlobalBounds().width / 2) - 13;
-		pointPosition.y += playerOnePoints.getGlobalBounds().height - 10;
+		pointPosition.y += playerOnePoints.getGlobalBounds().height/2 + 7;
 		secondPointChanging->setEmitter(pointPosition, 1000, 10, 20, false);
 	}
+
 
 	// zmiana punktow z inty na stringi
 	ostringstream firstPointsStream, secondPointsStream;
 	firstPointsStream << playerOne->getPoints();
-	playerOnePoints.setString(playerOne->getName() + "\n    " + firstPointsStream.str());
+	playerOnePoints.setString(playerOne->getName() + "\n" + firstPointsStream.str());
 	secondPointsStream << playerTwo->getPoints();
-	playerTwoPoints.setString(playerTwo->getName() + "\n    " + secondPointsStream.str());
-	//playerOnePoints.
+	playerTwoPoints.setString(playerTwo->getName() + "\n" + secondPointsStream.str());
 	playerOne->isHited = false;
 	playerTwo->isHited = false;
 	playerOne->deleteBullets();
 	playerTwo->deleteBullets();
-	playerTwo->setTankPosition(Vector2f(700,40));
-	playerOne->setTankPosition(Vector2f(40, 40));
+	// losowanie pozycji
+	int FirstPosition, SecondPosition;
+
+	int randFirstPosition = std::rand() % 3;
+	switch (randFirstPosition)
+	{
+	case 0:
+		FirstPosition = 40;
+		break;
+	case 1:
+		FirstPosition = 320;
+		break;
+	case 2:
+		FirstPosition = 590;
+		break;
+	}
+
+	int randSecondPosition = std::rand() % 3;
+	switch (randSecondPosition)
+	{
+	case 0:
+		SecondPosition = 40;
+		break;
+	case 1:
+		SecondPosition = 320;
+		break;
+	case 2:
+		SecondPosition = 590;
+		break;
+	}
+	playerTwo->setTankPosition(Vector2f(780, FirstPosition));
+	playerOne->setTankPosition(Vector2f(40, SecondPosition));
 	playerOne->setPlayerRotation(180);
 	playerTwo->setPlayerRotation(180);
 }
@@ -166,6 +194,8 @@ bool Game::run(RenderWindow &window, p3d::PlTankColors playerColors, string play
 		window.clear();
 
 		engine(window);
+		if (!isRunningGame)
+			break;
 		window.draw(*map);
 		if (!playerOne->isHited)
 			window.draw(*playerOne);
@@ -375,7 +405,14 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 		
 		timeToRestart = clock.getElapsedTime();
 		if (timeToRestart.asSeconds() > 3.f)
-			reset();
+		{
+				reset();
+				if (playerOne->getPoints() == 10 || playerTwo->getPoints() == 10)
+				{
+					finalResults(window, playerOne, playerTwo);
+				}
+		}
+			
 		
 	}
 		
@@ -385,7 +422,60 @@ void Game::bulletsEngine(RenderWindow &window, Player *player)
 	}
 }
 
+void Game::finalResults(RenderWindow &window, Player *playerOne, Player *playerTwo)
+{
+	Event event;
+	bool toReturn = false;
+	sf::Font * font = FontManager::getInstance().getFont("hongkong.ttf");
+	Text title, result;
+	while (!toReturn)
+	{
+		while (window.pollEvent(event))
+		{
+			if (event.type == Event::Closed)
+			{
+				window.close();
+			}
+			if (event.type == Event::KeyPressed &&
+				(event.key.code == Keyboard::Escape || event.key.code == Keyboard::Return))
+			{
+				toReturn = true;
+			}
+		}
 
+		if (playerOne->getPoints() == playerTwo->getPoints())
+			title.setString("Draw!");
+		else
+		{
+			if (playerOne->getPoints() > playerTwo->getPoints()) // jesli wygral gracz pierwszy
+				title.setString(playerOne->getName() + " Win!!!");
+			else
+				title.setString(playerTwo->getName() + " Win!!!");
+		}
+		title.setFont(*font);
+		title.setCharacterSize(60);
+		title.setColor(Color::Red);
+		title.setPosition(800 / 2 - title.getGlobalBounds().width / 2.f, 200);
+		title.setStyle(Text::Bold);
+		string results = "\t\t Final Result \n\n \t\t " ;
+		results += playerOne->getName() + "   " + to_string(playerOne->getPoints());
+		results += " : " + to_string(playerTwo->getPoints()) +"   " +playerTwo->getName();
+		results += "\n\n\n \t\t\t\t\t\t Press Enter";
+		result.setString(results);
+		result.setCharacterSize(30);
+		result.setFont(*font);
+		result.setPosition(800 / 2 - result.getGlobalBounds().width / 2.f, 300  );
+		result.setColor(Color::White);
+		window.clear();
+		window.draw(result);
+		window.draw(title);
+		window.display();
+
+
+	}
+	isRunningGame = false;
+
+}
 void Game::engine(RenderWindow &window)
 {
 

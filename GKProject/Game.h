@@ -41,4 +41,5 @@ public:
 	void detectBulletsCollision(Player *player);	// pociski kolidujace ze scianami zmieniaja swoj kierunek(gracz pierwszy)
 	bool isPlayerHit(Player *player, Bullet *bullet);
 	void playerHited(Player *player);
+	void finalResults(RenderWindow &window, Player *playerOne, Player *playerTwo);
 };
