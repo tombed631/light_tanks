@@ -133,6 +133,8 @@ namespace p3d {
 			this->meshes = std::move(meshes);
 		}
 
+		virtual ~Model3D() = default;
+
 		///Creates a new model that is a copy of other specified model.
 		Model3D(const Model3D & other) {
 			this->meshes = other.meshes;
