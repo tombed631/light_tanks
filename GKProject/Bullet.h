@@ -1,6 +1,6 @@
 #ifndef Bulet_hpp
 #define Bulet_hpp
-#endif
+
 
 #include "Includes.h"
 
@@ -26,3 +26,5 @@ public:
 	Vector2f getPositionBullet();
 	FloatRect getBulletBounds();
 };
+
+#endif

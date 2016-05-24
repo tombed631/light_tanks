@@ -1,6 +1,6 @@
 #ifndef Game_hpp
 #define Game_hpp
-#endif
+
 
 #include "Includes.h"
 #include "Player.h"
@@ -30,6 +30,7 @@ private:
 
 public:
 	Game(RenderWindow &window);
+	virtual ~Game();
 	bool run(RenderWindow &window, p3d::PlTankColors playerColors, string playerOneName, string playerTwoName); // odpala g³ówn¹ petle gry
 	void engine(RenderWindow &window); // silnik gry odpowiedzialny za ruch pojazdów, pocisków i kolizje
 
@@ -43,3 +44,5 @@ public:
 	void playerHited(Player *player);
 	void finalResults(RenderWindow &window, Player *playerOne, Player *playerTwo);
 };
+
+#endif

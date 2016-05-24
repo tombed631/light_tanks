@@ -1,6 +1,6 @@
 #ifndef Particle_hpp
 #define Particle_hpp
-#endif
+
 
 #include "Includes.h"
 
@@ -41,3 +41,5 @@ private:
 	Particle* nextParticle;
 	Particle* prevParticle;
 };
+
+#endif

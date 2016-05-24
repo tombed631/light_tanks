@@ -1,6 +1,5 @@
 #ifndef Player_hpp
 #define Player_hpp
-#endif
 
 #include "Includes.h"
 #include "Bullet.h"
@@ -22,6 +21,7 @@ private:
 	int points;					// punkty gracza
 	ParticleSystem *bulletExplosion;
 public:
+	virtual ~Player();
 	bool isHited; // czy zosta³ trafiony
 	Player();
 	virtual void draw(RenderTarget &target, RenderStates states) const; // wirtualna metoda pozwalajaca rysowac obiekt
@@ -52,3 +52,5 @@ public:
 	ParticleSystem *getBulletExplosion();
 	float getPlayerRotation();
 };
+
+#endif

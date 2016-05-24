@@ -98,3 +98,14 @@ Wall* Map::getWall(int index){
 const RectangleShape Map::getWallShape(int index){
 	return walls[index]->getShape();
 };
+
+Map::~Map() {
+	for (vector <Wall*>::iterator i = walls.begin(); i != walls.end(); i++)
+		if ((*i) != nullptr)
+			delete (*i);
+
+	for (int i = 0; i < 7; i++)
+		for (int j = 0; j < 9; j++)
+			if (mapCells[i][j] != nullptr)
+				delete mapCells[i][j];
+}

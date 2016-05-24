@@ -1,6 +1,5 @@
 #ifndef Map_hpp
 #define Map_hpp
-#endif
 
 #include "Includes.h"
 #include "Cell.h"
@@ -8,14 +7,14 @@
 class Map : public Drawable, public Transformable
 {
 private:
-	Wall *wall;
+	//Wall *wall;
 	vector <Wall*> walls;
 	float windowX, windowY;
 	Cell *mapCells[7][9];
 
 public:
 
-
+	virtual ~Map();
 	Map(){};
 
 	void createMap(RenderWindow &gameWindow);
@@ -25,3 +24,5 @@ public:
 
 	virtual void draw(RenderTarget &target, RenderStates states) const; // wirtualna metoda pozwalajaca rysowac obiekt
 };
+
+#endif

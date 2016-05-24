@@ -1,6 +1,6 @@
 #ifndef Cell_hpp
 #define Cell_hpp
-#endif
+
 
 #include "Includes.h"
 #include "Wall.h"
@@ -21,3 +21,5 @@ public:
 	Wall *getBottom();
 	Wall *getRight();
 };
+
+#endif

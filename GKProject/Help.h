@@ -1,6 +1,6 @@
 #ifndef Help_hpp
 #define Help_hpp
-#endif
+
 
 #include "Includes.h"
 
@@ -22,3 +22,5 @@ public:
 	bool showHelp(RenderWindow &window, p3d::PlTankColors colors );
 
 };
+
+#endif

@@ -214,3 +214,13 @@ ParticleSystem*::Player::getBulletExplosion()
 {
 	return bulletExplosion;
 }
+
+Player::~Player() {
+
+	if (bulletExplosion != nullptr)
+		delete bulletExplosion;
+
+	for (vector <Bullet*>::iterator i = bullets.begin(); i != bullets.end(); i++)
+		if ((*i) != nullptr)
+			delete (*i);
+}

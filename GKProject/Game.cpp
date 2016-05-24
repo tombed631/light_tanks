@@ -487,3 +487,30 @@ void Game::engine(RenderWindow &window)
 
 	
 }
+
+Game::~Game() {
+	if (this->firstTankExplosions != nullptr)
+		delete firstTankExplosions;
+	if (this->secondTankExplosions != nullptr)
+		delete secondTankExplosions;
+	if (this->firstPointChanging != nullptr)
+		delete firstPointChanging;
+	if (this->secondPointChanging != nullptr)
+		delete secondPointChanging;
+	if (this->bulletExplosion != nullptr)
+		delete bulletExplosion;
+	if (this->playerOne != nullptr)
+		delete playerOne;
+	if (this->playerTwo != nullptr)
+		delete playerTwo;
+	if (this->map != nullptr)
+		delete map;
+	
+	for (vector <ParticleSystem*>::iterator i = explosions.begin(); i != explosions.end(); i++)
+		if((*i) != nullptr)
+			delete (*i);
+	for (vector <Player*>::iterator i = players.begin(); i != players.end(); i++)
+		if ((*i) != nullptr)
+			delete (*i);
+
+}

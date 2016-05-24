@@ -1,8 +1,7 @@
 
 #ifndef COLLISION_H
 #define COLLISION_H
-
-#endif 
+ 
 #include "Includes.h"
 
 class BoundingBox 
@@ -70,3 +69,5 @@ public:
 			return true;
 	}
 };
+
+#endif

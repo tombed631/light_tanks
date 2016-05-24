@@ -7,13 +7,12 @@
 ///Button used to activate arcball (== start rotating tank model)
 #define ARCBALL_ACTIVATE_BUTTON	sf::Mouse::Middle
 ///Button used to switch between players
-#define SWITCH_PLAYER_BUTTON sf::Keyboard::P
+#define SWITCH_PLAYER_BUTTON sf::Keyboard::Return
 ///Buttons used to configure color
-#define INCREASE_RGBVALUE_BUTTON sf::Keyboard::Up
-#define DECREASE_RGBVALUE_BUTTON sf::Keyboard::Down
-#define CONFIG_RGBVALUE_R_BUTTON sf::Keyboard::R
-#define CONFIG_RGBVALUE_G_BUTTON sf::Keyboard::G
-#define CONFIG_RGBVALUE_B_BUTTON sf::Keyboard::B
+#define INCREASE_RGBVALUE_BUTTON sf::Keyboard::Right
+#define DECREASE_RGBVALUE_BUTTON sf::Keyboard::Left
+#define NEXT_RGBVALUE_BUTTON sf::Keyboard::Down
+#define PREVIOUS_RGBVALUE_BUTTON sf::Keyboard::Up
 ///Button used to return to the game menu
 #define RETURN_TO_MENU_BUTTON sf::Keyboard::Escape
 ///Defines camera settings
@@ -55,11 +54,13 @@ namespace p3d {
 		playerColors = { glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f) };
 
 		tankModelMatrix = glm::scale(tankModelMatrix, glm::vec3(0.05f, 0.05f, 0.05f));
-
+		
+		
 		if (gameWindow != nullptr) {
 			GLfloat width = gameWindow->getSize().x, height = gameWindow->getSize().y;
 			arcball = ArcBall(width, height);
 			projectionMatrix = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
+			modelAuthorText.setPosition((int)width - 210, (int)height - 30);
 		}
 		
 		Light _light;
@@ -92,6 +93,9 @@ namespace p3d {
 		playerText.setFont(*font);
 		playerText.setPosition(10, 10);
 		playerText.setCharacterSize(TEXT_CHARACTER_SIZE);
+		modelAuthorText.setFont(*font);
+		modelAuthorText.setString("Tank model created by blendswap.com user:\n The_marchin_on_game");
+		modelAuthorText.setCharacterSize(10);
 		for (unsigned int i = 0; i < 3; i++) {
 			colorValueText[i].setFont(*font);
 			colorValueText[i].setPosition(10, (i+1) * 20 + 10);
@@ -103,6 +107,7 @@ namespace p3d {
 	void TankSelector::setTargetWindow(sf::RenderWindow & window) {
 		gameWindow = &window;
 		GLfloat width = gameWindow->getSize().x, height = gameWindow->getSize().y;
+		modelAuthorText.setPosition((int)width - 210, (int)height - 30);
 		arcball.setWindowSize(width, height);
 		projectionMatrix = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
 		GLuint program = tankShader.getProgram();
@@ -121,6 +126,11 @@ namespace p3d {
 		//Select currently configured player as player 1
 		currentPlayerColor = playerColors.firstPlayerColor;
 		currentPlayer = Player::PLAYER_1;
+		//Select currently configured RGBValue as R, and color text
+		currentRGBValue = 0;
+		colorValueText[currentRGBValue].setColor(sf::Color::Yellow);
+		colorValueText[1].setColor(sf::Color::White);
+		colorValueText[2].setColor(sf::Color::White);
 		//Set default camera distance
 		glm::vec3 cameraPos = camera.getPosition();
 		cameraPos.z = CAMERA_DEFAULT_DISTANCE;
@@ -197,6 +207,7 @@ namespace p3d {
 		//Draw text
 		gameWindow->pushGLStates();
 		gameWindow->draw(playerText);
+		gameWindow->draw(modelAuthorText);
 		for (unsigned int i = 0; i < 3; i++)
 			gameWindow->draw(colorValueText[i]);
 		gameWindow->popGLStates();
@@ -230,40 +241,41 @@ namespace p3d {
 	///Handles keyboard events.
 	void TankSelector::handleKeyboardEvents() {
 
-		if (sf::Keyboard::isKeyPressed(CONFIG_RGBVALUE_R_BUTTON)) {
-			if (sf::Keyboard::isKeyPressed(INCREASE_RGBVALUE_BUTTON)) {
-				currentPlayerColor.r += COLOR_CHANGE_STEP;
-				if (currentPlayerColor.r > 1.0f)
-					currentPlayerColor.r -= 1.0f;
+		if (sf::Keyboard::isKeyPressed(INCREASE_RGBVALUE_BUTTON)) {
+			switch (currentRGBValue) {
+				case 0:
+					currentPlayerColor.r += COLOR_CHANGE_STEP;
+					if (currentPlayerColor.r > 1.0f)
+						currentPlayerColor.r -= 1.0f;
+					break;
+				case 1:
+					currentPlayerColor.g += COLOR_CHANGE_STEP;
+					if (currentPlayerColor.g > 1.0f)
+						currentPlayerColor.g -= 1.0f;
+					break;
+				case 2:
+					currentPlayerColor.b += COLOR_CHANGE_STEP;
+					if (currentPlayerColor.b > 1.0f)
+						currentPlayerColor.b -= 1.0f;
+					break;
 			}
-			else if (sf::Keyboard::isKeyPressed(DECREASE_RGBVALUE_BUTTON)) {
+		}else if(sf::Keyboard::isKeyPressed(DECREASE_RGBVALUE_BUTTON)){
+			switch (currentRGBValue) {
+			case 0:
 				currentPlayerColor.r -= COLOR_CHANGE_STEP;
 				if (currentPlayerColor.r < 0.0f)
 					currentPlayerColor.r += 1.0f;
-			}
-		}
-		if (sf::Keyboard::isKeyPressed(CONFIG_RGBVALUE_G_BUTTON)) {
-			if (sf::Keyboard::isKeyPressed(INCREASE_RGBVALUE_BUTTON)) {
-				currentPlayerColor.g += COLOR_CHANGE_STEP;
-				if (currentPlayerColor.g > 1.0f)
-					currentPlayerColor.g -= 1.0f;
-			}
-			else if (sf::Keyboard::isKeyPressed(DECREASE_RGBVALUE_BUTTON)) {
+				break;
+			case 1:
 				currentPlayerColor.g -= COLOR_CHANGE_STEP;
 				if (currentPlayerColor.g < 0.0f)
 					currentPlayerColor.g += 1.0f;
-			}
-		}
-		if (sf::Keyboard::isKeyPressed(CONFIG_RGBVALUE_B_BUTTON)) {
-			if (sf::Keyboard::isKeyPressed(INCREASE_RGBVALUE_BUTTON)) {
-				currentPlayerColor.b += COLOR_CHANGE_STEP;
-				if (currentPlayerColor.b > 1.0f)
-					currentPlayerColor.b -= 1.0f;
-			}
-			else if (sf::Keyboard::isKeyPressed(DECREASE_RGBVALUE_BUTTON)) {
+				break;
+			case 2:
 				currentPlayerColor.b -= COLOR_CHANGE_STEP;
 				if (currentPlayerColor.b < 0.0f)
 					currentPlayerColor.b += 1.0f;
+				break;
 			}
 		}
 	}
@@ -292,6 +304,18 @@ namespace p3d {
 						currentPlayerColor = playerColors.firstPlayerColor;
 						currentPlayer = Player::PLAYER_1;
 					}
+				}
+				else if (event.key.code == NEXT_RGBVALUE_BUTTON) {
+					colorValueText[currentRGBValue].setColor(sf::Color::White);
+					if (++currentRGBValue > 2)
+						currentRGBValue = 0;
+					colorValueText[currentRGBValue].setColor(sf::Color::Yellow);
+				}
+				else if (event.key.code == PREVIOUS_RGBVALUE_BUTTON) {
+					colorValueText[currentRGBValue].setColor(sf::Color::White);
+					if (--currentRGBValue < 0)
+						currentRGBValue = 2;
+					colorValueText[currentRGBValue].setColor(sf::Color::Yellow);
 				}
 				else if (event.key.code == RETURN_TO_MENU_BUTTON) {
 					isRunning = false;

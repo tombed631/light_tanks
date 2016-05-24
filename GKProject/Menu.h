@@ -1,6 +1,5 @@
 #ifndef Menu_hpp
 #define Menu_hpp
-#endif
 
 #include "Includes.h"
 #include "Game.h"
@@ -28,3 +27,5 @@ public:
 	string setPlayerName(RenderWindow &window, bool playerOne, p3d::PlTankColors playerColors);
 
 };
+
+#endif

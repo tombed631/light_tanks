@@ -1,6 +1,11 @@
+
+
+#ifdef _DEBUG
 #define CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
+#endif
+
 #include "Includes.h"
 #include "TankWindow.h"
 

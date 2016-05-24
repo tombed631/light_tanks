@@ -76,10 +76,13 @@ namespace p3d {
 		///currently selected player
 		Player currentPlayer;
 		
+		///Color config
+		int currentRGBValue;
+
 		///Text to display
 		sf::Text colorValueText[3];
 		sf::Text playerText;
-		
+		sf::Text modelAuthorText;
 		///Renders current frame to the window
 		///and displays it on the screen.
 		void draw();

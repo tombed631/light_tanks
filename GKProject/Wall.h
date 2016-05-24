@@ -1,6 +1,6 @@
 #ifndef Wall_hpp
 #define Wall_hpp
-#endif
+
 
 #include "Includes.h"
 
@@ -19,3 +19,5 @@ public:
 	const RectangleShape getShape();
 	
 };
+
+#endif
