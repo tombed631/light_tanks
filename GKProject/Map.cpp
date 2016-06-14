@@ -34,7 +34,7 @@ void Map::createMap(RenderWindow &gameWindow){
 	}
 	mapFile.open(mapPath, ios::in);
 	if (mapFile.good() == false){
-		MessageBox(NULL, "Brak shematu mapy!", "ERROR", NULL);
+		MessageBox(NULL, "No schema of map!", "ERROR", NULL);
 		return;
 	}
 	//ramka okna bazowa dla ka¿dego

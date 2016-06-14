@@ -20,7 +20,7 @@ bool Help::showHelp(RenderWindow &window, p3d::PlTankColors colors)
 	if ((!arrowKeysTexture.loadFromFile("Textures\\arrows.png")) || (!wsadKeysTexture.loadFromFile("Textures\\wsad.png")) ||
 		(!spaceKeyTexture.loadFromFile("Textures\\Space.png")) || (!pKeyTexture.loadFromFile("Textures\\pKey.png")))
 	{
-		MessageBox(NULL, "Brak tekstury klawisza!", "ERROR", NULL);
+		MessageBox(NULL, "Fail to load Texture!", "ERROR", NULL);
 		return false;
 	}
 

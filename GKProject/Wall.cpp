@@ -14,7 +14,7 @@ Wall::Wall(float _heigth, float _width, Vector2f _position, int _rotation)
 	
 	if (!texture.loadFromFile("Textures\\3.jpg"))
 	{
-		MessageBox(NULL, "Brak tekstury scian!", "ERROR", NULL);
+		MessageBox(NULL, "No texture of wall!", "ERROR", NULL);
 		return;
 	}
 	wall.setTexture(&texture);
