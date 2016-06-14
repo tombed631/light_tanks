@@ -73,7 +73,7 @@ string Menu::setPlayerName(RenderWindow &window, bool playerOne, p3d::PlTankColo
 			}
 			if (event.type == sf::Event::TextEntered)
 			{
-				if (event.text.unicode >= 32 && event.text.unicode <= 126 && name.length()<15)
+				if (event.text.unicode >= 32 && event.text.unicode <= 126 && name.length()<7)
 					name += ((char)event.text.unicode);
 				else if (event.text.unicode == 8)
 					name = name.substr(0, name.length() - 1);
