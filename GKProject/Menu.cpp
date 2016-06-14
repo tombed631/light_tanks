@@ -170,7 +170,8 @@ void Menu::showMenu(RenderWindow &window)
 					if (playerOneName != "PlayerWithNoNameException")
 					{
 						Game game(window);
-						isRunningMenu = game.run(window, playerColors, playerOneName,playerTwoName);
+						if (game.isRunningGame)
+							isRunningMenu = game.run(window, playerColors, playerOneName,playerTwoName);
 					}
 					
 				}

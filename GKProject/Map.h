@@ -14,6 +14,7 @@ private:
 
 public:
 
+	bool isDone;
 	virtual ~Map();
 	Map(){};
 

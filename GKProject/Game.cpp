@@ -25,11 +25,13 @@ Game::Game(RenderWindow &window)
 		(!ricochetSoundBuffer.loadFromFile("Sounds\\Ricochet.wav")))
 	{
 		MessageBox(NULL, "Brak dŸwiêków!", "ERROR", NULL);
+		isRunningGame = false;
 		return;
 	}
 	if (!scoreBoardTankTextureOne.loadFromFile("Textures\\tankScoreBoardOne.png")|| !scoreBoardTankTextureTwo.loadFromFile("Textures\\tankScoreBoardTwo.png"))
 	{
 		MessageBox(NULL, "Brak tesktur scoreboardow!", "ERROR", NULL);
+		isRunningGame = false;
 		return;
 	}
 	scoreBoardTankSpriteOne.setTexture(scoreBoardTankTextureOne);
@@ -125,7 +127,8 @@ bool Game::run(RenderWindow &window, p3d::PlTankColors playerColors, string play
 	scoreBoardTankSpriteTwo.setColor(Color(colorTwo.x, colorTwo.y, colorTwo.z));
 	map = new Map();
 	map->createMap(window);
-
+	if (!map->isDone)
+		isRunningGame = false;
 	// create a clock to track the elapsed time
 	sf::Clock clock1, clock2, clock3, clock4, clock5;
 

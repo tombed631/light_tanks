@@ -35,6 +35,7 @@ void Map::createMap(RenderWindow &gameWindow){
 	mapFile.open(mapPath, ios::in);
 	if (mapFile.good() == false){
 		MessageBox(NULL, "Brak shematu mapy!", "ERROR", NULL);
+		isDone = false;
 		return;
 	}
 	//ramka okna bazowa dla ka¿dego
@@ -85,6 +86,7 @@ void Map::createMap(RenderWindow &gameWindow){
 	}
 
 	mapFile.close();
+	isDone = true;
 };
 
 int Map::getWallsSize(){
