@@ -24,14 +24,14 @@ Game::Game(RenderWindow &window)
 	if ((!destroySoundBuffer.loadFromFile("Sounds\\Explosion.wav")) || (!shootSoundBuffer.loadFromFile("Sounds\\Shoot_v2.wav")) ||
 		(!ricochetSoundBuffer.loadFromFile("Sounds\\Ricochet.wav")))
 	{
-		MessageBox(NULL, "Brak dŸwiêków!", "ERROR", NULL);
 		isRunningGame = false;
+		MessageBox(NULL, "Fail to load Sounds!", "ERROR", NULL);
 		return;
 	}
 	if (!scoreBoardTankTextureOne.loadFromFile("Textures\\tankScoreBoardOne.png")|| !scoreBoardTankTextureTwo.loadFromFile("Textures\\tankScoreBoardTwo.png"))
 	{
-		MessageBox(NULL, "Brak tesktur scoreboardow!", "ERROR", NULL);
 		isRunningGame = false;
+		MessageBox(NULL, "No scoreboardTextures!", "ERROR", NULL);
 		return;
 	}
 	scoreBoardTankSpriteOne.setTexture(scoreBoardTankTextureOne);
