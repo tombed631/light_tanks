@@ -289,3 +289,5 @@ TankSelectorModule/packages.config
 GKProject/GKProject.vcxproj.filters
 TankSelectorModule/TankSelectorModule.vcxproj.filters
 *.config
+LightTanks.VC.db
+LightTanksSetup/LightTanksSetup.vdproj
